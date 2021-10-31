@@ -1,0 +1,204 @@
+package net.mehvahdjukaar.hauntedharvest.mixins;
+
+import net.mehvahdjukaar.hauntedharvest.Halloween;
+import net.mehvahdjukaar.hauntedharvest.ai.AI;
+import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
+import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Mixin(Villager.class)
+public abstract class VillagerMixin extends AbstractVillager implements IHalloweenVillager {
+
+    private final Map<UUID, Integer> CANDY_COOLDOWNS = new ConcurrentHashMap<>();
+
+    public VillagerMixin(EntityType<? extends AbstractVillager> p_35267_, Level p_35268_) {
+        super(p_35267_, p_35268_);
+    }
+
+    @Inject(method = ("registerBrainGoals"), at = @At("RETURN"))
+    protected void reg(Brain<Villager> pVillagerBrain, CallbackInfo ci) {
+        //not sure if it will work
+        pVillagerBrain.getMemories().put(MemoryModuleType.ATTACK_TARGET, Optional.empty());
+
+        if (this.isBaby()) {
+            pVillagerBrain.setSchedule(ModRegistry.HALLOWEEN_VILLAGER_BABY_SCHEDULE.get());
+            //use addActivityWithCondition
+            //pVillagerBrain.addActivity(ModRegistry.EAT_CANDY.get(), AI.getEatCandyPackage(0.5f));
+            pVillagerBrain.addActivity(ModRegistry.TRICK_OR_TREAT.get(), AI.getTrickOrTreatPackage(0.5f));
+            //replaces play package
+            pVillagerBrain.addActivity(Activity.PLAY, AI.getHalloweenPlayPackage(0.5F));
+            pVillagerBrain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
+        }
+        else{
+            pVillagerBrain.addActivity(Activity.REST, AI.getHalloweenRestPackage(this.getVillagerData().getProfession(), 0.5F));
+        }
+    }
+
+    @Shadow
+    public abstract VillagerData getVillagerData();
+
+    @Inject(method = ("customServerAiStep"), at = @At("RETURN"))
+    protected void customServerAiStep(CallbackInfo ci) {
+        for(UUID id : CANDY_COOLDOWNS.keySet()) {
+            Integer i = CANDY_COOLDOWNS.get(id);
+            if (i <= 0) {
+                CANDY_COOLDOWNS.remove(id);
+            } else {
+                CANDY_COOLDOWNS.put(id, i - 1);
+            }
+        }
+    }
+
+    @Override
+    public boolean isEntityOnCooldown(Entity e) {
+        return CANDY_COOLDOWNS.containsKey(e.getUUID());
+    }
+
+    @Override
+    public void setEntityOnCooldown(Entity e) {
+        this.setEntityOnCooldown(e, 50);
+    }
+
+    @Override
+    public void setEntityOnCooldown(Entity e, int cooldownSec) {
+        CANDY_COOLDOWNS.put(e.getUUID(), 20*(cooldownSec + e.level.random.nextInt(20)));
+    }
+
+    @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
+    protected void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        //hax. pickup candy
+        if(Halloween.IS_TRICK_OR_TREATING.test(this) && Halloween.EATABLE.contains(stack.getItem())){
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Override
+    public void onItemPickup(ItemEntity pItem) {
+        super.onItemPickup(pItem);
+        if(Halloween.IS_TRICK_OR_TREATING.test(this) && Halloween.EATABLE.contains(pItem.getItem().getItem())) {
+            this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            if (!this.level.isClientSide) {
+                this.level.broadcastEntityEvent(this, (byte) 14);
+            }
+        }
+    }
+
+    @Override
+    public void startConverting() {
+        if(this.conversionTime > 0) {
+            this.conversionTime = 60*20;
+            this.level.broadcastEntityEvent(this, (byte) 16);
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60*20, 2));
+        }
+    }
+
+    private int conversionTime = -1;
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    public void addAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
+        compoundNBT.putInt("ConversionTime", this.conversionTime);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
+        this.conversionTime = compoundNBT.getInt("ConversionTime");
+    }
+
+    @Override
+    public boolean isConverting() {
+        return this.conversionTime > 0;
+    }
+
+    private void doWitchConversion() {
+
+        float yBodyRot = this.yBodyRot;
+        float yHeadRot = this.yHeadRot;
+        float yBodyRotO = this.yBodyRotO;
+        float yHeadRotO = this.yHeadRotO;
+        Witch witch = this.convertTo(EntityType.WITCH, true);
+        if (witch != null) {
+
+            witch.yBodyRot = yBodyRot;
+            witch.yHeadRot = yHeadRot;
+            //witch.yBodyRotO = yBodyRotO;
+            witch.yHeadRotO = yHeadRotO;
+
+            witch.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
+
+
+            for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
+                ItemStack itemstack = this.getItemBySlot(equipmentslottype);
+                if (!itemstack.isEmpty()) {
+                    if (EnchantmentHelper.hasBindingCurse(itemstack)) {
+                        witch.getSlot(equipmentslottype.getIndex() + 300).set(itemstack);
+                    } else {
+                        double d0 = this.getEquipmentDropChance(equipmentslottype);
+                        if (d0 > 1.0D) {
+                            this.spawnAtLocation(itemstack);
+                        }
+                    }
+                }
+            }
+            net.minecraftforge.event.ForgeEventFactory.onLivingConvert(this, witch);
+        }
+
+        if (!this.isSilent()) {
+            this.level.levelEvent(null, 1027, this.blockPosition(), 0);
+        }
+    }
+
+
+    @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"), cancellable = true)
+    public void handleEntityEvent(byte pId, CallbackInfo ci) {
+        if (pId == 16) {
+            if (!this.isSilent()) {
+                this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
+            }
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "tick", at = @At(value = "HEAD"))
+    public void tick(CallbackInfo ci) {
+        if (!this.level.isClientSide && this.isAlive() && !this.isNoAi()) {
+            if (this.isConverting()) {
+                --this.conversionTime;
+
+                if (this.conversionTime == 0) {
+                    this.doWitchConversion();
+                }
+            }
+        }
+    }
+
+
+}

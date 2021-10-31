@@ -1,0 +1,21 @@
+
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "hauntedharvest.refmap.json",
+  "package": "net.mehvahdjukaar.hauntedharvest.mixins",
+  "mixins": [
+    "NearestAttackableTargetGoalMixin",
+    "ThrownEggMixin",
+    "VillageFeatureMixin",
+    "VillagerMixin",
+    "WitchMixin"
+  ],
+  "client": [
+    "VillagerRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

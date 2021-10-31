@@ -1,0 +1,38 @@
+
+modLoader="javafml" #mandatory
+
+loaderVersion="[36,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+
+license="All rights reserved"
+[[mods]] #mandatory
+# The modid of the mod
+modId="hauntedharvest" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Haunted Harvest" #mandatory
+logoFile="icon.png" #optional
+credits="MehVahdJukaar, Plantkillable" #optional
+authors="MehVahdJukaar, Plantkillable" #optional
+itemIcon="minecraft:potion" #catalogue icon
+description='''
+Baby villagers can now trick or treat with adults and occasionally witches.
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.hauntedharvest]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    mandatory=true #mandatory
+    # The version range of the dependency
+    versionRange="[36,)" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT or SERVER
+    side="BOTH"
+# Here's another dependency
+[[dependencies.hauntedharvest]]
+    modId="minecraft"
+    mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[1.17.0,1.18)"
+    ordering="NONE"
+    side="BOTH"
