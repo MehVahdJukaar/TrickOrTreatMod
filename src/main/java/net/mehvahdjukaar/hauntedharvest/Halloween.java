@@ -8,12 +8,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,7 +47,6 @@ public class Halloween {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
         MinecraftForge.EVENT_BUS.addListener(Halloween::onTagLoad);
-        MinecraftForge.EVENT_BUS.addListener(Halloween::onLootLoad);
 
     }
 
@@ -81,6 +77,7 @@ public class Halloween {
         }
     }
 
+    /*
     //@SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent event) {
         if(event.getName().toString().equals("minecraft:blocks/oak_leaves") || event.getName().toString().equals("minecraft:blocks/dark_oak_leaves")){
@@ -89,7 +86,7 @@ public class Halloween {
                     .name("rotten_apple").build();
             event.getTable().addPool(pool);
         }
-    }
+    }*/
 
 
 }
