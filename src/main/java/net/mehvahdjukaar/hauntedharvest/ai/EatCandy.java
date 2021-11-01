@@ -22,6 +22,8 @@ public class EatCandy extends Behavior<Villager> {
 
     private int eatingTime;
 
+    private int cooldown = 0;
+
     public EatCandy(int minDur, int maxDur) {
         super(ImmutableMap.of(), minDur, maxDur);
     }
@@ -29,16 +31,17 @@ public class EatCandy extends Behavior<Villager> {
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
         //TODO: find a way to clear this so they don't throw eggs as soon as night falls
-        if(pOwner.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET)){
+        if (pOwner.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
             pOwner.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
         }
-        return pLevel.random.nextInt(220) == 0 && pOwner.getInventory().hasAnyOf(Halloween.EATABLE);
+        if (cooldown-- > 0) return false;
+        return pOwner.getInventory().hasAnyOf(Halloween.EATABLE);
     }
 
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
         super.start(pLevel, pEntity, pGameTime);
-
+        this.cooldown = 20 * (3 + pLevel.random.nextInt(4)) + pLevel.random.nextInt(20);
         //stay still
         pEntity.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
         //hax
@@ -67,7 +70,7 @@ public class EatCandy extends Behavior<Villager> {
             if (eatingTime % 5 == 0) {
                 ItemStack stack = pOwner.getMainHandItem();
 
-                if(stack.isEmpty())return;
+                if (stack.isEmpty()) return;
 
                 Vec3 pos = new Vec3(0, 0, 0.09D);
                 //pos = pos.xRot(pOwner.getXRot() * ((float) Math.PI / 180F));
@@ -91,14 +94,13 @@ public class EatCandy extends Behavior<Villager> {
 
         if (pEntity.isBaby()) {
             Item item = pEntity.getMainHandItem().getItem();
-            if(item != Items.AIR) {
-                pEntity.setAge(pEntity.getAge() - (20 * 40));
+            if (item != Items.AIR) {
+                pEntity.setAge(pEntity.getAge() - (20 * 120));
                 pEntity.heal(0.5f);
 
-                if (item == ModRegistry.DEATH_APPLE.get()){
-                    if(pEntity instanceof IHalloweenVillager v) v.startConverting();
-                }
-                else if(item == ModRegistry.ROTTEN_APPLE.get() && pLevel.random.nextInt(5)==0){
+                if (item == ModRegistry.DEATH_APPLE.get()) {
+                    if (pEntity instanceof IHalloweenVillager v) v.startConverting();
+                } else if (item == ModRegistry.ROTTEN_APPLE.get() && pLevel.random.nextInt(5) == 0) {
                     pEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 60, 1));
                 }
             }

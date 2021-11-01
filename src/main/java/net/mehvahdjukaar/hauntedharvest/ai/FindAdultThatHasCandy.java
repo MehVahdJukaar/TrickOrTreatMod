@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
+import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +16,6 @@ import java.util.List;
 
 public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
     //walk target distance at which it will stop walking
-    private final int maxDist;
     private final float speedModifier;
     private final int interactionRangeSqr;
     private final MemoryModuleType<LivingEntity> memory = MemoryModuleType.INTERACTION_TARGET;
@@ -28,11 +28,12 @@ public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
                 MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, MemoryStatus.VALUE_PRESENT));
         this.speedModifier = speed;
         this.interactionRangeSqr = range * range;
-        this.maxDist = 2;
     }
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, LivingEntity pOwner) {
+        //do not search while trick or treating
+        if(Halloween.IS_TRICK_OR_TREATING.test(pOwner))return false;
         List<LivingEntity> list = pOwner.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).get();
         return list.stream().anyMatch(t -> this.isTargetValid(pOwner, t));
     }
@@ -54,7 +55,7 @@ public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
                 .findFirst()).ifPresent((foundTarget) -> {
             brain.setMemory(this.memory, foundTarget);
             brain.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(foundTarget, true));
-            brain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(new EntityTracker(foundTarget, false), this.speedModifier, this.maxDist));
+            brain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(new EntityTracker(foundTarget, false), this.speedModifier, 2));
         });
     }
 }

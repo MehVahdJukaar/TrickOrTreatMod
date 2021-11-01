@@ -1,15 +1,57 @@
-
 {
   "replace": false,
   "values": [
-    "minecraft:apple",
-    "minecraft:cookie"
-  ],
-  "optional": [
-    "supplementaries:candy",
-    "vanillacookbook:honey_candy",
-    "vanillacookbook:berry_candy",
-    "vanillacookbook:chocolate",
-    "vanillacookbook:sword_lollipop"
+    {
+      "id": "minecraft:apple",
+      "required": true
+    },
+    {
+      "id": "minecraft:cookie",
+      "required": true
+    },
+    {
+      "id": "supplementaries:candy",
+      "required": false
+    },
+    {
+      "id": "croptopia:raisin_oatmeal_cookie",
+      "required": false
+    },
+    {
+      "id": "croptopia:nutty_cookie",
+      "required": false
+    },
+    {
+      "id": "croptopia:doughnut",
+      "required": false
+    },
+    {
+      "id": "croptopia:nutty_cookie",
+      "required": false
+    },
+    {
+      "id": "croptopia:chocolate",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:honey_candy",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:berry_candy",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:chocolate",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:sword_lollipop",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:ore_o",
+      "required": false
+    }
   ]
 }

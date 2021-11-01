@@ -49,7 +49,7 @@ public class GoToAttackTargetIfFurtherThan extends Behavior<Mob> {
     private void setWalkAndLookTarget(LivingEntity p_24038_, LivingEntity p_24039_) {
         Brain<?> brain = p_24038_.getBrain();
         brain.setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(p_24039_, true));
-        WalkTarget walktarget = new WalkTarget(new EntityTracker(p_24039_, false), this.speedModifier, 0);
+        WalkTarget walktarget = new WalkTarget(new EntityTracker(p_24039_, false), this.speedModifier, 5);
         brain.setMemory(MemoryModuleType.WALK_TARGET, walktarget);
     }
 

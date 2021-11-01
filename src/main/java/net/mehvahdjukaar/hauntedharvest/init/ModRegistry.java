@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.hauntedharvest.init;
 
 import net.mehvahdjukaar.hauntedharvest.Halloween;
+import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.loot.AddItemModifier;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
@@ -10,6 +12,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.entity.schedule.ScheduleBuilder;
@@ -25,6 +29,8 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Optional;
+
 @SuppressWarnings({"unused"})
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
@@ -38,6 +44,9 @@ public class ModRegistry {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Halloween.MOD_ID);
     public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(ForgeRegistries.ACTIVITIES, Halloween.MOD_ID);
     public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(ForgeRegistries.SCHEDULES, Halloween.MOD_ID);
+    public static final DeferredRegister<MemoryModuleType<?>> MEMORY_MODULE_TYPES = DeferredRegister.create(ForgeRegistries.MEMORY_MODULE_TYPES, Halloween.MOD_ID);
+    public static final DeferredRegister<SensorType<?>> POI_SENSORS = DeferredRegister.create(ForgeRegistries.SENSOR_TYPES, Halloween.MOD_ID);
+
 
     public static void init(IEventBus bus) {
         ITEMS.register(bus);
@@ -48,6 +57,8 @@ public class ModRegistry {
         ACTIVITIES.register(bus);
         SCHEDULES.register(bus);
         GLM.register(bus);
+        MEMORY_MODULE_TYPES.register(bus);
+        POI_SENSORS.register(bus);
     }
 
     public static final RegistryObject<GlobalLootModifierSerializer<?>> ROTTEN_APPLE_GLM =
@@ -68,6 +79,16 @@ public class ModRegistry {
         return ACTIVITIES.register(name, () -> new Activity(name));
     }
 
+    public static final RegistryObject<MemoryModuleType<GlobalPos>> PUMPKIN_POS =
+            MEMORY_MODULE_TYPES.register("pumpkin_pos", ()->new MemoryModuleType<>(Optional.of(GlobalPos.CODEC)));
+
+    public static final RegistryObject<MemoryModuleType<GlobalPos>> NEAREST_PUMPKIN =
+            MEMORY_MODULE_TYPES.register("nearest_pumpkin", ()->new MemoryModuleType<>(Optional.empty()));
+
+
+    public static final RegistryObject<SensorType<PumpkinPoiSensor>> PUMPKIN_POI_SENSOR =
+            POI_SENSORS.register("pumpkin_poi", ()->new SensorType<>(PumpkinPoiSensor::new));
+
     public static final String SPLATTERED_EGG_NAME = "splattered_egg";
     public static final RegistryObject<EntityType<SplatteredEggEntity>> SPLATTERED_EGG_ENTITY = ENTITIES.register(SPLATTERED_EGG_NAME, () -> (
             EntityType.Builder.<SplatteredEggEntity>of(SplatteredEggEntity::new, MobCategory.MISC)
@@ -84,7 +105,7 @@ public class ModRegistry {
     public static final FoodProperties DEATH_APPLE_FOOD = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F)
             .effect(() -> new MobEffectInstance(MobEffects.HUNGER, 2400, 0), 1)
             .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 200, 0), 1.0F)
-            .effect(() -> new MobEffectInstance(MobEffects.WITHER, 220, 1), 1.0F)
+            .effect(() -> new MobEffectInstance(MobEffects.WITHER, 230, 1), 1.0F)
             .effect(() -> new MobEffectInstance(MobEffects.POISON, 500, 0), 1.0F)
             .effect(() -> new MobEffectInstance(MobEffects.WEAKNESS, 6000, 0), 1.0F)
             .meat().alwaysEat().build();

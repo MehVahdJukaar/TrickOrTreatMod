@@ -4,7 +4,9 @@ import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.mehvahdjukaar.hauntedharvest.ai.AI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -48,6 +50,9 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     protected void reg(Brain<Villager> pVillagerBrain, CallbackInfo ci) {
         //not sure if it will work
         pVillagerBrain.getMemories().put(MemoryModuleType.ATTACK_TARGET, Optional.empty());
+        pVillagerBrain.getMemories().put(ModRegistry.PUMPKIN_POS.get(), Optional.empty());
+        pVillagerBrain.getMemories().put(ModRegistry.NEAREST_PUMPKIN.get(), Optional.empty());
+        Halloween.addSensorToVillagers(pVillagerBrain, ModRegistry.PUMPKIN_POI_SENSOR.get());
 
         if (this.isBaby()) {
             pVillagerBrain.setSchedule(ModRegistry.HALLOWEEN_VILLAGER_BABY_SCHEDULE.get());
@@ -57,18 +62,20 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             //replaces play package
             pVillagerBrain.addActivity(Activity.PLAY, AI.getHalloweenPlayPackage(0.5F));
             pVillagerBrain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
-        }
-        else{
+        } else {
             pVillagerBrain.addActivity(Activity.REST, AI.getHalloweenRestPackage(this.getVillagerData().getProfession(), 0.5F));
+            pVillagerBrain.addActivity(Activity.IDLE, AI.getHalloweenIdlePackage(this.getVillagerData().getProfession(), 0.5F));
         }
     }
 
     @Shadow
     public abstract VillagerData getVillagerData();
 
+    @Shadow public abstract Brain<Villager> getBrain();
+
     @Inject(method = ("customServerAiStep"), at = @At("RETURN"))
     protected void customServerAiStep(CallbackInfo ci) {
-        for(UUID id : CANDY_COOLDOWNS.keySet()) {
+        for (UUID id : CANDY_COOLDOWNS.keySet()) {
             Integer i = CANDY_COOLDOWNS.get(id);
             if (i <= 0) {
                 CANDY_COOLDOWNS.remove(id);
@@ -90,13 +97,13 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Override
     public void setEntityOnCooldown(Entity e, int cooldownSec) {
-        CANDY_COOLDOWNS.put(e.getUUID(), 20*(cooldownSec + e.level.random.nextInt(20)));
+        CANDY_COOLDOWNS.put(e.getUUID(), 20 * (cooldownSec + e.level.random.nextInt(20)));
     }
 
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
     protected void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         //hax. pickup candy
-        if(Halloween.IS_TRICK_OR_TREATING.test(this) && Halloween.EATABLE.contains(stack.getItem())){
+        if (Halloween.IS_TRICK_OR_TREATING.test(this) && Halloween.EATABLE.contains(stack.getItem())) {
             cir.setReturnValue(true);
         }
     }
@@ -104,7 +111,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Override
     public void onItemPickup(ItemEntity pItem) {
         super.onItemPickup(pItem);
-        if(Halloween.IS_TRICK_OR_TREATING.test(this) && Halloween.EATABLE.contains(pItem.getItem().getItem())) {
+        if (Halloween.IS_TRICK_OR_TREATING.test(this) && Halloween.EATABLE.contains(pItem.getItem().getItem())) {
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte) 14);
@@ -114,23 +121,40 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Override
     public void startConverting() {
-        if(this.conversionTime > 0) {
-            this.conversionTime = 60*20;
+        if (this.conversionTime > 0) {
+            this.conversionTime = 60 * 20;
             this.level.broadcastEntityEvent(this, (byte) 16);
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60*20, 2));
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 2));
         }
     }
 
     private int conversionTime = -1;
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void addAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
-        compoundNBT.putInt("ConversionTime", this.conversionTime);
+    public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+        tag.putInt("ConversionTime", this.conversionTime);
+
+        //can't get thingie brain memory saving to work
+
+        if(this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
+            GlobalPos globalpos = this.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
+            if(globalpos.dimension() == this.level.dimension()) {
+                tag.put("Pumpkin", NbtUtils.writeBlockPos(globalpos.pos()));
+            }
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
         this.conversionTime = compoundNBT.getInt("ConversionTime");
+
+        if(compoundNBT.contains("Pumpkin")){
+            try{
+                this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level.dimension(),
+                        NbtUtils.readBlockPos(compoundNBT.getCompound("Pumpkin"))));
+            }catch (Exception ignored){};
+        }
+
     }
 
     @Override

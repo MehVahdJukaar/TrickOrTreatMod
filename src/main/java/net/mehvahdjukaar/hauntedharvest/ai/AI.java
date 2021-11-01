@@ -155,6 +155,7 @@ public class AI {
                 Pair.of(3, new GoToAttackTargetIfFurtherThan(speed*1.25f, 10)),
                 Pair.of(2, new ThrowEggs(12)),
 
+                Pair.of(7, new LightUpPumpkin(speed)),
 
                 Pair.of(10, new RunOne<>(
                         ImmutableMap.of(
@@ -220,6 +221,9 @@ public class AI {
                                 Pair.of(new SetWalkTargetFromLookTarget(pWalkingSpeed, 2), 1),
                                 Pair.of(new JumpOnBed(pWalkingSpeed), 2),
                                 Pair.of(new DoNothing(20, 40), 2)))),
+
+                Pair.of(10, new CarvePumpkin(pWalkingSpeed)),
+
                 Pair.of(99, new UpdateActivityFromSchedule()));
     }
 
@@ -238,5 +242,36 @@ public class AI {
                                 Pair.of(new DoNothing(20, 40), 2)))),
                 getMinimalLookBehavior(), Pair.of(99, new UpdateActivityFromSchedule()));
     }
+
+
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getHalloweenIdlePackage(VillagerProfession profession, float speed) {
+        return ImmutableList.of(
+                Pair.of(2, new RunOne<>(
+                        ImmutableList.of(
+                                Pair.of(InteractWith.of(EntityType.VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, speed, 2), 2),
+                                Pair.of(new InteractWith<>(EntityType.VILLAGER, 8, AgeableMob::canBreed, AgeableMob::canBreed, MemoryModuleType.BREED_TARGET, speed, 2), 1),
+                                Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speed, 2), 1),
+                                Pair.of(new VillageBoundRandomStroll(speed), 1),
+                                Pair.of(new SetWalkTargetFromLookTarget(speed, 2), 1),
+                                Pair.of(new JumpOnBed(speed), 1),
+                                Pair.of(new DoNothing(30, 60), 1)))),
+                Pair.of(3, new GiveGiftToHero(100)),
+                Pair.of(3, new SetLookAndInteract(EntityType.PLAYER, 4)),
+                Pair.of(3, new ShowTradesToPlayer(400, 1600)),
+                Pair.of(3, new GateBehavior<>(
+                        ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.INTERACTION_TARGET),
+                        GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE,
+                        ImmutableList.of(Pair.of(new TradeWithVillager(), 1)))),
+                Pair.of(3, new GateBehavior<>(
+                        ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.BREED_TARGET),
+                        GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE,
+                        ImmutableList.of(Pair.of(new VillagerMakeLove(), 1)))),
+
+                Pair.of(3, new PlacePumpkin(speed)),
+                Pair.of(3, new RemovePumpkin(speed)),
+
+                getFullLookBehavior(), Pair.of(99, new UpdateActivityFromSchedule()));
+    }
+
 
 }

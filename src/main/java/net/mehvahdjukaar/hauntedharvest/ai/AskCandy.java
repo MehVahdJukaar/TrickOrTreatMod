@@ -12,12 +12,12 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class AskCandy extends Behavior<Villager> {
-    private static final int MAX_LOOK_TIME = 900;
-    private static final int STARTING_LOOK_TIME = 40;
+
     private int lookTime;
     private boolean gotCandy = false;
 
@@ -75,6 +75,7 @@ public class AskCandy extends Behavior<Villager> {
             if (target.isSleeping()) {
                 target.stopSleeping();
                 target.level.broadcastEntityEvent(target, (byte) 13);
+                target.getBrain().setActiveActivityIfPossible(Activity.REST);
             }
         }
     }
@@ -101,12 +102,12 @@ public class AskCandy extends Behavior<Villager> {
         pEntity.getBrain().eraseMemory(MemoryModuleType.INTERACTION_TARGET);
     }
 
-    private static void clearHeldItem(Villager self) {
+    public static void clearHeldItem(Villager self) {
         self.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         self.setDropChance(EquipmentSlot.MAINHAND, 0.085F);
     }
 
-    private static void displayAsHeldItem(Villager self, ItemStack stack) {
+    public static void displayAsHeldItem(Villager self, ItemStack stack) {
         self.setItemSlot(EquipmentSlot.MAINHAND, stack);
         self.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
     }
