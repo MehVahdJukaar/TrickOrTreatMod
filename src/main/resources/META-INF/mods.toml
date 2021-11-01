@@ -12,10 +12,16 @@ displayName="Haunted Harvest" #mandatory
 logoFile="icon.png" #optional
 credits="MehVahdJukaar, Plantkillable" #optional
 authors="MehVahdJukaar, Plantkillable" #optional
-itemIcon="minecraft:potion" #catalogue icon
+
 description='''
 Baby villagers can now trick or treat with adults and occasionally witches.
 '''
+displayURL="https://www.curseforge.com/minecraft/mc-mods/haunted-harvest" #optional
+issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/haunted-harvest/issues" #optional
+itemIcon="hauntedharvest:grim_apple" #catalogue icon
+
+configuredBackground= "minecraft:textures/block/blackstone.png"
+
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.hauntedharvest]] #optional
     # the modid of the dependency

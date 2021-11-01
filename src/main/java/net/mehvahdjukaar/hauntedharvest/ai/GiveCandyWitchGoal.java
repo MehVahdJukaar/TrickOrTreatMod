@@ -33,6 +33,7 @@ public class GiveCandyWitchGoal extends Goal {
      */
     @Override
     public boolean canUse() {
+        if (!Halloween.isTrickOrTreatTime(this.witch.level)) return false;
         if (this.randomInterval > 0 && this.witch.getRandom().nextInt(this.randomInterval) != 0) {
             return false;
         } else {
@@ -52,7 +53,7 @@ public class GiveCandyWitchGoal extends Goal {
     }
 
     private boolean isValidTarget(Villager target) {
-        return Halloween.IS_TRICK_OR_TREATING.test(target) && GiveCandyToBabies.isTalkingToMe(this.witch, target);
+        return GiveCandyToBabies.isValidTrickOrTreater(this.witch, target);
     }
 
     /**
@@ -98,12 +99,12 @@ public class GiveCandyWitchGoal extends Goal {
             if (r == 0) {
                 ItemStack stack = new ItemStack(ModRegistry.DEATH_APPLE.get());
                 GiveCandyToBabies.throwCandy(this.witch, target, stack);
-                this.witch.level.broadcastEntityEvent(this.witch, (byte)15);
+                this.witch.level.broadcastEntityEvent(this.witch, (byte) 15);
             }
             //scare villager
             else if (r < 5) {
                 GiveCandyToBabies.spookVillager(target, this.witch);
-                this.witch.level.broadcastEntityEvent(this.witch, (byte)15);
+                this.witch.level.broadcastEntityEvent(this.witch, (byte) 15);
             } else {
                 ItemStack stack = new ItemStack(ModRegistry.ROTTEN_APPLE.get());
                 GiveCandyToBabies.throwCandy(this.witch, target, stack);

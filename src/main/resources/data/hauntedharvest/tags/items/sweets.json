@@ -52,6 +52,78 @@
     {
       "id": "bumpkinbatch:ore_o",
       "required": false
+    },
+    {
+      "id": "bumpkinbatch:east_twicks",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:west_twicks",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:gummy_boars",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:creeper_stick",
+      "required": false
+    },
+    {
+      "id": "suszombification:caramel_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:chocolate_cream_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:cinnamon_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:honey_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:melon_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:peppermint_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:pumpkin_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:vanilla_cream_candy",
+      "required": false
+    },
+    {
+      "id": "candymod:cotton_candy",
+      "required": false
+    },
+    {
+      "id": "candymod:candy_cane",
+      "required": false
+    },
+    {
+      "id": "candymod:taffy",
+      "required": false
+    },
+    {
+      "id": "candymod:lollipop",
+      "required": false
+    },
+    {
+      "id": "candymod:jelly_beans",
+      "required": false
+    },
+    {
+      "id": "candymod:chocolate_bar",
+      "required": false
     }
   ]
 }

@@ -36,14 +36,14 @@ public class PlacePumpkin extends Behavior<Villager> {
                         MemoryModuleType.INTERACTION_TARGET, MemoryStatus.VALUE_ABSENT,
                         ModRegistry.PUMPKIN_POS.get(), MemoryStatus.VALUE_ABSENT,
                         MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT),
-                170, 270);
+                190, 270);
         this.speedModifier = speed;
 
     }
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (!Halloween.IS_HALLOWEEN_TIME) return false;
+        if (!Halloween.IS_PUMPKIN_PLACEMENT_TIME) return false;
         if (cooldown-- > 0) return false;
         if (pOwner.isBaby()) return false;
         if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {

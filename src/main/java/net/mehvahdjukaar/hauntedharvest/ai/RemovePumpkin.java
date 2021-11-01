@@ -23,7 +23,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 public class RemovePumpkin extends Behavior<Villager> {
     private final float speedModifier;
     private int ticksSinceReached = 0;
-    private int cooldown = 20 * 60;
+    private int cooldown = 20 * 30;
     protected int lastBreakProgress = -1;
 
     public RemovePumpkin(float speed) {
@@ -38,7 +38,7 @@ public class RemovePumpkin extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (Halloween.IS_HALLOWEEN_TIME) return false;
+        if (Halloween.IS_PUMPKIN_PLACEMENT_TIME) return false;
         if (cooldown-- > 0) return false;
         if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
             cooldown = 20 * 60;

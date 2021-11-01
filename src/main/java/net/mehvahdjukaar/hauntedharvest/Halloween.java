@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.init.ClientSetup;
+import net.mehvahdjukaar.hauntedharvest.init.Configs;
 import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -22,7 +23,9 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
@@ -44,15 +47,13 @@ public class Halloween {
         return new ResourceLocation(MOD_ID, name);
     }
 
-
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final boolean IS_HALLOWEEN_TIME;
-    static{
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int day = Calendar.getInstance().get(Calendar.DATE);
-        IS_HALLOWEEN_TIME = (month == Calendar.OCTOBER && day > 20) || (month == Calendar.NOVEMBER && day < 10);
-    }
+    public static boolean IS_HALLOWEEN_TIME;
+    public static boolean IS_PUMPKIN_PLACEMENT_TIME;
+
+    private static int TRICK_OR_TREAT_START;
+    private static int TRICK_OR_TREAT_END;
 
     public Halloween() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -62,29 +63,59 @@ public class Halloween {
 
         MinecraftForge.EVENT_BUS.addListener(Halloween::onTagLoad);
 
-
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configs.buildConfig());
     }
 
+    public static void init(final FMLCommonSetupEvent event) {
+        try {
+            int startM = Configs.START_MONTH.get() - 1;
+            int startD = Configs.START_DAY.get();
 
-    public static boolean isNight(Level level) {
-        return level.getDayTime() % 24000 > 12000;
+            int endM = Configs.END_MONTH.get() - 1;
+            int endD = Configs.END_DAY.get();
+
+            boolean inv = startM > endM;
+
+            //pain
+            Date start = new Date(0, startM, startD);
+            Date end = new Date((inv ? 1 : 0), endM, endD);
+
+            Date today = new Date(0, Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DATE));
+
+            IS_PUMPKIN_PLACEMENT_TIME = !today.before(start) && !today.after(end);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to set event date. Defaulting to always on: " + e);
+            IS_PUMPKIN_PLACEMENT_TIME = true;
+        }
+        IS_HALLOWEEN_TIME = !Configs.SEASONAL.get() || IS_PUMPKIN_PLACEMENT_TIME;
+        TRICK_OR_TREAT_START = Configs.START_TIME.get();
+        TRICK_OR_TREAT_END = Configs.END_TIME.get();
     }
+
+    public static boolean isTrickOrTreatTime(Level level) {
+        return IS_HALLOWEEN_TIME && isBetween(TRICK_OR_TREAT_START,TRICK_OR_TREAT_END, level.getDayTime() % 24000);
+    }
+
+    //TODO: maybe cache some of this
+    private static boolean isBetween(float start, float end, float mid) {
+        if (start < end) return mid >= start && mid <= end;
+        else return mid <= end || mid >= start;
+    }
+
+    public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e -> e.isBaby() && e.getMainHandItem().is(Items.BUNDLE);
+
 
     public static final Tags.IOptionalNamedTag<Item> SWEETS = ItemTags.createOptional(res("sweets"));
     public static final Tags.IOptionalNamedTag<Block> PUMPKIN_SUPPORT = BlockTags.createOptional(res("pumpkin_support"));
     public static final Set<Item> EATABLE = new HashSet<>();
 
-    public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e -> e.isBaby() && e.getMainHandItem().is(Items.BUNDLE);
 
-    public static void init(final FMLCommonSetupEvent event) {
-    }
 
 
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
         EATABLE.clear();
-        Set<Item> temp = new HashSet<>();
-        temp.addAll(SWEETS.getValues());
+        Set<Item> temp = new HashSet<>(SWEETS.getValues());
         temp.add(ModRegistry.DEATH_APPLE.get());
         temp.add(ModRegistry.ROTTEN_APPLE.get());
         for (Item i : temp) {
@@ -94,22 +125,11 @@ public class Halloween {
         }
     }
 
-    /*
-    //@SubscribeEvent
-    public static void onLootLoad(LootTableLoadEvent event) {
-        if(event.getName().toString().equals("minecraft:blocks/oak_leaves") || event.getName().toString().equals("minecraft:blocks/dark_oak_leaves")){
-            LootPool pool = LootPool.lootPool().add(
-                            LootTableReference.lootTableReference(Halloween.res("inject/oak_leaves")))
-                    .name("rotten_apple").build();
-            event.getTable().addPool(pool);
-        }
-    }*/
-
     private static Field SENSORS = null;
 
     //this might be bad
-    public static void addSensorToVillagers(Brain<Villager> brain, SensorType<? extends Sensor<Villager>> newSensor){
-        if(SENSORS == null) SENSORS = ObfuscationReflectionHelper.findField(Brain.class, "f_21844_");
+    public static void addSensorToVillagers(Brain<Villager> brain, SensorType<? extends Sensor<Villager>> newSensor) {
+        if (SENSORS == null) SENSORS = ObfuscationReflectionHelper.findField(Brain.class, "f_21844_");
 
         SENSORS.setAccessible(true);
         try {
@@ -120,17 +140,12 @@ public class Halloween {
 
             var memories = brain.getMemories();
 
-            for(MemoryModuleType<?> memoryModuleType : sensorInstance.requires()) {
+            for (MemoryModuleType<?> memoryModuleType : sensorInstance.requires()) {
                 memories.put(memoryModuleType, Optional.empty());
             }
+        } catch (Exception e) {
+            LOGGER.warn("failed to register pumpkin sensor type for villagers: " + e);
         }
-        catch (Exception e){
-            LOGGER.warn("failed to register pumpkin sensor type for villagers: "+e);
-        }
-
-
-
-
     }
 
 }

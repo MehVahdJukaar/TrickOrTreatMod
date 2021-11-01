@@ -131,7 +131,8 @@ dependencies {
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
 
-    //implementation fg.deobf("mezz.jei:jei-1.17.1:8.0.0.12:api")
+    //implementation fg.deobf("curse.maven:jei-238222:3486421")
+    //implementation fg.deobf("curse.maven:configured-457570:3434072")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

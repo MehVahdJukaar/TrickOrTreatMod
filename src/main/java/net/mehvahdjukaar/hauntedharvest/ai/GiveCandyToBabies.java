@@ -38,10 +38,12 @@ public class GiveCandyToBabies extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
+        if (!Halloween.isTrickOrTreatTime(pLevel)) return false;
         return getValidTarget(pOwner) != null;
     }
 
-    public static boolean isTalkingToMe(LivingEntity self, LivingEntity villagerTarget) {
+    public static boolean isValidTrickOrTreater(LivingEntity self, LivingEntity villagerTarget) {
+        if (!Halloween.IS_TRICK_OR_TREATING.test(villagerTarget)) return false;
         if (self.distanceToSqr(villagerTarget) <= 4 * 3 && !(villagerTarget instanceof IHalloweenVillager e && e.isEntityOnCooldown(self))) {
             Entity lookTarget = villagerTarget.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
             return lookTarget == self;
@@ -52,14 +54,14 @@ public class GiveCandyToBabies extends Behavior<Villager> {
     @Nullable
     private LivingEntity getValidTarget(LivingEntity self) {
         List<LivingEntity> list = self.getBrain().getMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES).orElse(List.of());
-        return list.stream().filter(t -> isTalkingToMe(self, t)).findFirst().orElse(null);
+        return list.stream().filter(t -> isValidTrickOrTreater(self, t)).findFirst().orElse(null);
     }
 
     @Override
     protected boolean canStillUse(ServerLevel pLevel, Villager pEntity, long pGameTime) {
         if (tickSinceStarted < 300 && !hasGivenCandy) {
             var p = pEntity.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET);
-            return p.isPresent() && isTalkingToMe(pEntity, p.get());
+            return p.isPresent() && isValidTrickOrTreater(pEntity, p.get());
         }
         return false;
     }
@@ -96,8 +98,8 @@ public class GiveCandyToBabies extends Behavior<Villager> {
         this.tickSinceStarted++;
     }
 
-    public static void spookVillager(Villager target, LivingEntity cause){
-        ((ServerLevel)target.level).sendParticles(ModRegistry.SPOOKED_PARTICLE.get(), target.getX(), target.getY() + 1.25, target.getZ(), 5,
+    public static void spookVillager(Villager target, LivingEntity cause) {
+        ((ServerLevel) target.level).sendParticles(ModRegistry.SPOOKED_PARTICLE.get(), target.getX(), target.getY() + 1.25, target.getZ(), 5,
                 target.getBbWidth() / 2f, target.getBbHeight() / 3f, target.getBbWidth() / 2f, 0.02);
 
 

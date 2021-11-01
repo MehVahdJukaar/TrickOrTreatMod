@@ -48,6 +48,8 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = ("registerBrainGoals"), at = @At("RETURN"))
     protected void reg(Brain<Villager> pVillagerBrain, CallbackInfo ci) {
+        //might cause issues
+        if(!Halloween.IS_HALLOWEEN_TIME) return;
         //not sure if it will work
         pVillagerBrain.getMemories().put(MemoryModuleType.ATTACK_TARGET, Optional.empty());
         pVillagerBrain.getMemories().put(ModRegistry.PUMPKIN_POS.get(), Optional.empty());

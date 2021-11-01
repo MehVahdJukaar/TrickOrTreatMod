@@ -43,7 +43,7 @@ public abstract class VillageFeatureMixin extends JigsawFeature {
 
     private static final WeightedRandomList<MobSpawnSettings.SpawnerData> VILLAGE_ENEMIES =
             WeightedRandomList.create(
-                    new MobSpawnSettings.SpawnerData(EntityType.WITCH, 16, 1, 1),
+                    new MobSpawnSettings.SpawnerData(EntityType.WITCH, 18, 1, 1),
                     new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 4, 1, 5),
                     new MobSpawnSettings.SpawnerData(EntityType.CREEPER, 8, 2, 5),
                     new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 8, 2, 5),

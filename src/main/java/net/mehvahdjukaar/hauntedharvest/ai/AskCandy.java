@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
+import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -31,7 +32,7 @@ public class AskCandy extends Behavior<Villager> {
     public boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
         Brain<?> brain = pOwner.getBrain();
         LivingEntity livingentity = brain.getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
-        return livingentity != null &&
+        return livingentity != null && Halloween.isTrickOrTreatTime(pLevel) &&
                 (livingentity.getType() == EntityType.VILLAGER || livingentity.getType() == EntityType.WITCH)
                 && pOwner.isAlive() && livingentity.isAlive() && pOwner.isBaby() && pOwner.distanceToSqr(livingentity) <= 5 * 3;
     }
