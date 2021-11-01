@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.client.HalloweenMaskLayer;
 import net.minecraft.client.model.VillagerModel;
@@ -19,7 +18,6 @@ public abstract class VillagerRendererMixin extends MobRenderer<Villager, Villag
 
     public VillagerRendererMixin(EntityRendererProvider.Context context, VillagerModel<Villager> villagerVillagerModel, float v) {
         super(context, villagerVillagerModel, v);
-
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -28,16 +26,7 @@ public abstract class VillagerRendererMixin extends MobRenderer<Villager, Villag
     }
 
     @Override
-    public void setupRotations(Villager pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks) {
-        if (this.isShaking(pEntityLiving)) {
-            pRotationYaw += (float)(Math.cos((double)pEntityLiving.tickCount * 3.25D) * Math.PI * (double)0.4F);
-        }
-        super.setupRotations(pEntityLiving, pMatrixStack, pAgeInTicks, pRotationYaw, pPartialTicks);
-
-    }
-
-    @Override
     public boolean isShaking(Villager villager) {
-        return (villager instanceof IHalloweenVillager v && v.isConverting());
+        return super.isShaking(villager) || (villager instanceof IHalloweenVillager v && v.isConverting());
     }
 }

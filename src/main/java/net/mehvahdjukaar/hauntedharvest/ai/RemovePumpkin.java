@@ -77,10 +77,10 @@ public class RemovePumpkin extends Behavior<Villager> {
 
         //hax
         pOwner.getBrain().eraseMemory(MemoryModuleType.INTERACTION_TARGET);
-        pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, this.speedModifier, 1));
+        pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, this.speedModifier, 2));
 
         pOwner.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(pos));
-        if (pos.closerThan(pOwner.position(), 1.73D)) {
+        if (pos.closerThan(pOwner.position(), 2.3)) {
             this.ticksSinceReached++;
 
             BlockState state = pLevel.getBlockState(pos);

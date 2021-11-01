@@ -55,7 +55,7 @@ public class CarvePumpkin extends Behavior<Villager> {
         BlockPos targetPos = pEntity.getBrain().getMemory(ModRegistry.NEAREST_PUMPKIN.get()).get().pos();
 
         pEntity.getBrain().eraseMemory(MemoryModuleType.INTERACTION_TARGET);
-        pEntity.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier, 1));
+        pEntity.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier, 2));
         AskCandy.displayAsHeldItem(pEntity, new ItemStack(Items.SHEARS));
 
     }
@@ -79,7 +79,7 @@ public class CarvePumpkin extends Behavior<Villager> {
         pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier, 1));
 
         pOwner.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(targetPos));
-        if (targetPos.closerThan(pOwner.position(), 1.73D)) {
+        if (targetPos.closerThan(pOwner.position(), 2.3)) {
             this.ticksSinceReached++;
             if (ticksSinceReached > 40) {
                 Direction dir = pOwner.getDirection().getOpposite();

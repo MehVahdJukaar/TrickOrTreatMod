@@ -119,9 +119,10 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         }
     }
 
+    //called server side. needs syncing with entity event
     @Override
     public void startConverting() {
-        if (this.conversionTime > 0) {
+        if (!this.isConverting()) {
             this.conversionTime = 60 * 20;
             this.level.broadcastEntityEvent(this, (byte) 16);
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 2));
@@ -204,6 +205,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"), cancellable = true)
     public void handleEntityEvent(byte pId, CallbackInfo ci) {
         if (pId == 16) {
+            this.conversionTime = 60 * 20;
             if (!this.isSilent()) {
                 this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
