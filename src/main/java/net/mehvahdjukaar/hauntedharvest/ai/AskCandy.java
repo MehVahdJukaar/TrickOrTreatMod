@@ -21,6 +21,7 @@ public class AskCandy extends Behavior<Villager> {
 
     private int lookTime;
     private boolean gotCandy = false;
+    private LivingEntity currentVillager = null;
 
     public AskCandy(int minDuration, int maxDuration) {
         super(ImmutableMap.of(
@@ -47,6 +48,7 @@ public class AskCandy extends Behavior<Villager> {
     public void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
         super.start(pLevel, pEntity, pGameTime);
         LivingEntity target = this.lookAtTarget(pEntity);
+        currentVillager = target;
         this.keepVillageAwake(target);
 
         target.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
@@ -72,9 +74,11 @@ public class AskCandy extends Behavior<Villager> {
     private void keepVillageAwake(LivingEntity target) {
         //hacky
         if (target instanceof Villager) {
-            target.getBrain().setMemory(MemoryModuleType.LAST_WOKEN, target.level.getGameTime());
+            target.getBrain().setMemory(MemoryModuleType.LAST_WOKEN, target.level.getGameTime()-1);
             if (target.isSleeping()) {
                 target.stopSleeping();
+                //frick your bed. for some reason all this isn't enough, and they keep going in and out constantly
+                target.getBrain().eraseMemory(MemoryModuleType.NEAREST_BED);
                 target.level.broadcastEntityEvent(target, (byte) 13);
                 target.getBrain().setActiveActivityIfPossible(Activity.REST);
             }
@@ -87,15 +91,18 @@ public class AskCandy extends Behavior<Villager> {
         clearHeldItem(pEntity);
         if (!this.gotCandy) {
             Brain<?> brain = pEntity.getBrain();
-            LivingEntity livingentity = brain.getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
+            //using local target instead cause this seem to mess it up when first switching back
+            //LivingEntity livingentity = brain.getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
+
             //trick
             //only have a chance cause they like to spam eggs a bit too much. it skips witches
-            if (livingentity != null && pLevel.random.nextInt(10) < 7 && livingentity instanceof Villager) {
+            if (currentVillager instanceof Villager && currentVillager.isAlive()
+                    && !currentVillager.isBaby() && pLevel.random.nextInt(10) < 7 ) {
                 //egg time
                 pLevel.broadcastEntityEvent(pEntity, (byte) 13);
-                brain.setMemory(MemoryModuleType.ATTACK_TARGET, livingentity);
+                brain.setMemory(MemoryModuleType.ATTACK_TARGET, currentVillager);
                 if (pEntity instanceof IHalloweenVillager c) {
-                    c.setEntityOnCooldown(livingentity);
+                    c.setEntityOnCooldown(currentVillager);
                 }
             }
         }

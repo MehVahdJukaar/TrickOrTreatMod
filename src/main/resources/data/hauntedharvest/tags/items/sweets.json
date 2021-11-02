@@ -22,15 +22,15 @@
       "required": false
     },
     {
-      "id": "croptopia:doughnut",
-      "required": false
-    },
-    {
       "id": "croptopia:nutty_cookie",
       "required": false
     },
     {
       "id": "croptopia:chocolate",
+      "required": false
+    },
+    {
+      "id": "croptopia:candy_corn",
       "required": false
     },
     {
@@ -123,6 +123,14 @@
     },
     {
       "id": "candymod:chocolate_bar",
+      "required": false
+    },
+    {
+      "id": "trickortreat:bonebreaker",
+      "required": false
+    },
+    {
+      "id": "trickxortreat:sugarbone",
       "required": false
     }
   ]

@@ -110,8 +110,6 @@ public class Halloween {
     public static final Set<Item> EATABLE = new HashSet<>();
 
 
-
-
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
         EATABLE.clear();
@@ -148,4 +146,11 @@ public class Halloween {
         }
     }
 
+    public static boolean isPlayerOnCooldown(LivingEntity self) {
+        return false;
+    }
+
+    //TODO: give candy to players
+    //TODO: add milk bucket to clear baby villagers
+    //TODO: fix when inventory is full
 }

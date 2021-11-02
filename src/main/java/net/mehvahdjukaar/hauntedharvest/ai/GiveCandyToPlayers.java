@@ -22,15 +22,15 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class GiveCandyToBabies extends Behavior<Villager> {
+public class GiveCandyToPlayers extends Behavior<Villager> {
 
     private boolean hasGivenCandy = false;
     private int tickSinceStarted = 0;
     private int timeToGiveCandy = 0;
 
-    public GiveCandyToBabies() {
+    public GiveCandyToPlayers() {
         super(ImmutableMap.of(
-                MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryStatus.VALUE_PRESENT,
+                MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryStatus.VALUE_PRESENT,
                 MemoryModuleType.WALK_TARGET, MemoryStatus.REGISTERED,
                 MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED,
                 MemoryModuleType.INTERACTION_TARGET, MemoryStatus.VALUE_ABSENT));
@@ -43,8 +43,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
     }
 
     public static boolean isValidTrickOrTreater(LivingEntity self, LivingEntity villagerTarget) {
-        if (!Halloween.IS_TRICK_OR_TREATING.test(villagerTarget)) return false;
-        if (self.distanceToSqr(villagerTarget) <= 4 * 3 && !(villagerTarget instanceof IHalloweenVillager e && e.isEntityOnCooldown(self))) {
+        if (self.distanceToSqr(villagerTarget) <= 4 * 3 && !(Halloween.isPlayerOnCooldown(self))) {
             Entity lookTarget = villagerTarget.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
             return lookTarget == self;
         }
@@ -76,9 +75,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
             //give coal
             if (r == 0) {
                 ItemStack stack = new ItemStack(Items.CHARCOAL);
-                ItemEntity entity = throwCandy(pOwner, target, stack);
-                //low lifespan for coal so they dont clutter since they cah't pick it up
-                entity.lifespan = 60*20;
+                throwCandy(pOwner, target, stack);
 
                 pLevel.broadcastEntityEvent(pOwner, (byte) 13);
             }
@@ -114,7 +111,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
         target.getBrain().setMemory(MemoryModuleType.HURT_BY_ENTITY, cause);
     }
 
-    public static ItemEntity throwCandy(LivingEntity self, LivingEntity pTarget, ItemStack stack) {
+    public static void throwCandy(LivingEntity self, LivingEntity pTarget, ItemStack stack) {
 
 
         Vec3 vec3 = pTarget.getDeltaMovement();
@@ -127,14 +124,13 @@ public class GiveCandyToBabies extends Behavior<Villager> {
         ItemEntity itementity = new ItemEntity(self.level, self.getX(), d0, self.getZ(), stack);
 
         float pVelocity = 0.2F;
-        double pY = d1 + d3 * 0.8D;
+        double pY = d1 + d3 * 0.7D;
 
         itementity.setDeltaMovement((new Vec3(pX, pY, pZ)).normalize().scale(pVelocity));
 
         //this.level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
 
         self.level.addFreshEntity(itementity);
-        return itementity;
 
     }
 

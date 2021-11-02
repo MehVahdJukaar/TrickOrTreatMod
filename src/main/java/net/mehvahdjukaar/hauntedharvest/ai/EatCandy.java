@@ -2,14 +2,11 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.Halloween;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.Villager;
@@ -93,16 +90,14 @@ public class EatCandy extends Behavior<Villager> {
         super.stop(pLevel, pEntity, pGameTime);
 
         if (pEntity.isBaby()) {
-            Item item = pEntity.getMainHandItem().getItem();
+            ItemStack stack = pEntity.getMainHandItem();
+            Item item = stack.getItem();
             if (item != Items.AIR) {
-                pEntity.setAge(pEntity.getAge() - (20 * 120));
+                //5m
+                pEntity.setAge(pEntity.getAge() - (20 * 60 * 5));
                 pEntity.heal(0.5f);
 
-                if (item == ModRegistry.DEATH_APPLE.get()) {
-                    if (pEntity instanceof IHalloweenVillager v) v.startConverting();
-                } else if (item == ModRegistry.ROTTEN_APPLE.get() && pLevel.random.nextInt(5) == 0) {
-                    pEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 60, 1));
-                }
+                item.finishUsingItem(stack, pLevel, pEntity);
             }
         }
         pEntity.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);

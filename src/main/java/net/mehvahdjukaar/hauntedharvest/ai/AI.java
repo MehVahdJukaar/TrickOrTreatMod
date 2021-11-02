@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.hauntedharvest.init.Configs;
+import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,12 +17,17 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.entity.schedule.Schedule;
+import net.minecraft.world.entity.schedule.ScheduleBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class AI {
 
-    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getTrickOrTreatPackage2(float speed) {
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> test(float speed) {
         return ImmutableList.of(
                 //priority, task
                 //move where you need to move  min duration max duration
@@ -76,24 +84,24 @@ public class AI {
     }
 
     public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getEatCandyPackage(float speed) {
-            return ImmutableList.of(
-                    Pair.of(2, new RunOne<>(
-                            ImmutableList.of(
-                                    Pair.of(new StrollAroundPoi(MemoryModuleType.MEETING_POINT, 0.4F, 40), 2),
-                                    Pair.of(new SocializeAtBell(), 2))
-                    )),
-                    Pair.of(10, new ShowTradesToPlayer(400, 1600)),
-                    Pair.of(10, new SetLookAndInteract(EntityType.PLAYER, 4)),
-                    Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.MEETING_POINT, speed, 6, 100, 200)),
-                    Pair.of(3, new GiveGiftToHero(100)), Pair.of(3, new ValidateNearbyPoi(PoiType.MEETING, MemoryModuleType.MEETING_POINT)),
-                    Pair.of(3, new GateBehavior<>(
-                            ImmutableMap.of(),
-                            ImmutableSet.of(MemoryModuleType.INTERACTION_TARGET),
-                            GateBehavior.OrderPolicy.ORDERED,
-                            GateBehavior.RunningPolicy.RUN_ONE,
-                            ImmutableList.of(Pair.of(new TradeWithVillager(), 1)))),
-                    getFullLookBehavior(),
-                    Pair.of(99, new UpdateActivityFromSchedule()));
+        return ImmutableList.of(
+                Pair.of(2, new RunOne<>(
+                        ImmutableList.of(
+                                Pair.of(new StrollAroundPoi(MemoryModuleType.MEETING_POINT, 0.4F, 40), 2),
+                                Pair.of(new SocializeAtBell(), 2))
+                )),
+                Pair.of(10, new ShowTradesToPlayer(400, 1600)),
+                Pair.of(10, new SetLookAndInteract(EntityType.PLAYER, 4)),
+                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.MEETING_POINT, speed, 6, 100, 200)),
+                Pair.of(3, new GiveGiftToHero(100)), Pair.of(3, new ValidateNearbyPoi(PoiType.MEETING, MemoryModuleType.MEETING_POINT)),
+                Pair.of(3, new GateBehavior<>(
+                        ImmutableMap.of(),
+                        ImmutableSet.of(MemoryModuleType.INTERACTION_TARGET),
+                        GateBehavior.OrderPolicy.ORDERED,
+                        GateBehavior.RunningPolicy.RUN_ONE,
+                        ImmutableList.of(Pair.of(new TradeWithVillager(), 1)))),
+                getFullLookBehavior(),
+                Pair.of(99, new UpdateActivityFromSchedule()));
     }
 
     public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getEatCandyPackage2(float speed) {
@@ -124,6 +132,31 @@ public class AI {
                 getMinimalLookBehavior());
     }
 
+
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getCorePackage(VillagerProfession p_24586_, float p_24587_) {
+        return ImmutableList.of(
+                Pair.of(0, new Swim(0.8F)),
+                Pair.of(0, new InteractWithDoor()),
+                Pair.of(0, new LookAtTargetSink(45, 90)),
+                Pair.of(0, new VillagerPanicTrigger()),
+                Pair.of(0, new WakeUp()),
+                Pair.of(0, new ReactToBell()),
+                Pair.of(0, new SetRaidStatus()),
+                Pair.of(0, new ValidateNearbyPoi(p_24586_.getJobPoiType(), MemoryModuleType.JOB_SITE)),
+                Pair.of(0, new ValidateNearbyPoi(p_24586_.getJobPoiType(), MemoryModuleType.POTENTIAL_JOB_SITE)),
+                Pair.of(1, new MoveToTargetSink()),
+                Pair.of(2, new PoiCompetitorScan(p_24586_)),
+                Pair.of(3, new LookAndFollowTradingPlayerSink(p_24587_)),
+                Pair.of(5, new GoToWantedItem(p_24587_, false, 4)),
+                Pair.of(6, new AcquirePoi(p_24586_.getJobPoiType(), MemoryModuleType.JOB_SITE, MemoryModuleType.POTENTIAL_JOB_SITE, true, Optional.empty())),
+                Pair.of(7, new GoToPotentialJobSite(p_24587_)),
+                Pair.of(8, new YieldJobSite(p_24587_)),
+                Pair.of(10, new AcquirePoi(PoiType.HOME, MemoryModuleType.HOME, false, Optional.of((byte) 14))),
+                Pair.of(10, new AcquirePoi(PoiType.MEETING, MemoryModuleType.MEETING_POINT, true, Optional.of((byte) 14))),
+                Pair.of(10, new AssignProfessionFromJobSite()),
+                Pair.of(10, new ResetProfession()));
+    }
+
     public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getIdlePackage(VillagerProfession p_24599_, float p_24600_) {
         return ImmutableList.of(
                 Pair.of(2, new RunOne<>(
@@ -147,12 +180,12 @@ public class AI {
 
         return ImmutableList.of(
                 //finds interaction and walk target
-                Pair.of(1, new FindAdultThatHasCandy(26, speed*1.15f)),
+                Pair.of(1, new FindAdultThatHasCandy(26, speed * 1.15f)),
                 //consumes walk target and makes a path
                 Pair.of(1, new MoveToTargetSink(210, 320)),
                 //starts when close enough to interaction target
                 Pair.of(0, new AskCandy(3000, 4000)),
-                Pair.of(3, new GoToAttackTargetIfFurtherThan(speed*1.25f, 10)),
+                Pair.of(3, new GoToAttackTargetIfFurtherThan(speed * 1.25f, 10)),
                 Pair.of(2, new ThrowEggs(12)),
 
                 Pair.of(7, new LightUpPumpkin(speed)),
@@ -166,10 +199,9 @@ public class AI {
                                 //Pair.of(new SetClosestHomeAsWalkTarget(speed), 7),
                                 Pair.of(new InsideBrownianWalk(speed), 7),
                                 Pair.of(new GoToClosestVillage(speed, 4), 10),
-                                Pair.of(new StrollAroundPoi(MemoryModuleType.MEETING_POINT, 1, 50),2),
+                                Pair.of(new StrollAroundPoi(MemoryModuleType.MEETING_POINT, 1, 50), 2),
                                 Pair.of(new VillageBoundRandomStroll(speed, 25, 7), 1)
                         ))),
-
 
 
                 //Pair.of(0, new SetLookAndInteract(EntityType.VILLAGER, 16)),
@@ -182,95 +214,59 @@ public class AI {
                 Pair.of(99, new UpdateActivityFromSchedule()));
     }
 
-    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getCorePackage(VillagerProfession p_24586_, float p_24587_) {
-        return ImmutableList.of(
-                Pair.of(0, new Swim(0.8F)),
-                Pair.of(0, new InteractWithDoor()),
-                Pair.of(0, new LookAtTargetSink(45, 90)),
-                Pair.of(0, new VillagerPanicTrigger()),
-                Pair.of(0, new WakeUp()),
-                Pair.of(0, new ReactToBell()),
-                Pair.of(0, new SetRaidStatus()),
-                Pair.of(0, new ValidateNearbyPoi(p_24586_.getJobPoiType(), MemoryModuleType.JOB_SITE)),
-                Pair.of(0, new ValidateNearbyPoi(p_24586_.getJobPoiType(), MemoryModuleType.POTENTIAL_JOB_SITE)),
-                Pair.of(1, new MoveToTargetSink()),
-                Pair.of(2, new PoiCompetitorScan(p_24586_)),
-                Pair.of(3, new LookAndFollowTradingPlayerSink(p_24587_)),
-                Pair.of(5, new GoToWantedItem(p_24587_, false, 4)),
-                Pair.of(6, new AcquirePoi(p_24586_.getJobPoiType(), MemoryModuleType.JOB_SITE, MemoryModuleType.POTENTIAL_JOB_SITE, true, Optional.empty())),
-                Pair.of(7, new GoToPotentialJobSite(p_24587_)),
-                Pair.of(8, new YieldJobSite(p_24587_)),
-                Pair.of(10, new AcquirePoi(PoiType.HOME, MemoryModuleType.HOME, false, Optional.of((byte)14))),
-                Pair.of(10, new AcquirePoi(PoiType.MEETING, MemoryModuleType.MEETING_POINT, true, Optional.of((byte)14))),
-                Pair.of(10, new AssignProfessionFromJobSite()),
-                Pair.of(10, new ResetProfession()));
-    }
 
-    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getHalloweenPlayPackage(float pWalkingSpeed) {
-        return ImmutableList.of(
-                Pair.of(0, new MoveToTargetSink(80, 120)),
-                getFullLookBehavior(),
-                Pair.of(9, new EatCandy(100, 130)),
-                Pair.of(5, new PlayTagWithOtherKids()),
-                Pair.of(5, new RunOne<>(
-                        ImmutableMap.of(MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryStatus.VALUE_ABSENT),
-                        ImmutableList.of(
-                                Pair.of(InteractWith.of(EntityType.VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, pWalkingSpeed, 2), 2),
-                                Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, pWalkingSpeed, 2), 1),
-                                Pair.of(new VillageBoundRandomStroll(pWalkingSpeed), 1),
-                                Pair.of(new SetWalkTargetFromLookTarget(pWalkingSpeed, 2), 1),
-                                Pair.of(new JumpOnBed(pWalkingSpeed), 2),
-                                Pair.of(new DoNothing(20, 40), 2)))),
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getHalloweenPlayPackage(float speed) {
+        var old = VillagerGoalPackages.getPlayPackage(speed);
+        List<Pair<Integer, ? extends Behavior<? super Villager>>> mutable = new ArrayList<>(old);
 
-                Pair.of(10, new CarvePumpkin(pWalkingSpeed)),
+        mutable.add(Pair.of(9, new EatCandy(100, 130)));
+        mutable.add(Pair.of(10, new CarvePumpkin(speed)));
 
-                Pair.of(99, new UpdateActivityFromSchedule()));
+        return ImmutableList.copyOf(mutable);
     }
 
 
-    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getHalloweenRestPackage(VillagerProfession pProfession, float pWalkingSpeed) {
-        return ImmutableList.of(
-                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.HOME, pWalkingSpeed, 1, 150, 1200)),
-                Pair.of(3, new ValidateNearbyPoi(PoiType.HOME, MemoryModuleType.HOME)),
-                Pair.of(3, new SleepInBed()),
-                Pair.of(1, new GiveCandyToBabies()),
-                Pair.of(5, new RunOne<>(
-                        ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_ABSENT),
-                        ImmutableList.of(Pair.of(new SetClosestHomeAsWalkTarget(pWalkingSpeed), 1),
-                                Pair.of(new InsideBrownianWalk(pWalkingSpeed), 4),
-                                Pair.of(new GoToClosestVillage(pWalkingSpeed, 4), 2),
-                                Pair.of(new DoNothing(20, 40), 2)))),
-                getMinimalLookBehavior(), Pair.of(99, new UpdateActivityFromSchedule()));
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getHalloweenRestPackage(VillagerProfession profession, float speed) {
+        var old = VillagerGoalPackages.getRestPackage(profession, speed);
+        List<Pair<Integer, ? extends Behavior<? super Villager>>> mutable = new ArrayList<>(old);
+
+        mutable.add(Pair.of(1, new GiveCandyToBabies()));
+
+        return ImmutableList.copyOf(mutable);
     }
 
 
     public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getHalloweenIdlePackage(VillagerProfession profession, float speed) {
-        return ImmutableList.of(
-                Pair.of(2, new RunOne<>(
-                        ImmutableList.of(
-                                Pair.of(InteractWith.of(EntityType.VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, speed, 2), 2),
-                                Pair.of(new InteractWith<>(EntityType.VILLAGER, 8, AgeableMob::canBreed, AgeableMob::canBreed, MemoryModuleType.BREED_TARGET, speed, 2), 1),
-                                Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speed, 2), 1),
-                                Pair.of(new VillageBoundRandomStroll(speed), 1),
-                                Pair.of(new SetWalkTargetFromLookTarget(speed, 2), 1),
-                                Pair.of(new JumpOnBed(speed), 1),
-                                Pair.of(new DoNothing(30, 60), 1)))),
-                Pair.of(3, new GiveGiftToHero(100)),
-                Pair.of(3, new SetLookAndInteract(EntityType.PLAYER, 4)),
-                Pair.of(3, new ShowTradesToPlayer(400, 1600)),
-                Pair.of(3, new GateBehavior<>(
-                        ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.INTERACTION_TARGET),
-                        GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE,
-                        ImmutableList.of(Pair.of(new TradeWithVillager(), 1)))),
-                Pair.of(3, new GateBehavior<>(
-                        ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.BREED_TARGET),
-                        GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE,
-                        ImmutableList.of(Pair.of(new VillagerMakeLove(), 1)))),
+        var old = VillagerGoalPackages.getIdlePackage(profession, speed);
+        List<Pair<Integer, ? extends Behavior<? super Villager>>> mutable = new ArrayList<>(old);
 
-                Pair.of(3, new PlacePumpkin(speed)),
-                Pair.of(3, new RemovePumpkin(speed)),
+        mutable.add(Pair.of(3, new PlacePumpkin(speed)));
+        mutable.add(Pair.of(3, new RemovePumpkin(speed)));
 
-                getFullLookBehavior(), Pair.of(99, new UpdateActivityFromSchedule()));
+        return ImmutableList.copyOf(mutable);
+    }
+
+    public static final Schedule INITIALIZED_BABY_VILLAGER_SCHEDULE;
+
+    static {
+        ScheduleBuilder builder = new ScheduleBuilder(ModRegistry.HALLOWEEN_VILLAGER_BABY_SCHEDULE.get())
+                .changeActivityAt(10, Activity.IDLE)
+                .changeActivityAt(3000, Activity.PLAY)
+                .changeActivityAt(6000, Activity.IDLE)
+                .changeActivityAt(10000, Activity.PLAY)
+                .changeActivityAt(12000, Activity.REST);
+
+        int s = Configs.START_TIME.get();
+        int e = Configs.END_TIME.get();
+        if (e == 0) e = 24000;
+        //TODO: need to do here cause configs aren't loaded earlier
+        if (s < e) {
+            int startTime = Mth.clamp(s, 12010, Mth.clamp(e, 10020, 23980));
+            int endTime = Mth.clamp(e, startTime + 10, 23991);
+            builder.changeActivityAt(startTime, ModRegistry.TRICK_OR_TREAT.get());
+            builder.changeActivityAt(endTime, Activity.REST);
+        }
+        INITIALIZED_BABY_VILLAGER_SCHEDULE = builder.build();
     }
 
 

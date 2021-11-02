@@ -3,6 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.init;
 import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
+import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.loot.AddItemModifier;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleType;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
-import net.minecraft.world.entity.schedule.ScheduleBuilder;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -67,13 +67,8 @@ public class ModRegistry {
     public static final RegistryObject<Activity> EAT_CANDY = regActivity("eat_candy");
     public static final RegistryObject<Activity> TRICK_OR_TREAT = regActivity("trick_or_treat");
 
-    public static final RegistryObject<Schedule> HALLOWEEN_VILLAGER_BABY_SCHEDULE = SCHEDULES.register("villager_baby_halloween", () ->
-            (new ScheduleBuilder(new Schedule())
-                    .changeActivityAt(10, Activity.IDLE)
-                    .changeActivityAt(3000, Activity.PLAY)
-                    .changeActivityAt(6000, Activity.IDLE)
-                    .changeActivityAt(10000, Activity.PLAY)
-                    .changeActivityAt(12000, TRICK_OR_TREAT.get())).build());
+    //do not use
+    public static final RegistryObject<Schedule> HALLOWEEN_VILLAGER_BABY_SCHEDULE = SCHEDULES.register("villager_baby_halloween", Schedule::new);
 
     private static RegistryObject<Activity> regActivity(String name) {
         return ACTIVITIES.register(name, () -> new Activity(name));
@@ -114,5 +109,5 @@ public class ModRegistry {
             new Item(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).food(ROTTEN_APPLE_FOOD)));
 
     public static final RegistryObject<Item> DEATH_APPLE = ITEMS.register("grim_apple", () ->
-            new Item(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).rarity(Rarity.RARE).food(DEATH_APPLE_FOOD)));
+            new GrimAppleItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).rarity(Rarity.RARE).food(DEATH_APPLE_FOOD)));
 }

@@ -122,12 +122,9 @@ public class PlacePumpkin extends Behavior<Villager> {
             if (state.getMaterial().isReplaceable() && state.getFluidState().isEmpty()) {
 
                 BlockState below = serverLevel.getBlockState(pos.below());
-                if (below.is(Halloween.PUMPKIN_SUPPORT)) {
-                    return true;
-                }
+                return below.is(Halloween.PUMPKIN_SUPPORT);
             }
         }
-        ;
         return false;
     }
 }

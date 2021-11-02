@@ -3,7 +3,6 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
@@ -11,8 +10,9 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.entity.npc.Villager;
 
-public class GoToAttackTargetIfFurtherThan extends Behavior<Mob> {
+public class GoToAttackTargetIfFurtherThan extends Behavior<Villager> {
     private final float speedModifier;
     private final float range;
 
@@ -26,6 +26,16 @@ public class GoToAttackTargetIfFurtherThan extends Behavior<Mob> {
         this.range  =range;
     }
 
+    @Override
+    protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
+        LivingEntity livingentity = pOwner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).orElse(null);
+        if (livingentity == null || !livingentity.isAlive()) {
+            ThrowEggs.clearAnger(pOwner);
+            return false;
+        }
+        return true;
+    }
+
     /*
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Mob pOwner) {
@@ -33,7 +43,8 @@ public class GoToAttackTargetIfFurtherThan extends Behavior<Mob> {
         return isOutOfRange(pOwner, livingentity, range);
     }*/
 
-    protected void start(ServerLevel pLevel, Mob pEntity, long pGameTime) {
+    @Override
+    protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
         LivingEntity livingentity = pEntity.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
         if (BehaviorUtils.canSee(pEntity, livingentity) && !isOutOfRange(pEntity, livingentity, range -2)) {
             this.clearWalkTarget(pEntity);

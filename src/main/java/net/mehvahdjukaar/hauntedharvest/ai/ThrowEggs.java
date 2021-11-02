@@ -21,6 +21,7 @@ public class ThrowEggs extends Behavior<Villager> {
     private int cooldownBetweenAttacks;
     private int eggs;
     private final int maxRange;
+    private int duration = 20 * 20;
 
     public ThrowEggs(int range) {
         super(ImmutableMap.of(
@@ -33,7 +34,7 @@ public class ThrowEggs extends Behavior<Villager> {
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
         LivingEntity livingentity = this.getAttackTarget(pOwner);
         if (livingentity == null || !livingentity.isAlive()) {
-            this.clearAnger(pOwner);
+            clearAnger(pOwner);
             return false;
         }
         return BehaviorUtils.canSee(pOwner, livingentity) && livingentity.distanceToSqr(pOwner.getX(), pOwner.getY(), pOwner.getZ()) < maxRange * maxRange;
@@ -46,10 +47,12 @@ public class ThrowEggs extends Behavior<Villager> {
 
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
+
         LivingEntity livingentity = this.getAttackTarget(pEntity);
         BehaviorUtils.lookAtEntity(pEntity, livingentity);
         displayAsHeldItem(pEntity, new ItemStack(Items.EGG));
         if (eggs == 0) {
+            this.duration = 20 * 20;
             this.eggs = pLevel.random.nextInt(2) + 1;
             this.cooldownBetweenAttacks = 35 + pLevel.random.nextInt(30);
         }
@@ -67,22 +70,25 @@ public class ThrowEggs extends Behavior<Villager> {
             //this is always server side
             ThrownEgg egg = new ThrownEgg(pLevel, pOwner);
             if (egg instanceof IHarmlessProjectile e) e.setHarmless(true);
-            double d0 = target.getY()-0.5;
+            double d0 = target.getY() - 0.5;
             double d1 = target.getX() - pOwner.getX();
             double d2 = d0 - egg.getY();
             double d3 = target.getZ() - pOwner.getZ();
             double distFactor = Math.sqrt(d1 * d1 + d3 * d3) * (double) 0.2F;
-            egg.shoot(d1, (d2 + distFactor)* 0.5, d3, 1.1F, 8);
+            egg.shoot(d1, (d2 + distFactor) * 0.5, d3, 1.1F, 8);
             pLevel.playSound(null, pOwner.getX(), pOwner.getY(), pOwner.getZ(), SoundEvents.EGG_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (pLevel.getRandom().nextFloat() * 0.4F + 0.8F));
             pLevel.addFreshEntity(egg);
 
             if (this.eggs <= 0) {
-                this.clearAnger(pOwner);
+                clearAnger(pOwner);
             }
+        }
+        if(this.duration--<=0){
+            clearAnger(pOwner);
         }
     }
 
-    private void clearAnger(Villager pOwner) {
+    public static void clearAnger(Villager pOwner) {
         pOwner.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
         displayAsHeldItem(pOwner, ItemStack.EMPTY);
     }

@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "hauntedharvest.refmap.json"
 }
 
-version = '1.17-1.4.1'
+version = '1.17-1.5.1'
 group = 'net.mehvahdjukaar.hauntedharvest' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'hauntedharvest'
 

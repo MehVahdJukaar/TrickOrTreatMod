@@ -31,7 +31,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
         super(ImmutableMap.of(
                         MemoryModuleType.INTERACTION_TARGET, MemoryStatus.VALUE_ABSENT,
                         ModRegistry.PUMPKIN_POS.get(), MemoryStatus.VALUE_PRESENT),
-                200, 250);
+                250, 360);
         this.speedModifier = speed;
 
     }

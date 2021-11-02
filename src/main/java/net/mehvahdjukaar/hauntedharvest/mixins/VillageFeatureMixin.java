@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import com.mojang.serialization.Codec;
+import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -52,7 +53,8 @@ public abstract class VillageFeatureMixin extends JigsawFeature {
 
     @Override
     public List<MobSpawnSettings.SpawnerData> getDefaultSpawnList() {
-        return VILLAGE_ENEMIES.unwrap();
+        if(Halloween.IS_HALLOWEEN_TIME) return VILLAGE_ENEMIES.unwrap();
+        return super.getDefaultSpawnList();
     }
 
 }

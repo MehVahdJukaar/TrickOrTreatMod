@@ -23,7 +23,6 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,7 +56,8 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         Halloween.addSensorToVillagers(pVillagerBrain, ModRegistry.PUMPKIN_POI_SENSOR.get());
 
         if (this.isBaby()) {
-            pVillagerBrain.setSchedule(ModRegistry.HALLOWEEN_VILLAGER_BABY_SCHEDULE.get());
+
+            pVillagerBrain.setSchedule(AI.INITIALIZED_BABY_VILLAGER_SCHEDULE);
             //use addActivityWithCondition
             //pVillagerBrain.addActivity(ModRegistry.EAT_CANDY.get(), AI.getEatCandyPackage(0.5f));
             pVillagerBrain.addActivity(ModRegistry.TRICK_OR_TREAT.get(), AI.getTrickOrTreatPackage(0.5f));
@@ -138,7 +138,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         tag.putInt("ConversionTime", this.conversionTime);
 
         //can't get thingie brain memory saving to work
-
+        //TODO: figure out why it's not read after getting saved
         if(this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
             GlobalPos globalpos = this.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
             if(globalpos.dimension() == this.level.dimension()) {
@@ -171,6 +171,20 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         float yHeadRot = this.yHeadRot;
         float yBodyRotO = this.yBodyRotO;
         float yHeadRotO = this.yHeadRotO;
+
+        //remove all items
+        for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
+            ItemStack itemstack = this.getItemBySlot(equipmentslottype);
+            if (!itemstack.isEmpty()) {
+                double d0 = this.getEquipmentDropChance(equipmentslottype);
+                if (d0 > 1.0D) {
+                    this.spawnAtLocation(itemstack);
+                }
+            }
+            this.setItemSlot(equipmentslottype, ItemStack.EMPTY);
+        }
+        //rest of the inventory gets discarded
+
         Witch witch = this.convertTo(EntityType.WITCH, true);
         if (witch != null) {
 
@@ -182,19 +196,6 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             witch.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
 
 
-            for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
-                ItemStack itemstack = this.getItemBySlot(equipmentslottype);
-                if (!itemstack.isEmpty()) {
-                    if (EnchantmentHelper.hasBindingCurse(itemstack)) {
-                        witch.getSlot(equipmentslottype.getIndex() + 300).set(itemstack);
-                    } else {
-                        double d0 = this.getEquipmentDropChance(equipmentslottype);
-                        if (d0 > 1.0D) {
-                            this.spawnAtLocation(itemstack);
-                        }
-                    }
-                }
-            }
             net.minecraftforge.event.ForgeEventFactory.onLivingConvert(this, witch);
         }
 
