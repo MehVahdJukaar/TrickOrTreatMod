@@ -184,7 +184,7 @@ public class AI {
                 //consumes walk target and makes a path
                 Pair.of(1, new MoveToTargetSink(210, 320)),
                 //starts when close enough to interaction target
-                Pair.of(0, new AskCandy(3000, 4000)),
+                Pair.of(0, new AskCandy(2900, 3800)),
                 Pair.of(3, new GoToAttackTargetIfFurtherThan(speed * 1.25f, 10)),
                 Pair.of(2, new ThrowEggs(12)),
 
@@ -267,6 +267,7 @@ public class AI {
             builder.changeActivityAt(endTime, Activity.REST);
         }
         INITIALIZED_BABY_VILLAGER_SCHEDULE = builder.build();
+
     }
 
 

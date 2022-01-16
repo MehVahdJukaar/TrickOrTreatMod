@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.init;
 
+import net.mehvahdjukaar.hauntedharvest.Halloween;
+import net.mehvahdjukaar.hauntedharvest.compat.SereneSeasonsCompat;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class Configs {
@@ -12,9 +14,11 @@ public class Configs {
     public static ForgeConfigSpec.IntValue START_TIME;
     public static ForgeConfigSpec.IntValue END_TIME;
 
+    public static ForgeConfigSpec.BooleanValue SERENE_SEASONS;
+
     public static ForgeConfigSpec.BooleanValue SEASONAL;
 
-    public static ForgeConfigSpec buildConfig(){
+    public static ForgeConfigSpec buildConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         builder.push("pumpkin_placement_start");
         START_MONTH = builder.comment("Day from which villagers will start placing pumpkins")
@@ -38,6 +42,15 @@ public class Configs {
                 .defineInRange("start_time", 12000, 0, 24000);
         END_TIME = builder.comment("Time of day at which baby villagers will stop trick-or-treating. Note that this will only properly work if it's at night since baby villagers can only trick or treat during their sleep schedule which is from 12000 to 0")
                 .defineInRange("end_time", 0, 0, 24000);
+
+        builder.pop();
+
+        builder.push("serene_seasons_compat");
+
+        SERENE_SEASONS = builder.comment("Enables Serene Seasons compatibility. Only takes effect if the mod is installed. Will make trick or treating only active during certain seasons. Note that this will override previous time window settings")
+                .define("enabled", Halloween.SERENE_SEASONS);
+        if (Halloween.SERENE_SEASONS) SereneSeasonsCompat.addConfig(builder);
+        builder.pop();
 
         return builder.build();
     }

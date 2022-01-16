@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest;
 
+import net.mehvahdjukaar.hauntedharvest.compat.SereneSeasonsCompat;
 import net.mehvahdjukaar.hauntedharvest.init.ClientSetup;
 import net.mehvahdjukaar.hauntedharvest.init.Configs;
 import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
@@ -23,10 +24,10 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.LogManager;
@@ -55,9 +56,11 @@ public class Halloween {
     private static int TRICK_OR_TREAT_START;
     private static int TRICK_OR_TREAT_END;
 
+    public static boolean SERENE_SEASONS = ModList.get().isLoaded("sereneseasons");
+
     public Halloween() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(Halloween::init);
+        //bus.addListener(Halloween::init);
         ModRegistry.init(bus);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
@@ -66,7 +69,11 @@ public class Halloween {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configs.buildConfig());
     }
 
-    public static void init(final FMLCommonSetupEvent event) {
+    //needs to be fired after configs are loaded
+    public static void init() {
+        if (SERENE_SEASONS) {
+            SereneSeasonsCompat.init();
+        }
         try {
             int startM = Configs.START_MONTH.get() - 1;
             int startD = Configs.START_DAY.get();
@@ -87,13 +94,16 @@ public class Halloween {
             LOGGER.warn("Failed to set event date. Defaulting to always on: " + e);
             IS_PUMPKIN_PLACEMENT_TIME = true;
         }
+        //if seasonal use pumpkin placement time window
         IS_HALLOWEEN_TIME = !Configs.SEASONAL.get() || IS_PUMPKIN_PLACEMENT_TIME;
         TRICK_OR_TREAT_START = Configs.START_TIME.get();
         TRICK_OR_TREAT_END = Configs.END_TIME.get();
     }
 
     public static boolean isTrickOrTreatTime(Level level) {
-        return IS_HALLOWEEN_TIME && isBetween(TRICK_OR_TREAT_START,TRICK_OR_TREAT_END, level.getDayTime() % 24000);
+        if (SERENE_SEASONS) return SereneSeasonsCompat.isAutumn(level);
+
+        return IS_HALLOWEEN_TIME && isBetween(TRICK_OR_TREAT_START, TRICK_OR_TREAT_END, level.getDayTime() % 24000);
     }
 
     //TODO: maybe cache some of this
@@ -121,6 +131,9 @@ public class Halloween {
                 EATABLE.add(i);
             }
         }
+
+        //moved here so it's after configs
+        init();
     }
 
     private static Field SENSORS = null;
@@ -151,6 +164,5 @@ public class Halloween {
     }
 
     //TODO: give candy to players
-    //TODO: add milk bucket to clear baby villagers
     //TODO: fix when inventory is full
 }

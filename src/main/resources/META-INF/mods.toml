@@ -20,7 +20,7 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/haunted-harvest" #optio
 issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/haunted-harvest/issues" #optional
 itemIcon="hauntedharvest:grim_apple" #catalogue icon
 
-configuredBackground= "minecraft:textures/block/blackstone.png"
+configuredBackground= "minecraft:textures/block/jack_o_lantern.png"
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.hauntedharvest]] #optional

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,6 +15,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 
 public class AskCandy extends Behavior<Villager> {
 
@@ -31,17 +31,25 @@ public class AskCandy extends Behavior<Villager> {
 
     @Override
     public boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        Brain<?> brain = pOwner.getBrain();
+        LivingEntity target = isTargetValid(pLevel, pOwner);
+        return target != null && pOwner.distanceToSqr(target) <= 5 * 2.5f;
+    }
+
+    @Nullable
+    public LivingEntity isTargetValid(ServerLevel level, Villager owner) {
+        Brain<?> brain = owner.getBrain();
         LivingEntity livingentity = brain.getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
-        return livingentity != null && Halloween.isTrickOrTreatTime(pLevel) &&
+        if (livingentity != null &&
                 (livingentity.getType() == EntityType.VILLAGER || livingentity.getType() == EntityType.WITCH)
-                && pOwner.isAlive() && livingentity.isAlive() && pOwner.isBaby() && pOwner.distanceToSqr(livingentity) <= 5 * 3;
+                && livingentity.isAlive() && owner.isBaby()) return livingentity;
+        return null;
     }
 
     @Override
     public boolean canStillUse(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-
-        return !this.gotCandy && this.checkExtraStartConditions(pLevel, pEntity) && this.lookTime > 0 && pEntity.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).isPresent();
+        if (this.gotCandy || this.lookTime <= 0) return false;
+        LivingEntity target = isTargetValid(pLevel, pEntity);
+        return target != null && pEntity.distanceToSqr(target) <= 5 * 4f;
     }
 
     @Override
@@ -73,13 +81,14 @@ public class AskCandy extends Behavior<Villager> {
 
     private void keepVillageAwake(LivingEntity target) {
         //hacky
-        if (target instanceof Villager) {
-            target.getBrain().setMemory(MemoryModuleType.LAST_WOKEN, target.level.getGameTime()-1);
+        if (target instanceof Villager v) {
+            target.getBrain().setMemory(MemoryModuleType.LAST_WOKEN, target.level.getGameTime() - 1);
             if (target.isSleeping()) {
                 target.stopSleeping();
                 //frick your bed. for some reason all this isn't enough, and they keep going in and out constantly
                 target.getBrain().eraseMemory(MemoryModuleType.NEAREST_BED);
-                target.level.broadcastEntityEvent(target, (byte) 13);
+
+                target.level.broadcastEntityEvent(target, (byte) 26);
                 target.getBrain().setActiveActivityIfPossible(Activity.REST);
             }
         }
@@ -97,12 +106,15 @@ public class AskCandy extends Behavior<Villager> {
             //trick
             //only have a chance cause they like to spam eggs a bit too much. it skips witches
             if (currentVillager instanceof Villager && currentVillager.isAlive()
-                    && !currentVillager.isBaby() && pLevel.random.nextInt(10) < 7 ) {
-                //egg time
+                    && !currentVillager.isBaby()) {
+
                 pLevel.broadcastEntityEvent(pEntity, (byte) 13);
-                brain.setMemory(MemoryModuleType.ATTACK_TARGET, currentVillager);
-                if (pEntity instanceof IHalloweenVillager c) {
-                    c.setEntityOnCooldown(currentVillager);
+                //egg time
+                if(pLevel.random.nextInt(10) < 7) {
+                    brain.setMemory(MemoryModuleType.ATTACK_TARGET, currentVillager);
+                    if (pEntity instanceof IHalloweenVillager c) {
+                        c.setEntityOnCooldown(currentVillager);
+                    }
                 }
             }
         }

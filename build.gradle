@@ -5,7 +5,6 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url = 'https://repo.spongepowered.org/maven' }
         maven { url = 'https://maven.parchmentmc.org' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -133,6 +132,8 @@ dependencies {
 
     //implementation fg.deobf("curse.maven:jei-238222:3486421")
     //implementation fg.deobf("curse.maven:configured-457570:3434072")
+    //implementation fg.deobf("curse.maven:configured-457570:3537614")
+   // implementation fg.deobf("curse.maven:serene-seasons-291874:3438384")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

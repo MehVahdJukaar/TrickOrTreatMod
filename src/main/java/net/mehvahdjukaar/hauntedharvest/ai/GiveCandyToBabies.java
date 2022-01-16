@@ -126,8 +126,8 @@ public class GiveCandyToBabies extends Behavior<Villager> {
         double d0 = self.getEyeY() - (double) 0.3F;
         ItemEntity itementity = new ItemEntity(self.level, self.getX(), d0, self.getZ(), stack);
 
-        float pVelocity = 0.2F;
-        double pY = d1 + d3 * 0.8D;
+        double pVelocity = 0.179 + d3 * 0.022;
+        double pY = d1 + d3 * 0.7D;
 
         itementity.setDeltaMovement((new Vec3(pX, pY, pZ)).normalize().scale(pVelocity));
 

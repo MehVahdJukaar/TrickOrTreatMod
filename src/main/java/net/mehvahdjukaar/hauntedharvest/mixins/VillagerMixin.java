@@ -5,15 +5,18 @@ import net.mehvahdjukaar.hauntedharvest.ai.AI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -21,8 +24,10 @@ import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,6 +53,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = ("registerBrainGoals"), at = @At("RETURN"))
     protected void reg(Brain<Villager> pVillagerBrain, CallbackInfo ci) {
         //might cause issues
+        //TODO: fnish and figure out how to do it dynamically
         if(!Halloween.IS_HALLOWEEN_TIME) return;
         //not sure if it will work
         pVillagerBrain.getMemories().put(MemoryModuleType.ATTACK_TARGET, Optional.empty());
@@ -214,6 +220,12 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             }
             ci.cancel();
         }
+        //only get angry when going out of bed
+        else if(pId == 26){
+            if(this.getPose() == Pose.SLEEPING) {
+                this.addParticlesAroundSelf(ParticleTypes.ANGRY_VILLAGER);
+            }
+        }
     }
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
@@ -229,5 +241,17 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         }
     }
 
+    @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
+    public void interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        if(itemstack.is(Items.MILK_BUCKET) && this.isConverting()){
+            this.conversionTime = -1;
+            itemstack.finishUsingItem(this.level, this);
+            this.eat(this.level, itemstack);
+            pPlayer.setItemInHand(pHand, new ItemStack(Items.BUCKET));
+            cir.cancel();
+            cir.setReturnValue(InteractionResult.sidedSuccess(pPlayer.level.isClientSide));
+        }
+    }
 
 }

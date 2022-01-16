@@ -64,21 +64,21 @@ public class EatCandy extends Behavior<Villager> {
     @Override
     protected void tick(ServerLevel pLevel, Villager pOwner, long pGameTime) {
         if (this.eatingTime-- < 50) {
-            if (eatingTime % 5 == 0) {
-                ItemStack stack = pOwner.getMainHandItem();
+            ItemStack stack = pOwner.getMainHandItem();
 
-                if (stack.isEmpty()) return;
+            if (stack.isEmpty()) return;
 
+            if(eatingTime % 2 == 0) {
                 Vec3 pos = new Vec3(0, 0, 0.09D);
                 //pos = pos.xRot(pOwner.getXRot() * ((float) Math.PI / 180F));
                 pos = pos.yRot(-pOwner.getYRot() * ((float) Math.PI / 180F));
                 pos = pos.add(pOwner.getX(), pOwner.getEyeY(), pOwner.getZ());
 
                 pLevel.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack),
-                        pos.x, pos.y - 0.2, pos.z, 5,
+                        pos.x, pos.y - 0.2, pos.z, 2,
                         0.03, 0.05, 0.03, 0.0D);
-
-
+            }
+            if (eatingTime % 5 == 0) {
                 pOwner.playSound(pOwner.getEatingSound(stack), 0.3F + 0.4F * (float) pLevel.random.nextInt(2),
                         (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F + 1.3F);
             }

@@ -48,8 +48,9 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile implements 
     protected void onHit(HitResult pResult) {
         if(this.isHarmless()){
             if (pResult.getType() == HitResult.Type.BLOCK) {
-                this.onHitBlock((BlockHitResult)pResult);
                 this.spawnSplatteredEgg(pResult);
+                this.onHitBlock((BlockHitResult)pResult);
+                this.discard();
             }
             return;
         }
