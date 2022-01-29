@@ -1,4 +1,6 @@
 {
 	"item.hauntedharvest.grim_apple": "Mela malevola",
-    "item.hauntedharvest.rotten_apple": "Mela marcia"
+    "item.hauntedharvest.rotten_apple": "Mela marcia",
+	
+	"entity.hauntedharvest.splattered_egg": "Uovo schizzato"
 }
