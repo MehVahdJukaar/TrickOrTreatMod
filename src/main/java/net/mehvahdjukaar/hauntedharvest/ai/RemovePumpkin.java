@@ -38,7 +38,7 @@ public class RemovePumpkin extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (Halloween.IS_PUMPKIN_PLACEMENT_TIME) return false;
+        if (Halloween.isHalloweenSeason(pLevel)) return false;
         if (cooldown-- > 0) return false;
         if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
             cooldown = 20 * 60;
@@ -80,7 +80,7 @@ public class RemovePumpkin extends Behavior<Villager> {
         pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, this.speedModifier, 2));
 
         pOwner.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(pos));
-        if (pos.closerThan(pOwner.position(), 2.3)) {
+        if (pos.closerToCenterThan(pOwner.position(), 2.3)) {
             this.ticksSinceReached++;
 
             BlockState state = pLevel.getBlockState(pos);

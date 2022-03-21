@@ -5,12 +5,13 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import sereneseasons.api.season.Season;
 import sereneseasons.api.season.SeasonHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SereneSeasonsCompat {
 
     private static ForgeConfigSpec.ConfigValue<List<Season.SubSeason>> ALLOWED_SUB_SEASONS;
-    private static List<Season.SubSeason> CACHED_SEASONS;
+    private static List<Season.SubSeason> CACHED_SEASONS = new ArrayList<>();
 
 
     public static boolean isAutumn(Level level){
@@ -24,7 +25,7 @@ public class SereneSeasonsCompat {
                 List.of(Season.SubSeason.MID_AUTUMN, Season.SubSeason.LATE_AUTUMN));
     }
 
-    public static void init() {
+    public static void refresh() {
         CACHED_SEASONS = ALLOWED_SUB_SEASONS.get();
     }
 }

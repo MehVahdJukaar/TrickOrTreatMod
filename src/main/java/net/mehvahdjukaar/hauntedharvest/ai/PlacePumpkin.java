@@ -43,9 +43,14 @@ public class PlacePumpkin extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (!Halloween.IS_PUMPKIN_PLACEMENT_TIME) return false;
+        if (!Halloween.isHalloweenSeason(pLevel)) return false;
         if (cooldown-- > 0) return false;
         if (pOwner.isBaby()) return false;
+        //rarer
+        if (pLevel.random.nextInt(2) == 0) {
+            cooldown = 20 * 20;
+            return false;
+        }
         if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
             cooldown = 20 * 60;
             return false;
@@ -55,7 +60,7 @@ public class PlacePumpkin extends Behavior<Villager> {
 
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-        this.cooldown = 20 * (10 + pLevel.random.nextInt(10)) + pLevel.random.nextInt(20);
+        this.cooldown = 20 * (15 + pLevel.random.nextInt(10)) + pLevel.random.nextInt(20);
         this.ticksSinceReached = 0;
         targetPos = getValidPumpkinPos(pLevel, pEntity);
 
@@ -86,7 +91,7 @@ public class PlacePumpkin extends Behavior<Villager> {
             pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier, 2));
 
             pOwner.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(targetPos));
-            if (targetPos.closerThan(pOwner.position(), 2.3)) {
+            if (targetPos.closerToCenterThan(pOwner.position(), 2.3)) {
                 this.ticksSinceReached++;
                 if (ticksSinceReached > 20) {
                     BlockState state = Blocks.PUMPKIN.defaultBlockState();

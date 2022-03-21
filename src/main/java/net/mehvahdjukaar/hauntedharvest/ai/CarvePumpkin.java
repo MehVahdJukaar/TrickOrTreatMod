@@ -37,7 +37,7 @@ public class CarvePumpkin extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (!Halloween.IS_PUMPKIN_PLACEMENT_TIME) return false;
+        if (!Halloween.isHalloweenSeason(pLevel)) return false;
         if (cooldown-- > 0) return false;
         if (!pOwner.isBaby()) return false;
         if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
@@ -79,7 +79,7 @@ public class CarvePumpkin extends Behavior<Villager> {
         pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(targetPos, this.speedModifier, 1));
 
         pOwner.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(targetPos));
-        if (targetPos.closerThan(pOwner.position(), 2.3)) {
+        if (targetPos.closerToCenterThan(pOwner.position(), 2.3)) {
             this.ticksSinceReached++;
             if (ticksSinceReached > 40) {
                 Direction dir = pOwner.getDirection().getOpposite();

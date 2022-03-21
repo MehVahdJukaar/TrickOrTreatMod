@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import net.mehvahdjukaar.hauntedharvest.Halloween;
-import net.mehvahdjukaar.hauntedharvest.ai.AI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
 import net.minecraft.core.GlobalPos;
@@ -13,19 +12,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -37,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,36 +42,9 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         super(p_35267_, p_35268_);
     }
 
-    @Inject(method = ("registerBrainGoals"), at = @At("RETURN"))
-    protected void reg(Brain<Villager> pVillagerBrain, CallbackInfo ci) {
-        //might cause issues
-        //TODO: fnish and figure out how to do it dynamically
-        if(!Halloween.IS_HALLOWEEN_TIME) return;
-        //not sure if it will work
-        pVillagerBrain.getMemories().put(MemoryModuleType.ATTACK_TARGET, Optional.empty());
-        pVillagerBrain.getMemories().put(ModRegistry.PUMPKIN_POS.get(), Optional.empty());
-        pVillagerBrain.getMemories().put(ModRegistry.NEAREST_PUMPKIN.get(), Optional.empty());
-        Halloween.addSensorToVillagers(pVillagerBrain, ModRegistry.PUMPKIN_POI_SENSOR.get());
-
-        if (this.isBaby()) {
-
-            pVillagerBrain.setSchedule(AI.INITIALIZED_BABY_VILLAGER_SCHEDULE);
-            //use addActivityWithCondition
-            //pVillagerBrain.addActivity(ModRegistry.EAT_CANDY.get(), AI.getEatCandyPackage(0.5f));
-            pVillagerBrain.addActivity(ModRegistry.TRICK_OR_TREAT.get(), AI.getTrickOrTreatPackage(0.5f));
-            //replaces play package
-            pVillagerBrain.addActivity(Activity.PLAY, AI.getHalloweenPlayPackage(0.5F));
-            pVillagerBrain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
-        } else {
-            pVillagerBrain.addActivity(Activity.REST, AI.getHalloweenRestPackage(this.getVillagerData().getProfession(), 0.5F));
-            pVillagerBrain.addActivity(Activity.IDLE, AI.getHalloweenIdlePackage(this.getVillagerData().getProfession(), 0.5F));
-        }
-    }
 
     @Shadow
-    public abstract VillagerData getVillagerData();
-
-    @Shadow public abstract Brain<Villager> getBrain();
+    public abstract Brain<Villager> getBrain();
 
     @Inject(method = ("customServerAiStep"), at = @At("RETURN"))
     protected void customServerAiStep(CallbackInfo ci) {
@@ -132,7 +97,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     public void startConverting() {
         if (!this.isConverting()) {
             this.conversionTime = 60 * 20;
-            this.level.broadcastEntityEvent(this, (byte) 16);
+            this.level.broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 2));
         }
     }
@@ -145,9 +110,9 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
         //can't get thingie brain memory saving to work
         //TODO: figure out why it's not read after getting saved
-        if(this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
+        if (this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
             GlobalPos globalpos = this.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
-            if(globalpos.dimension() == this.level.dimension()) {
+            if (globalpos.dimension() == this.level.dimension()) {
                 tag.put("Pumpkin", NbtUtils.writeBlockPos(globalpos.pos()));
             }
         }
@@ -157,11 +122,13 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
         this.conversionTime = compoundNBT.getInt("ConversionTime");
 
-        if(compoundNBT.contains("Pumpkin")){
-            try{
+        if (compoundNBT.contains("Pumpkin")) {
+            try {
                 this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level.dimension(),
                         NbtUtils.readBlockPos(compoundNBT.getCompound("Pumpkin"))));
-            }catch (Exception ignored){};
+            } catch (Exception ignored) {
+            }
+            ;
         }
 
     }
@@ -179,15 +146,15 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         float yHeadRotO = this.yHeadRotO;
 
         //remove all items
-        for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
-            ItemStack itemstack = this.getItemBySlot(equipmentslottype);
+        for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+            ItemStack itemstack = this.getItemBySlot(equipmentSlot);
             if (!itemstack.isEmpty()) {
-                double d0 = this.getEquipmentDropChance(equipmentslottype);
+                double d0 = this.getEquipmentDropChance(equipmentSlot);
                 if (d0 > 1.0D) {
                     this.spawnAtLocation(itemstack);
                 }
             }
-            this.setItemSlot(equipmentslottype, ItemStack.EMPTY);
+            this.setItemSlot(equipmentSlot, ItemStack.EMPTY);
         }
         //rest of the inventory gets discarded
 
@@ -213,7 +180,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"), cancellable = true)
     public void handleEntityEvent(byte pId, CallbackInfo ci) {
-        if (pId == 16) {
+        if (pId == EntityEvent.ZOMBIE_CONVERTING) {
             this.conversionTime = 60 * 20;
             if (!this.isSilent()) {
                 this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
@@ -221,10 +188,11 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             ci.cancel();
         }
         //only get angry when going out of bed
-        else if(pId == 26){
-            if(this.getPose() == Pose.SLEEPING) {
+        else if (pId == 26) {
+            if (this.getPose() == Pose.SLEEPING) {
                 this.addParticlesAroundSelf(ParticleTypes.ANGRY_VILLAGER);
             }
+            ci.cancel();
         }
     }
 
@@ -244,7 +212,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if(itemstack.is(Items.MILK_BUCKET) && this.isConverting()){
+        if (itemstack.is(Items.MILK_BUCKET) && this.isConverting()) {
             this.conversionTime = -1;
             itemstack.finishUsingItem(this.level, this);
             this.eat(this.level, itemstack);

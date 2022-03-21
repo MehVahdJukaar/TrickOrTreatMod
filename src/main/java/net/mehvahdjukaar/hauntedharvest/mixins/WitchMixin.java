@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
+import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.mehvahdjukaar.hauntedharvest.ai.GiveCandyWitchGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Witch;
@@ -20,6 +21,7 @@ public abstract class WitchMixin extends Raider {
 
     @Inject(method = "registerGoals", at = @At("RETURN"))
     public void findTarget(CallbackInfo ci){
+        if(Halloween.isHalloweenSeason(this.level))
         this.goalSelector.addGoal(2, new GiveCandyWitchGoal(this));
     }
 

@@ -132,6 +132,10 @@
     {
       "id": "trickxortreat:sugarbone",
       "required": false
+    },
+    {
+      "id": "snowyspirit:candy_cane",
+      "required": false
     }
   ]
 }

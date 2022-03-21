@@ -1,23 +1,19 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import com.mojang.serialization.Codec;
-import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.feature.JigsawFeature;
-import net.minecraft.world.level.levelgen.feature.VillageFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import org.spongepowered.asm.mixin.Mixin;
+import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 
-import java.util.List;
+import java.util.function.Predicate;
 
-@Mixin(VillageFeature.class)
+//Disabled cause it causes problems
+//@Mixin(VillageFeature.class)
 public abstract class VillageFeatureMixin extends JigsawFeature {
 
-    public VillageFeatureMixin(Codec<JigsawConfiguration> pCodec, int pStartY, boolean pDoExpansionHack, boolean pProjectStartToHeightmap) {
-        super(pCodec, pStartY, pDoExpansionHack, pProjectStartToHeightmap);
-    }
 
 
     /**
@@ -44,17 +40,15 @@ public abstract class VillageFeatureMixin extends JigsawFeature {
 
     private static final WeightedRandomList<MobSpawnSettings.SpawnerData> VILLAGE_ENEMIES =
             WeightedRandomList.create(
-                    new MobSpawnSettings.SpawnerData(EntityType.WITCH, 18, 1, 1),
-                    new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 4, 1, 5),
-                    new MobSpawnSettings.SpawnerData(EntityType.CREEPER, 8, 2, 5),
-                    new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 8, 2, 5),
-                    new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 8, 2, 5),
-                    new MobSpawnSettings.SpawnerData(EntityType.SPIDER, 8, 2, 5));
+                    new MobSpawnSettings.SpawnerData(EntityType.WITCH, 18, 1, 2),
+                    new MobSpawnSettings.SpawnerData(EntityType.ZOMBIE, 4, 0, 2),
+                    new MobSpawnSettings.SpawnerData(EntityType.CREEPER, 8, 0, 2),
+                    new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 8, 0, 2),
+                    new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 8, 0, 2),
+                    new MobSpawnSettings.SpawnerData(EntityType.SPIDER, 8, 0, 2));
 
-    @Override
-    public List<MobSpawnSettings.SpawnerData> getDefaultSpawnList() {
-        if(Halloween.IS_HALLOWEEN_TIME) return VILLAGE_ENEMIES.unwrap();
-        return super.getDefaultSpawnList();
+    public VillageFeatureMixin(Codec<JigsawConfiguration> p_197092_, int p_197093_, boolean p_197094_, boolean p_197095_, Predicate<PieceGeneratorSupplier.Context<JigsawConfiguration>> p_197096_) {
+        super(p_197092_, p_197093_, p_197094_, p_197095_, p_197096_);
     }
 
 }

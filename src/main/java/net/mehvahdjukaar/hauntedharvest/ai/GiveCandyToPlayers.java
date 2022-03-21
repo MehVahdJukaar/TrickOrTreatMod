@@ -38,7 +38,7 @@ public class GiveCandyToPlayers extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (!Halloween.isTrickOrTreatTime(pLevel)) return false;
+        if (!Halloween.isHalloweenSeason(pLevel)) return false;
         return getValidTarget(pOwner) != null;
     }
 
@@ -83,8 +83,9 @@ public class GiveCandyToPlayers extends Behavior<Villager> {
             else if (r < 3) {
                 spookVillager(pOwner, target);
             } else {
-                ItemStack stack = Halloween.SWEETS.getRandomElement(pLevel.random).getDefaultInstance();
-                throwCandy(pOwner, target, stack);
+                //TODO: finish
+                //ItemStack stack = Halloween.SWEETS.getRandomElement(pLevel.random).getDefaultInstance();
+               // throwCandy(pOwner, target, stack);
 
                 pLevel.broadcastEntityEvent(pOwner, (byte) 14);
             }

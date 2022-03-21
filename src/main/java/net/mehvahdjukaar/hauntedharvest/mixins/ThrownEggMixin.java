@@ -25,8 +25,8 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile implements 
         super(p_37442_, p_37443_);
     }
 
-    //@Inject(method = "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V", at = @At("RETURN"))
-    //public void init(CallbackInfo ci){
+    //@Inject(method = "<refresh>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V", at = @At("RETURN"))
+    //public void refresh(CallbackInfo ci){
     //    if(this.getOwner() instanceof Villager villager && villager.isBaby()) this.shotFromVillager = true;
    // }
 

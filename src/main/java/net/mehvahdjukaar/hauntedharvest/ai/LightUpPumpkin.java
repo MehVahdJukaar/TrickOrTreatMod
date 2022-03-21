@@ -36,9 +36,10 @@ public class LightUpPumpkin extends Behavior<Villager> {
 
     }
 
+    //checking time again cause villager might spawn at the end of the season
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if (!Halloween.IS_PUMPKIN_PLACEMENT_TIME) return false;
+        if (!Halloween.isTrickOrTreatTime(pLevel)) return false;
         if (cooldown-- > 0) return false;
         if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
             cooldown = 20 * 60;
@@ -46,7 +47,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
         }
         GlobalPos globalpos = pOwner.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
         return globalpos.dimension() == pLevel.dimension() && pOwner.isBaby() &&
-                globalpos.pos().closerThan(pOwner.position(), 28);
+                globalpos.pos().closerToCenterThan(pOwner.position(), 28);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
         pOwner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, this.speedModifier, 2));
 
         pOwner.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(pos));
-        if (pos.closerThan(pOwner.position(), 2.3)) {
+        if (pos.closerToCenterThan(pOwner.position(), 2.3)) {
             this.ticksSinceReached++;
 
             BlockState state = pLevel.getBlockState(pos);

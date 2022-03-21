@@ -8,7 +8,6 @@
   "mixins": [
     "NearestAttackableTargetGoalMixin",
     "ThrownEggMixin",
-    "VillageFeatureMixin",
     "VillagerMixin",
     "WitchMixin"
   ],

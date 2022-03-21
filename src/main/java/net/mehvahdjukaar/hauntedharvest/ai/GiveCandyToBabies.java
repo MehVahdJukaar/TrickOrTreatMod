@@ -3,6 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.Halloween;
 import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -86,7 +87,8 @@ public class GiveCandyToBabies extends Behavior<Villager> {
             else if (r < 3) {
                 spookVillager(pOwner, target);
             } else {
-                ItemStack stack = Halloween.SWEETS.getRandomElement(pLevel.random).getDefaultInstance();
+                ItemStack stack = Registry.ITEM.getTag(Halloween.SWEETS)
+                        .get().getRandomElement(pLevel.random).get().value().getDefaultInstance();
                 throwCandy(pOwner, target, stack);
 
                 pLevel.broadcastEntityEvent(pOwner, (byte) 14);

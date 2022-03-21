@@ -25,7 +25,7 @@ public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
                 MemoryModuleType.WALK_TARGET, MemoryStatus.REGISTERED,
                 MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_ABSENT,
                 MemoryModuleType.LOOK_TARGET, MemoryStatus.VALUE_ABSENT,
-                MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, MemoryStatus.VALUE_PRESENT));
+                MemoryModuleType.NEAREST_LIVING_ENTITIES, MemoryStatus.VALUE_PRESENT));
         this.speedModifier = speed;
         this.interactionRangeSqr = range * range;
     }
@@ -34,7 +34,7 @@ public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
     protected boolean checkExtraStartConditions(ServerLevel pLevel, LivingEntity pOwner) {
         //do not search while trick or treating
         if(Halloween.IS_TRICK_OR_TREATING.test(pOwner))return false;
-        List<LivingEntity> list = pOwner.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).get();
+        List<LivingEntity> list = pOwner.getBrain().getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES).get();
         return list.stream().anyMatch(t -> this.isTargetValid(pOwner, t));
     }
 
@@ -48,7 +48,7 @@ public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
     @Override
     protected void start(ServerLevel pLevel, LivingEntity pEntity, long pGameTime) {
         Brain<?> brain = pEntity.getBrain();
-        brain.getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
+        brain.getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES)
                 .flatMap(t -> t.stream()
                 .filter((villager) -> villager.distanceToSqr(pEntity) <= (double) this.interactionRangeSqr)
                 .filter(v -> this.isTargetValid(pEntity, v))
