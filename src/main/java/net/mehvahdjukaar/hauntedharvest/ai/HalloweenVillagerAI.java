@@ -13,13 +13,14 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraftforge.common.MinecraftForge;
 
 public class HalloweenVillagerAI {
 
 
     public static void init() {
 
-        VillagerAIManager.addVillagerAiEventListener(HalloweenVillagerAI::onVillagerBrainInitialize);
+        MinecraftForge.EVENT_BUS.addListener(HalloweenVillagerAI::onVillagerBrainInitialize);
 
         //memories
         VillagerAIManager.registerMemory(MemoryModuleType.ATTACK_TARGET);
