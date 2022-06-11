@@ -31,7 +31,10 @@ public class EatCandy extends Behavior<Villager> {
         if (pOwner.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
             pOwner.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
         }
-        if (cooldown-- > 0) return false;
+        if (cooldown > 0){
+            cooldown--;
+            return false;
+        }
         return pOwner.getInventory().hasAnyOf(Halloween.EATABLE);
     }
 
@@ -89,7 +92,7 @@ public class EatCandy extends Behavior<Villager> {
     protected void stop(ServerLevel pLevel, Villager pEntity, long pGameTime) {
         super.stop(pLevel, pEntity, pGameTime);
 
-        if (pEntity.isBaby()) {
+        if (pEntity.isBaby() && eatingTime <= 0) {
             ItemStack stack = pEntity.getMainHandItem();
             Item item = stack.getItem();
             if (item != Items.AIR) {

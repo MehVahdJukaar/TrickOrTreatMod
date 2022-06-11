@@ -5,7 +5,6 @@ import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownEgg;
@@ -14,21 +13,19 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ThrownEgg.class)
-public abstract class ThrownEggMixin extends ThrowableItemProjectile implements IHarmlessProjectile {
+public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile implements IHarmlessProjectile {
 
+    private boolean hasSpawnedChicken = false;
     private boolean shotFromVillager = false;
 
-    public ThrownEggMixin(EntityType<? extends ThrowableItemProjectile> p_37442_, Level p_37443_) {
-        super(p_37442_, p_37443_);
+    public ThrownEggEntityMixin(EntityType<? extends ThrowableItemProjectile> aSuper, Level level) {
+        super(aSuper, level);
     }
-
-    //@Inject(method = "<refresh>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V", at = @At("RETURN"))
-    //public void refresh(CallbackInfo ci){
-    //    if(this.getOwner() instanceof Villager villager && villager.isBaby()) this.shotFromVillager = true;
-   // }
 
     @Override
     public boolean isHarmless() {
@@ -40,48 +37,37 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile implements 
         this.shotFromVillager = harmless;
     }
 
-    /**
-     * @author MehVahdJukaar
-     * adding new splattered egg behavior. Don't have time to figure out the non overwriting way
-     */
-    @Overwrite()
-    protected void onHit(HitResult pResult) {
-        if(this.isHarmless()){
+    //for villagers
+    @Inject(method = "onHit", at = @At("HEAD"), cancellable = true)
+    protected void onHit(HitResult pResult, CallbackInfo ci) {
+        this.hasSpawnedChicken = false;
+        if (this.isHarmless()) {
             if (pResult.getType() == HitResult.Type.BLOCK) {
                 this.spawnSplatteredEgg(pResult);
-                this.onHitBlock((BlockHitResult)pResult);
+                this.onHitBlock((BlockHitResult) pResult);
                 this.discard();
             }
-            return;
-        }
-        super.onHit(pResult);
-        if (!this.level.isClientSide) {
-            if (this.random.nextInt(8) == 0) {
-                int i = 1;
-                //bruh why
-                if (this.random.nextInt(32) == 0) {
-                    i = 4;
-                }
-
-                for(int j = 0; j < i; ++j) {
-                    Chicken chicken = EntityType.CHICKEN.create(this.level);
-                    chicken.setAge(-24000);
-                    chicken.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
-                    this.level.addFreshEntity(chicken);
-                }
-            }
-            else{
-                this.spawnSplatteredEgg(pResult);
-            }
-
-            this.level.broadcastEntityEvent(this, (byte)3);
-            this.discard();
+            ci.cancel();
         }
     }
 
-    protected void spawnSplatteredEgg(HitResult pResult){
+    //from player
+    @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/world/level/Level;)Lnet/minecraft/world/entity/Entity;"))
+    protected void onSpawnChicken(HitResult pResult, CallbackInfo ci) {
+        this.hasSpawnedChicken = true;
+    }
+
+    //from player2
+    @Inject(method = "onHit", at = @At(value = "INVOKE", shift = At.Shift.BEFORE,
+            target = "Lnet/minecraft/world/entity/projectile/ThrownEgg;discard()V"))
+    protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci) {
+        if (!this.hasSpawnedChicken) this.spawnSplatteredEgg(pResult);
+    }
+
+
+    protected void spawnSplatteredEgg(HitResult pResult) {
         var type = pResult.getType();
-        if(type == HitResult.Type.BLOCK){
+        if (type == HitResult.Type.BLOCK) {
             BlockHitResult hit = (BlockHitResult) pResult;
 
             BlockPos blockpos = hit.getBlockPos();

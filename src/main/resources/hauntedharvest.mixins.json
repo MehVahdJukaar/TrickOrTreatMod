@@ -7,7 +7,7 @@
   "package": "net.mehvahdjukaar.hauntedharvest.mixins",
   "mixins": [
     "NearestAttackableTargetGoalMixin",
-    "ThrownEggMixin",
+    "ThrownEggEntityMixin",
     "VillagerMixin",
     "WitchMixin"
   ],
