@@ -2,7 +2,8 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.ForgeEventFactory;
 
 public class RemovePumpkin extends Behavior<Villager> {
     private final float speedModifier;
@@ -40,7 +40,7 @@ public class RemovePumpkin extends Behavior<Villager> {
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
         if (HauntedHarvest.isHalloweenSeason(pLevel)) return false;
         if (cooldown-- > 0) return false;
-        if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
+        if (!PlatformHelper.isMobGriefingOn(pLevel, pOwner)) {
             cooldown = 20 * 60;
             return false;
         }
@@ -84,7 +84,7 @@ public class RemovePumpkin extends Behavior<Villager> {
             this.ticksSinceReached++;
 
             BlockState state = pLevel.getBlockState(pos);
-            if (!state.is(Blocks.PUMPKIN) &&  !state.is(Blocks.CARVED_PUMPKIN) && !state.is(Blocks.JACK_O_LANTERN)) {
+            if (!state.is(Blocks.PUMPKIN) && !state.is(Blocks.CARVED_PUMPKIN) && !state.is(Blocks.JACK_O_LANTERN)) {
                 pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
             } else {
                 //breaking animation. same as fodder lol. might have the same issues
@@ -96,7 +96,7 @@ public class RemovePumpkin extends Behavior<Villager> {
 
                 if (ticksSinceReached > 20) {
 
-                    SoundType soundtype = state.getSoundType(pLevel, pos, null);
+                    SoundType soundtype = state.getSoundType();
                     pLevel.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
                     pLevel.destroyBlock(pos, true);

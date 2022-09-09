@@ -21,8 +21,9 @@ public abstract class WitchMixin extends Raider {
 
     @Inject(method = "registerGoals", at = @At("RETURN"))
     public void findTarget(CallbackInfo ci){
-        if(HauntedHarvest.isHalloweenSeason(this.level))
-        this.goalSelector.addGoal(2, new GiveCandyWitchGoal(this));
+        if(HauntedHarvest.isHalloweenSeason(this.level)) {
+            this.goalSelector.addGoal(2, new GiveCandyWitchGoal(this));
+        }
     }
 
 }

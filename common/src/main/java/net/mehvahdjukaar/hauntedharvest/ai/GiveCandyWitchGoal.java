@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.npc.Villager;

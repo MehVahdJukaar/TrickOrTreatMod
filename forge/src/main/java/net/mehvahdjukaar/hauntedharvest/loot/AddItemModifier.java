@@ -1,48 +1,61 @@
 package net.mehvahdjukaar.hauntedharvest.loot;
 
-import com.google.gson.JsonObject;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.function.Supplier;
 
 public class AddItemModifier extends LootModifier {
-    private final Item addedItem;
 
-    protected AddItemModifier(LootItemCondition[] conditionsIn, Item addedItemIn) {
+    public static final Supplier<Codec<AddItemModifier>> CODEC = Suppliers.memoize(() ->
+            RecordCodecBuilder.create(inst -> codecStart(inst).and(
+                            ItemStack.CODEC.fieldOf("items").forGetter(AddItemModifier::getAddedItemStack)
+                    )
+                    .apply(inst, AddItemModifier::new)));
+
+    private final ItemStack addedItemStack;
+
+
+    protected AddItemModifier(LootItemCondition[] conditionsIn, ItemStack addedItemStack) {
         super(conditionsIn);
-        this.addedItem = addedItemIn;
+        this.addedItemStack = addedItemStack;
     }
 
+    public ItemStack getAddedItemStack() {
+        return addedItemStack;
+    }
+
+    @Nonnull
     @Override
-    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        generatedLoot.add(new ItemStack(this.addedItem));
+    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        ItemStack addedStack = addedItemStack.copy();
+
+        if (addedStack.getCount() < addedStack.getMaxStackSize()) {
+            generatedLoot.add(addedStack);
+        } else {
+            int i = addedStack.getCount();
+
+            while (i > 0) {
+                ItemStack subStack = addedStack.copy();
+                subStack.setCount(Math.min(addedStack.getMaxStackSize(), i));
+                i -= subStack.getCount();
+                generatedLoot.add(subStack);
+            }
+        }
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<AddItemModifier> {
-        public Serializer() {
-        }
 
-        public AddItemModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
-            Item addedItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(GsonHelper.getAsString(object, "item")));
-            return new AddItemModifier(ailootcondition, addedItem);
-        }
-
-        public JsonObject write(AddItemModifier instance) {
-            JsonObject json = makeConditions(instance.conditions);
-            json.addProperty("item", ForgeRegistries.ITEMS.getKey(instance.addedItem).toString());
-            return json;
-        }
+    @Override
+    public Codec<? extends IGlobalLootModifier> codec() {
+        return CODEC.get();
     }
 }

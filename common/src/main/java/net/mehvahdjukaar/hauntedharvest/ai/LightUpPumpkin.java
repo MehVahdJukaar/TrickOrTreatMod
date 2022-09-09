@@ -2,7 +2,8 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.ForgeEventFactory;
 
 public class LightUpPumpkin extends Behavior<Villager> {
     private final float speedModifier;
@@ -41,7 +41,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
         if (!HauntedHarvest.isTrickOrTreatTime(pLevel)) return false;
         if (cooldown-- > 0) return false;
-        if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
+        if (!PlatformHelper.isMobGriefingOn(pLevel, pOwner)) {
             cooldown = 20 * 60;
             return false;
         }
@@ -92,7 +92,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
 
                 if (ticksSinceReached > 40) {
 
-                    SoundType soundtype = Blocks.TORCH.defaultBlockState().getSoundType(pLevel, pos, null);
+                    SoundType soundtype = Blocks.TORCH.defaultBlockState().getSoundType();
                     pLevel.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
                     pLevel.setBlockAndUpdate(pos, Blocks.JACK_O_LANTERN.defaultBlockState()

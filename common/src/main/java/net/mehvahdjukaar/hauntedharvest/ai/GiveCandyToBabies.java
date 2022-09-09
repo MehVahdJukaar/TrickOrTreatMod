@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
+import net.mehvahdjukaar.hauntedharvest.HHPlatform;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -79,7 +80,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
                 ItemStack stack = new ItemStack(Items.CHARCOAL);
                 ItemEntity entity = throwCandy(pOwner, target, stack);
                 //low lifespan for coal so they dont clutter since they cah't pick it up
-                entity.lifespan = 60*20;
+                HHPlatform.setItemLifespan(entity, 60 * 20);
 
                 pLevel.broadcastEntityEvent(pOwner, (byte) 13);
             }

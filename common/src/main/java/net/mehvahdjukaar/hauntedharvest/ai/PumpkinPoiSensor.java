@@ -2,7 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.resources.ResourceKey;

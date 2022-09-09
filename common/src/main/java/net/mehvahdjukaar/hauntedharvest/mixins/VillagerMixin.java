@@ -2,7 +2,8 @@ package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -169,7 +170,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             witch.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
 
 
-            net.minecraftforge.event.ForgeEventFactory.onLivingConvert(this, witch);
+            ForgeHelper.onLivingConvert(this, witch);
         }
 
         if (!this.isSilent()) {

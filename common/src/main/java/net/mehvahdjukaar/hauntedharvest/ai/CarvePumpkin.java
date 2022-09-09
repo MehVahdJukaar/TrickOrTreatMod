@@ -2,7 +2,8 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.init.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -19,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
-import net.minecraftforge.event.ForgeEventFactory;
 
 public class CarvePumpkin extends Behavior<Villager> {
     private final float speedModifier;
@@ -28,8 +28,7 @@ public class CarvePumpkin extends Behavior<Villager> {
 
     public CarvePumpkin(float speed) {
 
-        super(ImmutableMap.of(
-                        ModRegistry.NEAREST_PUMPKIN.get(), MemoryStatus.VALUE_PRESENT),
+        super(ImmutableMap.of(ModRegistry.NEAREST_PUMPKIN.get(), MemoryStatus.VALUE_PRESENT),
                 150, 250);
         this.speedModifier = speed;
 
@@ -40,7 +39,7 @@ public class CarvePumpkin extends Behavior<Villager> {
         if (!HauntedHarvest.isHalloweenSeason(pLevel)) return false;
         if (cooldown-- > 0) return false;
         if (!pOwner.isBaby()) return false;
-        if (!ForgeEventFactory.getMobGriefingEvent(pLevel, pOwner)) {
+        if (!PlatformHelper.isMobGriefingOn(pLevel, pOwner)) {
             cooldown = 20 * 60;
             return false;
         }

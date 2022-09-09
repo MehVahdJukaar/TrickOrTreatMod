@@ -4,7 +4,6 @@ import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
-import net.mehvahdjukaar.hauntedharvest.loot.AddItemModifier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -27,12 +26,8 @@ import java.util.function.Supplier;
 @SuppressWarnings({"unused"})
 public class ModRegistry {
 
-    public static void init(){}
-
-    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, HauntedHarvest.MOD_ID);
-
-    public static final RegistryObject<GlobalLootModifierSerializer<?>> ROTTEN_APPLE_GLM =
-            GLM.register("add_item", AddItemModifier.Serializer::new);
+    public static void init() {
+    }
 
     public static final Supplier<Activity> EAT_CANDY = regActivity("eat_candy");
     public static final Supplier<Activity> TRICK_OR_TREAT = regActivity("trick_or_treat");

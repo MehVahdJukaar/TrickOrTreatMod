@@ -10,5 +10,8 @@
       "block": "minecraft:oak_leaves"
     }
   ],
-  "item": "hauntedharvest:rotten_apple"
+  "item": {
+    "id": "hauntedharvest:rotten_apple",
+    "Count": 1
+  }
 }
