@@ -7,7 +7,7 @@ license="All rights reserved"
 [[mods]] #mandatory
 # The modid of the mod
 modId="hauntedharvest" #mandatory
-version="${file.jarVersion}" #mandatory
+version = "${version}"
 displayName="Haunted Harvest" #mandatory
 logoFile="icon.png" #optional
 credits="MehVahdJukaar, Plantkillable" #optional

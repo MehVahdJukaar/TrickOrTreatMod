@@ -1,24 +1,27 @@
 package net.mehvahdjukaar.hauntedharvest.integration.fabric.modMenu;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.reg.ModConfigs;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.cloth_config.ClothConfigListScreen;
-import net.mehvahdjukaar.hauntedharvest.SnowySpirit;
-import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 
 public class ModConfigScreen extends ClothConfigListScreen {
 
     public ModConfigScreen(Screen parent) {
-        super(SnowySpirit.MOD_ID, ModRegistry.WREATH.get().asItem().getDefaultInstance(),
-                Component.literal(ChatFormatting.AQUA + "Snowy Spirit Configs"),
-                SnowySpirit.res("textures/blocks/gingerbread_frosted_block.png"),
-                parent, RegistryConfigs.SPEC);
+        super(HauntedHarvest.MOD_ID, ModRegistry.DEATH_APPLE.get().asItem().getDefaultInstance(),
+                Component.literal(ChatFormatting.GOLD + "Haunted Harvest Configs"),
+                new ResourceLocation("textures/block/cracked_stone_bricks.png"),
+                parent, ModConfigs.SPEC);
     }
 
     @Override
@@ -38,10 +41,10 @@ public class ModConfigScreen extends ClothConfigListScreen {
                 "https://ko-fi.com/mehvahdjukaar", "Donate a Coffe");
 
         LinkButton curseforge = LinkButton.create(icons, this, centerX - 45 - 22 * 3, y, 1, 2,
-                "https://www.curseforge.com/minecraft/mc-mods/snowy-spirit", "CurseForge Page");
+                "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest", "CurseForge Page");
 
         LinkButton github = LinkButton.create(icons, this, centerX - 45 - 22 * 4, y, 0, 2,
-                "https://github.com/MehVahdJukaar/SnowySpirit", "Github");
+                "https://github.com/MehVahdJukaar/TrickOrTreatMod", "Github");
 
 
         LinkButton discord = LinkButton.create(icons, this, centerX + 45 + 2, y, 1, 1,
@@ -67,5 +70,15 @@ public class ModConfigScreen extends ClothConfigListScreen {
         this.addRenderableWidget(twitter);
     }
 
+    @Override
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
+        var level = Minecraft.getInstance().level;
+        if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
+            int x = (int) (this.width * 0.93f);
+            this.itemRenderer.renderAndDecorateFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
+        }
+    }
 }
 

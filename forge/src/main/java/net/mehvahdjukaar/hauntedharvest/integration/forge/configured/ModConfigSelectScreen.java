@@ -23,7 +23,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
     public ModConfigSelectScreen(Screen parent) {
         super(HauntedHarvest.MOD_ID, ModRegistry.DEATH_APPLE.get().asItem().getDefaultInstance(),
                 ChatFormatting.GOLD + "Haunted Harvest Configured",
-                new ResourceLocation("textures/blocks/cracked_bricks.png"),
+                new ResourceLocation("textures/block/cracked_stone_bricks.png"),
                 parent, ModConfigScreen::new, ModConfigs.SPEC);
     }
 
@@ -51,7 +51,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
                 "https://ko-fi.com/mehvahdjukaar", "Donate a Coffe");
 
         LinkButton curseforge = LinkButton.create(MISC_ICONS, this, centerX - 45 - 22 * 3, y, 1, 2,
-                "https://www.curseforge.com/minecraft/mc-mods/haunted-haunted", "CurseForge Page");
+                "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest", "CurseForge Page");
 
         LinkButton github = LinkButton.create(MISC_ICONS, this, centerX - 45 - 22 * 4, y, 0, 2,
                 "https://github.com/MehVahdJukaar/TrickOrTreatMod", "Github");
@@ -87,9 +87,9 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
         var level = Minecraft.getInstance().level;
         if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
             int x = (int) (this.width * 0.93f);
-            this.itemRenderer.renderAndDecorateFakeItem(Items.PUMPKIN.getDefaultInstance(), x, 16);
+            this.itemRenderer.renderAndDecorateFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
             if (ScreenUtil.isMouseWithin(x, 16, 16, 16, mouseX, mouseY)) {
-                this.renderTooltip(poseStack, this.font.split(Component.translatable("gui.snowyspirit.snow_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
+                this.renderTooltip(poseStack, this.font.split(Component.translatable("gui.hauntedharvest.autumn_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
             }
         }
     }

@@ -7,26 +7,49 @@ import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.config.ModConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //credits to MrCrayfish's Configured Mod
 public class ModConfigScreen extends CustomConfigScreen {
 
 
+    private static final Map<String, ItemStack> ICONS = new HashMap<>();
+
+    static {
+        addIcon("trick or treating", Items.EGG);
+        addIcon("halloween end",Items.CARVED_PUMPKIN);
+        addIcon("halloween start", Items.JACK_O_LANTERN);
+        addIcon("season mod compat", ModRegistry.ROTTEN_APPLE.get());
+    }
+
     public ModConfigScreen(CustomConfigSelectScreen parent, ModConfig config) {
         super(parent, config);
+        this.icons.putAll(ICONS);
     }
 
     public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background, Component title, Screen parent, ModConfig config) {
         super(modId, mainIcon, background, title, parent, config);
+        this.icons.putAll(ICONS);
     }
+
+
+    private static void addIcon(String s, ItemLike i) {
+        ICONS.put(s, i.asItem().getDefaultInstance());
+    }
+
 
     @Override
     public boolean hasFancyBooleans() {
