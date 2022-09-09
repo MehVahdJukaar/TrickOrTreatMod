@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "hauntedharvest",
+  "version": "${version}",
+  "name": "Haunted Harvest",
+  "description": "Baby villagers can now trick or treat with adults and occasionally witches.",
+  "authors": [
+    "Mehvahdjukaar, Plantkillable"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest",
+    "sources": "https://github.com/MehVahdJukaar/SnowySpirit/tree/master/src/main/java/net/mehvahdjukaar/TrickOrTreatMod"
+  },
+  "license": "ARR",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.mehvahdjukaar.hauntedharvest.fabric.HauntedHarvestFabric"
+    ],
+    "modmenu": [
+      "net.mehvahdjukaar.hauntedharvest.integration.fabric.modMenu.ModMenuCompat"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19",
+    "moonlight": ">=1.19-2.0.28"
+  }
+}
