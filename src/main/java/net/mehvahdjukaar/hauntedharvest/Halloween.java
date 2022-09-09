@@ -63,12 +63,11 @@ public class Halloween {
         bus.addListener(Halloween::reloadConfigsEvent);
 
         ModRegistry.init(bus);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
         MinecraftForge.EVENT_BUS.addListener(Halloween::onTagLoad);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configs.buildConfig());
-
 
     }
 
@@ -84,7 +83,7 @@ public class Halloween {
     public static final Set<Item> EATABLE = new HashSet<>();
 
 
-    //refresh confgs and tag stuff
+    //refresh configs and tag stuff
     public static void onTagLoad(TagsUpdatedEvent event) {
         EATABLE.clear();
         Set<Item> temp = new HashSet<>();
@@ -148,6 +147,7 @@ public class Halloween {
         return isHalloweenSeason(level) && isBetween(TRICK_OR_TREAT_START, TRICK_OR_TREAT_END, level.getDayTime() % 24000);
     }
 
+    //TODO: add witches to villages using structure modifiers
 
     //TODO: give candy to players
     //TODO: fix when inventory is full

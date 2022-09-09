@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
@@ -107,7 +108,7 @@ public class PlacePumpkin extends Behavior<Villager> {
 
     @Nullable
     private static BlockPos getValidPumpkinPos(ServerLevel pLevel, LivingEntity pWalker) {
-        Random random = pWalker.getRandom();
+        RandomSource random = pWalker.getRandom();
         BlockPos blockpos = pWalker.blockPosition();
 
         //10 tries
