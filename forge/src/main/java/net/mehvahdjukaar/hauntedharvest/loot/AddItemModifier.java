@@ -17,7 +17,7 @@ public class AddItemModifier extends LootModifier {
 
     public static final Supplier<Codec<AddItemModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(inst -> codecStart(inst).and(
-                            ItemStack.CODEC.fieldOf("items").forGetter(AddItemModifier::getAddedItemStack)
+                            ItemStack.CODEC.fieldOf("item").forGetter(AddItemModifier::getAddedItemStack)
                     )
                     .apply(inst, AddItemModifier::new)));
 

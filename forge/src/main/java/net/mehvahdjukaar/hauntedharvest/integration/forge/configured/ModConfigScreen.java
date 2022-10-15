@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.integration.forge.configured;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mrcrayfish.configured.api.IModConfig;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
@@ -35,12 +36,13 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("season mod compat", ModRegistry.ROTTEN_APPLE.get());
     }
 
-    public ModConfigScreen(CustomConfigSelectScreen parent, ModConfig config) {
+    public ModConfigScreen(CustomConfigSelectScreen parent, IModConfig config) {
         super(parent, config);
         this.icons.putAll(ICONS);
     }
 
-    public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background, Component title, Screen parent, ModConfig config) {
+    public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background,
+                           Component title, Screen parent, IModConfig config) {
         super(modId, mainIcon, background, title, parent, config);
         this.icons.putAll(ICONS);
     }
