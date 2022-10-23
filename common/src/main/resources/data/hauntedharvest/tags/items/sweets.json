@@ -70,6 +70,10 @@
       "required": false
     },
     {
+      "id": "cloudstorage:cotton_candy",
+      "required": false
+    },
+    {
       "id": "suszombification:caramel_candy",
       "required": false
     },

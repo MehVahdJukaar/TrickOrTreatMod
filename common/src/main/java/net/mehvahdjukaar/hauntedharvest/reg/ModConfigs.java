@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.reg;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
@@ -18,12 +19,20 @@ public class ModConfigs {
     public static Supplier<Integer> START_TIME;
     public static Supplier<Integer> END_TIME;
 
+    public static Supplier<ModCarvedPumpkinBlock.UseMode> CARVE_MODE;
+
     public static Supplier<Boolean> SEASONS_MOD_COMPAT;
 
     public static ConfigSpec SPEC;
 
     public static void earlyLoad() {
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON);
+
+        builder.push("pumpkin_carving");
+        CARVE_MODE = builder.comment("Pumpkin carving mode")
+                        .define("carve_mode", ModCarvedPumpkinBlock.UseMode.BOTH);
+
+        builder.pop();
 
         builder.push("halloween_start");
         START_MONTH = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")

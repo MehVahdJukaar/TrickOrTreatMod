@@ -2,8 +2,11 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -16,9 +19,14 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -83,4 +91,18 @@ public class ModRegistry {
     public static final Supplier<Item> DEATH_APPLE = RegHelper.registerItem(
             HauntedHarvest.res("grim_apple"), () ->
                     new GrimAppleItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).rarity(Rarity.RARE).food(DEATH_APPLE_FOOD)));
+
+    public static final Supplier<Block> MOD_CARVED_PUMPKIN = RegHelper.registerBlock(
+            HauntedHarvest.res("carved_pumpkin"), () ->
+                    new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)));
+
+    public static final Supplier<Item> MOD_CARVED_PUMPKIN_ITEM = RegHelper.registerItem(
+            HauntedHarvest.res("carved_pumpkin"), () -> new BlockItem(MOD_CARVED_PUMPKIN.get(),
+                    new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)));
+
+    public static final Supplier<BlockEntityType<ModCarvedPumpkinBlockTile>> MOD_CARVED_PUMPKIN_TILE =
+            RegHelper.registerBlockEntityType(HauntedHarvest.res("carved_pumpkin"), () ->
+                    PlatformHelper.newBlockEntityType(ModCarvedPumpkinBlockTile::new, MOD_CARVED_PUMPKIN.get()));
+
+
 }
