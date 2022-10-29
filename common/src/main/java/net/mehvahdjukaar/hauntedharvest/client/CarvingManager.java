@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
@@ -33,7 +34,9 @@ public class CarvingManager {
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
                 TextureInstance value = (TextureInstance) i.getValue();
-                if (value != null) value.close();
+                if (value != null){
+                    RenderSystem.recordRenderCall(value::close);
+                }
             })
             .build(new CacheLoader<>() {
                 @Override
