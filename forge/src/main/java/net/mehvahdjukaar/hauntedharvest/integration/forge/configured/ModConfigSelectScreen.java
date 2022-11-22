@@ -4,7 +4,7 @@ package net.mehvahdjukaar.hauntedharvest.integration.forge.configured;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.reg.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;

@@ -1,0 +1,13 @@
+{
+	"item.hauntedharvest.grim_apple": "纸袋",
+	"gui.hauntedharvest.carving.edit": "雕刻",
+	"gui.hauntedharvest.carving.clear": "清除",
+    "item.hauntedharvest.corn": "玉米",
+    "item.hauntedharvest.corn_on_the_cob": "烤玉米",
+    "item.hauntedharvest.popcorn": "爆米花",
+    "item.hauntedharvest.candy_corn": "玉米糖果",
+    "block.hauntedharvest.paper_bag": "纸袋",
+    "block.hauntedharvest.candy_bag": "糖果袋",
+    "block.hauntedharvest.jack_o_lantern": "可雕刻的南瓜灯",
+    "block.hauntedharvest.carved_pumpkin": "可雕刻的南瓜"
+}

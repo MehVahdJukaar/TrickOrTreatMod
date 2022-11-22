@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hauntedharvest:corn_crate"
+    }
+  ],
+  "result": {
+    "item": "hauntedharvest:corn",
+    "count": 9
+  },
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

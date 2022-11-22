@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#forge:tools/knives",
+      "required": false
+    },
+    {
+      "id": "#c:tools/knives",
+      "required": false
+    }
+  ]
+}

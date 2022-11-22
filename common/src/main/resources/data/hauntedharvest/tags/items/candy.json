@@ -1,0 +1,121 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "minecraft:cookie",
+      "required": false
+    },
+    {
+      "id": "#villagersoctober:candy",
+      "required": false
+    },
+    {
+      "id": "#halloween_mood:candies",
+      "required": false
+    },
+    {
+      "id": "shuckhorror:candy_corn",
+      "required": false
+    },
+    {
+      "id": "shuckhorror:popcorn",
+      "required": false
+    },
+    {
+      "id": "croptopia:candy_corn",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:honey_candy",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:berry_candy",
+      "required": false
+    },
+    {
+      "id": "vanillacookbook:sword_lollipop",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:east_twicks",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:west_twicks",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:gummy_boars",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:creeper_stick",
+      "required": false
+    },
+    {
+      "id": "cloudstorage:cotton_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:caramel_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:chocolate_cream_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:cinnamon_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:honey_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:melon_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:peppermint_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:pumpkin_candy",
+      "required": false
+    },
+    {
+      "id": "suszombification:vanilla_cream_candy",
+      "required": false
+    },
+    {
+      "id": "candymod:cotton_candy",
+      "required": false
+    },
+    {
+      "id": "candymod:candy_cane",
+      "required": false
+    },
+    {
+      "id": "candymod:taffy",
+      "required": false
+    },
+    {
+      "id": "candymod:lollipop",
+      "required": false
+    },
+    {
+      "id": "candymod:jelly_beans",
+      "required": false
+    },
+    {
+      "id": "trickortreat:bonebreaker",
+      "required": false
+    },
+    {
+      "id": "trickxortreat:sugarbone",
+      "required": false
+    }
+  ]
+}

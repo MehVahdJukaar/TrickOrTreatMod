@@ -1,0 +1,117 @@
+{
+  "variants": {
+    "content=popcorn,fill_level=1": {
+      "model": "hauntedharvest:block/paper_bag_popcorn_1"
+    },
+    "content=popcorn,fill_level=2": {
+      "model": "hauntedharvest:block/paper_bag_popcorn_2"
+    },
+    "content=popcorn,fill_level=3": {
+      "model": "hauntedharvest:block/paper_bag_popcorn_3"
+    },
+    "content=popcorn,fill_level=4": {
+      "model": "hauntedharvest:block/paper_bag_popcorn_4"
+    },
+    "content=popcorn,fill_level=5": {
+      "model": "hauntedharvest:block/paper_bag_popcorn_5"
+    },
+    "content=popcorn,fill_level=6": {
+      "model": "hauntedharvest:block/paper_bag_popcorn_6"
+    },
+    
+    "content=other_candy,fill_level=1": {
+      "model": "hauntedharvest:block/paper_bag_other_candy_1"
+    },
+    "content=other_candy,fill_level=2": {
+      "model": "hauntedharvest:block/paper_bag_other_candy_2"
+    },
+    "content=other_candy,fill_level=3": {
+      "model": "hauntedharvest:block/paper_bag_other_candy_3"
+    },
+    "content=other_candy,fill_level=4": {
+      "model": "hauntedharvest:block/paper_bag_other_candy_4"
+    },
+    "content=other_candy,fill_level=5": {
+      "model": "hauntedharvest:block/paper_bag_other_candy_5"
+    },
+    "content=other_candy,fill_level=6": {
+      "model": "hauntedharvest:block/paper_bag_other_candy_6"
+    },
+    
+    "content=candy_cane,fill_level=1": {
+      "model": "hauntedharvest:block/paper_bag_candy_cane_1"
+    },
+    "content=candy_cane,fill_level=2": {
+      "model": "hauntedharvest:block/paper_bag_candy_cane_2"
+    },
+    "content=candy_cane,fill_level=3": {
+      "model": "hauntedharvest:block/paper_bag_candy_cane_3"
+    },
+    "content=candy_cane,fill_level=4": {
+      "model": "hauntedharvest:block/paper_bag_candy_cane_4"
+    },
+    "content=candy_cane,fill_level=5": {
+      "model": "hauntedharvest:block/paper_bag_candy_cane_5"
+    },
+    "content=candy_cane,fill_level=6": {
+      "model": "hauntedharvest:block/paper_bag_candy_cane_6"
+    },
+    
+    "content=kernels,fill_level=1": {
+      "model": "hauntedharvest:block/paper_bag_kernels_1"
+    },
+    "content=kernels,fill_level=2": {
+      "model": "hauntedharvest:block/paper_bag_kernels_2"
+    },
+    "content=kernels,fill_level=3": {
+      "model": "hauntedharvest:block/paper_bag_kernels_3"
+    },
+    "content=kernels,fill_level=4": {
+      "model": "hauntedharvest:block/paper_bag_kernels_4"
+    },
+    "content=kernels,fill_level=5": {
+      "model": "hauntedharvest:block/paper_bag_kernels_5"
+    },
+    "content=kernels,fill_level=6": {
+      "model": "hauntedharvest:block/paper_bag_kernels_6"
+    },
+    
+    "content=candy,fill_level=1": {
+      "model": "hauntedharvest:block/paper_bag_candy_1"
+    },
+    "content=candy,fill_level=2": {
+      "model": "hauntedharvest:block/paper_bag_candy_2"
+    },
+    "content=candy,fill_level=3": {
+      "model": "hauntedharvest:block/paper_bag_candy_3"
+    },
+    "content=candy,fill_level=4": {
+      "model": "hauntedharvest:block/paper_bag_candy_4"
+    },
+    "content=candy,fill_level=5": {
+      "model": "hauntedharvest:block/paper_bag_candy_5"
+    },
+    "content=candy,fill_level=6": {
+      "model": "hauntedharvest:block/paper_bag_candy_6"
+    },
+    
+    "content=candy_corn,fill_level=1": {
+      "model": "hauntedharvest:block/paper_bag_candy_corn_1"
+    },
+    "content=candy_corn,fill_level=2": {
+      "model": "hauntedharvest:block/paper_bag_candy_corn_2"
+    },
+    "content=candy_corn,fill_level=3": {
+      "model": "hauntedharvest:block/paper_bag_candy_corn_3"
+    },
+    "content=candy_corn,fill_level=4": {
+      "model": "hauntedharvest:block/paper_bag_candy_corn_4"
+    },
+    "content=candy_corn,fill_level=5": {
+      "model": "hauntedharvest:block/paper_bag_candy_corn_5"
+    },
+    "content=candy_corn,fill_level=6": {
+      "model": "hauntedharvest:block/paper_bag_candy_corn_6"
+    }
+  }
+}

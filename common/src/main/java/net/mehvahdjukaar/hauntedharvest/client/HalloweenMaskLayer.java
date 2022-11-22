@@ -27,6 +27,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
             HauntedHarvest.res("textures/entity/villager/masks/creeper.png"),
             HauntedHarvest.res("textures/entity/villager/masks/vindicator.png"),
             HauntedHarvest.res("textures/entity/villager/masks/piglin.png"),
+            HauntedHarvest.res("textures/entity/villager/masks/paper_bag.png"),
             HauntedHarvest.res("textures/entity/villager/masks/mehvahdjukaar.png"),
             HauntedHarvest.res("textures/entity/villager/masks/plantkillable.png"),
     };

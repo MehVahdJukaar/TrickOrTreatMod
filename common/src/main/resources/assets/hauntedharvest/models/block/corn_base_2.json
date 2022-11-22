@@ -1,0 +1,6 @@
+{
+  "parent": "hauntedharvest:block/crop_cross",
+  "textures": {
+    "cross": "hauntedharvest:block/corn_base_2"
+  }
+}

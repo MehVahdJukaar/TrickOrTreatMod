@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "hauntedharvest:block/corn_base_0"
+    },
+    "age=1": {
+      "model": "hauntedharvest:block/corn_base_1"
+    },
+    "age=2": {
+      "model": "hauntedharvest:block/corn_base_2"
+    },
+    "age=3": {
+      "model": "hauntedharvest:block/corn_base_3"
+    }
+  }
+}

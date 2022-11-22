@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.hauntedharvest.reg;
+package net.mehvahdjukaar.hauntedharvest.configs;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
@@ -19,7 +19,9 @@ public class ModConfigs {
     public static Supplier<Integer> START_TIME;
     public static Supplier<Integer> END_TIME;
 
-    public static Supplier<ModCarvedPumpkinBlock.UseMode> CARVE_MODE;
+    public static Supplier<ModCarvedPumpkinBlock.CarveMode> PUMPKIN_CARVE_MODE;
+    public static Supplier<ModCarvedPumpkinBlock.CarveMode> JACK_O_LANTERN_CARVE_MODE;
+
 
     public static Supplier<Boolean> SEASONS_MOD_COMPAT;
 
@@ -29,8 +31,10 @@ public class ModConfigs {
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON);
 
         builder.push("pumpkin_carving");
-        CARVE_MODE = builder.comment("Pumpkin carving mode")
-                        .define("carve_mode", ModCarvedPumpkinBlock.UseMode.BOTH);
+        PUMPKIN_CARVE_MODE = builder.comment("Pumpkin carving mode")
+                .define("pumpkin_carve_mode", ModCarvedPumpkinBlock.CarveMode.BOTH);
+        JACK_O_LANTERN_CARVE_MODE = builder.comment("Jack o Lantern carving mode")
+                .define("jack_o_lantern_carve_mode", ModCarvedPumpkinBlock.CarveMode.NONE);
 
         builder.pop();
 

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "tag": "c:crops/corn"
+  },
+  "result": "hauntedharvest:corn_on_the_cob",
+  "experience": 0.35,
+  "cookingtime": 100
+}

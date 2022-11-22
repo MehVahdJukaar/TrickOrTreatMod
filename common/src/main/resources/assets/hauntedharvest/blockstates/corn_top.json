@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "hauntedharvest:block/corn_top_0"
+    },
+    "age=1": {
+      "model": "hauntedharvest:block/corn_top_1"
+    }
+  }
+}

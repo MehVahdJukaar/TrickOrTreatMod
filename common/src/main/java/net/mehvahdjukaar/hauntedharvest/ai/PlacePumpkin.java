@@ -3,6 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -127,7 +128,7 @@ public class PlacePumpkin extends Behavior<Villager> {
             if (state.getMaterial().isReplaceable() && state.getFluidState().isEmpty()) {
 
                 BlockState below = serverLevel.getBlockState(pos.below());
-                return below.is(HauntedHarvest.PUMPKIN_SUPPORT);
+                return below.is(ModTags.PUMPKIN_SUPPORT);
             }
         }
         return false;

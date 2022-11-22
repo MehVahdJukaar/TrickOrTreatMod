@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
-import net.mehvahdjukaar.hauntedharvest.client.CarvingGui;
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager.CarvingKey;
+import net.mehvahdjukaar.hauntedharvest.client.CarvingManager.Key;
+import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingGui;
+import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
@@ -13,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,18 +25,25 @@ import java.util.UUID;
 public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProtected,
         IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelDataKey<CarvingKey> CARVING = new ModelDataKey<>(CarvingKey.class);
+    public static final ModelDataKey<Key> CARVING = new ModelDataKey<>(Key.class);
+
+    private final boolean isJackOLantern;
 
     private UUID owner = null;
     private boolean waxed = false;
     private boolean[][] pixels = new boolean[16][16];
 
     //client side
-    private CarvingKey textureKey = null;
+    private Key textureKey = null;
 
     public ModCarvedPumpkinBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.MOD_CARVED_PUMPKIN_TILE.get(), pos, state);
         this.clear();
+        isJackOLantern = (state.is(ModRegistry.MOD_JACK_O_LANTERN.get()));
+    }
+
+    public boolean isJackOLantern() {
+        return isJackOLantern;
     }
 
     @Override
@@ -44,13 +53,13 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
                 .build();
     }
 
-    public CarvingKey getTextureKey() {
+    public Key getTextureKey() {
         if (textureKey == null) refreshTextureKey();
         return textureKey;
     }
 
     public void refreshTextureKey() {
-        this.textureKey = CarvingKey.of(packPixels(this.pixels));
+        this.textureKey = Key.of(packPixels(this.pixels), this.isJackOLantern);
     }
 
     @Override
@@ -70,8 +79,16 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        loadFromTag(compound);
         this.loadOwner(compound);
+        loadPixels(compound);
+    }
+
+    public void loadPixels(CompoundTag compound) {
+        this.waxed = compound.contains("Waxed") && compound.getBoolean("Waxed");
+        this.pixels = new boolean[16][16];
+        if (compound.contains("Pixels")) {
+            this.pixels = unpackPixels(compound.getLongArray("Pixels"));
+        }
     }
 
     @Override
@@ -87,15 +104,6 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
         return compound;
     }
 
-    public void loadFromTag(CompoundTag compound) {
-        this.waxed = compound.contains("Waxed") && compound.getBoolean("Waxed");
-        this.pixels = new boolean[16][16];
-        if (compound.contains("Pixels")) {
-            this.pixels = unpackPixels(compound.getLongArray("Pixels"));
-        }
-    }
-
-
     public static long[] packPixels(boolean[][] pixels) {
         long[] packed = new long[4];
         long n = 0;
@@ -103,7 +111,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
         for (int a = 0; a < pixels.length; a++) {
             int s = 0;
             for (int i = 0; i < pixels.length; i++) {
-                s =  (s | ((toShort(pixels[a][i]) & 1) << i));
+                s = (s | ((toShort(pixels[a][i]) & 1) << i));
             }
             n = n | (long) s << ((a % 4) * 16);
             if ((a + 1) % 4 == 0) {
@@ -149,7 +157,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     public boolean isEmpty() {
         for (boolean[] pixel : pixels) {
             for (boolean b : pixel) {
-                if (b)return false;
+                if (b) return false;
             }
         }
         return true;
@@ -205,4 +213,21 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     public boolean isWaxed() {
         return this.waxed;
     }
+
+    public ModCarvedPumpkinBlock.CarveMode getCarveMode() {
+        if (this.isJackOLantern) return ModConfigs.JACK_O_LANTERN_CARVE_MODE.get();
+        return ModConfigs.PUMPKIN_CARVE_MODE.get();
+    }
+
+    public ItemStack getItemWithNBT() {
+        ItemStack itemstack = new ItemStack(this.getBlockState().getBlock());
+        if (!this.isEmpty()) {
+            CompoundTag tag = this.savePixels(new CompoundTag());
+            if (!tag.isEmpty()) {
+                itemstack.addTagElement("BlockEntityTag", tag);
+            }
+        }
+        return itemstack;
+    }
+
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:seeds/corn"
+  },
+  "result": "hauntedharvest:popcorn",
+  "experience": 0.35,
+  "cookingtime": 200
+}

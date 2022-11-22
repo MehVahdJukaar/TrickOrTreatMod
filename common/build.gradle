@@ -14,6 +14,8 @@ dependencies {
     //implementation fileTree(dir: 'mods', include: '*.jar')
 
     modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
+    modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
+
 }
 
 publishing {

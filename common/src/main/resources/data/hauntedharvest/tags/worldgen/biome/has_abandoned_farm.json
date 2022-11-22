@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "#is_savanna",
+    {
+      "id": "#c:plains",
+      "required": false
+    },
+    {
+      "id": "#forge:is_plains",
+      "required": false
+    }
+  ]
+}

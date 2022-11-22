@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "hauntedharvest:abandoned_farm",
+      "weight": 1
+    }
+  ],
+  "placement": {
+
+    "type": "minecraft:random_spread",
+
+    "salt": 121931326,
+
+    "spacing": 30,
+
+    "separation": 22
+  }
+}

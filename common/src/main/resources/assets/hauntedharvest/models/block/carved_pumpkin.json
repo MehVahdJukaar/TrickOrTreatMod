@@ -1,7 +1,7 @@
 {
   "loader": "hauntedharvest:carved_pumpkin",
   "model": {
-    "parent": "hauntedharvest:block/carved_pumpkin_frame",
+    "parent": "hauntedharvest:block/pumpkin_frame",
     "textures": {
 		"side": "block/pumpkin_side",
 		"background": "hauntedharvest:block/carved_pumpkin_background",
@@ -12,7 +12,7 @@
   },
   "textures": {
 	  "side": "block/pumpkin_side",
-	  "2": "hauntedharvest:block/carved_pumpkin_background",
+	  "background": "hauntedharvest:block/carved_pumpkin_background",
 	  "3": "hauntedharvest:block/carved_pumpkin_top",
 	  "4": "block/pumpkin_top",
 	  "particle": "block/pumpkin_side"

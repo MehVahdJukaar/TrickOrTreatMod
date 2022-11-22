@@ -1,14 +1,17 @@
-package net.mehvahdjukaar.hauntedharvest.client;
+package net.mehvahdjukaar.hauntedharvest.client.gui;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvents;
@@ -19,22 +22,27 @@ public class CarvingButton extends GuiComponent implements Widget, GuiEventListe
     public final int v;
     public final int x;
     public final int y;
-    public static final int WIDTH = 6;
+    public static final int SIZE = 6;
     protected boolean isHovered;
     protected boolean carved = false;
     protected boolean focused;
 
     private final IDraggable onDragged;
     private final IPressable onPress;
+    private Material material;
 
     public CarvingButton(int centerX, int centerY, int u, int v, IPressable pressedAction,
                          IDraggable dragAction) {
-        this.x = centerX - ((8 - u) * WIDTH);
-        this.y = centerY - ((-v) * WIDTH);
+        this.x = centerX - ((8 - u) * SIZE);
+        this.y = centerY - ((-v) * SIZE);
         this.u = u;
         this.v = v;
         this.onPress = pressedAction;
         this.onDragged = dragAction;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     public void setCarved(boolean carved) {
@@ -48,45 +56,36 @@ public class CarvingButton extends GuiComponent implements Widget, GuiEventListe
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
-        this.renderButton(matrixStack);
-        //soboolean wasHovered = this.isHovered();
+        //boolean wasHovered = this.isHovered();
+        renderButton(matrixStack);
     }
 
-
-    public void renderButton(PoseStack matrixStack) {
-/*
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, ModTextures.BLACKBOARD_GUI_TEXTURE);
-
-        int offset = this.color > 0 ? 16 : 0;
-
-        int rgb = BlackboardBlock.colorFromByte(this.color);
-        float b = NativeImage.getR(rgb) / 255f;
-        float g = NativeImage.getG(rgb) / 255f;
-        float r = NativeImage.getB(rgb) / 255f;
-
-        RenderSystem.setShaderColor(r, g, b, 1.0F);
-        blit(matrixStack, this.x, this.y, (float)(this.u + offset) * WIDTH, (float)this.v * WIDTH, WIDTH, WIDTH, 32 * WIDTH, 16 * WIDTH);
-*/
+    private void renderButton(PoseStack matrixStack) {
+        TextureAtlasSprite sprite = material.sprite();
+        blitSprite(matrixStack, x, y, SIZE, SIZE, u, v, 1, 1, sprite);
     }
 
     public void renderTooltip(PoseStack matrixStack) {
-        //maybe remove this
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        TextureAtlasSprite sprite = ClientRegistry.CARVING_OUTLINE.sprite();
+        blitSprite(matrixStack, x - 1, y - 1, SIZE + 2, SIZE + 2, 0, 0, 1, 1, sprite);
 
-        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
-
-        blit(matrixStack, this.x - 1, this.y - 1, 16 * WIDTH, 0, WIDTH + 2, WIDTH + 2, 32 * WIDTH, 16 * WIDTH);
         this.renderButton(matrixStack);
+    }
+
+
+    @Deprecated(forRemoval = true)
+    private static void blitSprite(PoseStack matrixStack, int x, int y, int w, int h,
+                                   int u, int v, int uW, int vH, TextureAtlasSprite sprite) {
+        RenderSystem.setShaderTexture(0, sprite.atlas().location());
+        int width = (int) (sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
+        int height = (int) (sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
+        blit(matrixStack, x, y, w, h, sprite.getU(u) * width, height * sprite.getV(v), uW, vH, width, height);
     }
 
     //toggle
     public void onClick(double mouseX, double mouseY) {
         this.carved = !this.carved;
         this.onPress.onPress(this.u, this.v, this.carved);
-
     }
 
     public void onRelease(double mouseX, double mouseY) {
@@ -149,7 +148,7 @@ public class CarvingButton extends GuiComponent implements Widget, GuiEventListe
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + WIDTH) && mouseY < (this.y + WIDTH);
+        return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + SIZE) && mouseY < (this.y + SIZE);
     }
 
 

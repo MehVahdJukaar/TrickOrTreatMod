@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.client;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
@@ -19,7 +18,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -82,20 +80,20 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType,
                                          ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, side, rand));
-        if (data != ExtraModelData.EMPTY && state != null && side == null) {
-            Direction dir = state.getValue(ModCarvedPumpkinBlock.FACING);
-            CarvingManager.CarvingKey key = data.get(ModCarvedPumpkinBlockTile.CARVING);
+        if (data != ExtraModelData.EMPTY && state != null && side == state.getValue(ModCarvedPumpkinBlock.FACING)) {
+            CarvingManager.Key key = data.get(ModCarvedPumpkinBlockTile.CARVING);
             if (key != null) {
-                var textureInstance = CarvingManager.getCarvingInstance(key);
-                quads.addAll(textureInstance.getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform)));
+                var textureInstance = CarvingManager.getInstance(key);
+                quads.addAll(textureInstance.getOrCreateModel(side, () ->
+                        generateQuads(textureInstance.getPixels(), this.modelTransform, textureInstance.isGlow(), side)));
             }
         }
 
         return quads;
     }
 
-    private List<BakedQuad> generateQuads(boolean[][] px, ModelState modelTransform) {
-        Material[][] pixels = PumpkinTextureGenerator.getTexturePerPixel(px);
+    private List<BakedQuad> generateQuads(boolean[][] px, ModelState modelTransform, boolean jackOLantern, Direction direction) {
+        Material[][] pixels = PumpkinTextureGenerator.getTexturePerPixel(px, jackOLantern);
         List<BakedQuad> quads;
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();
@@ -114,12 +112,12 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
                     }
                     current = b;
                 }
-                //block uv is incorrectly flipped on both axis... too bad
                 //draws prev quad
-                int tint = NativeImage.combine(255, 255, 255, 255);//255 << 24;
+                int tint = -1;
                 TextureAtlasSprite sprite = spriteGetter.apply(prevColor);
+
                 quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 0,
-                        1 / 16f, length / 16f, sprite, tint, rotation, false));
+                        1 / 16f, length / 16f, sprite, tint, rotation, false, direction));
                 startY = y;
                 if (current != null) {
                     prevColor = current;
@@ -133,17 +131,19 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
 
     public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
                                             TextureAtlasSprite sprite, int color, Transformation transform,
-                                            boolean litUp) {
-        Vector3f normal = new Vector3f(0, 0, 1);
+                                            boolean litUp, Direction dd) {
 
+        float tu = (1 - (1 + sprite.getWidth() * width));
+        float tv = (1 - (1 + sprite.getHeight() * height));
+        float u0 = (1 - x) * 16;
+        float v0 = (1 - y) * 16;
+
+        //this just wraps around forge baked quad builder
         BakedQuadBuilder builder = BakedQuadBuilder.create();
 
-        float tu = (1-(1+sprite.getWidth() * width));
-        float tv = (1-(1+sprite.getHeight() * height));
-        float u0 = (1-x) * 16;
-        float v0 = (1-y) * 16;
+        builder.setDirection(dd);
+        Vector3f normal = new Vector3f(dd.getStepX(), dd.getStepY(), dd.getStepZ());
 
-        builder.setDirection(Direction.getNearest(normal.x(), normal.y(), normal.z()));
         builder.setSprite(sprite);
 
         putVertex(builder, normal, x + width, y + height, z,
@@ -155,8 +155,10 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         putVertex(builder, normal, x, y + height, z,
                 u0, v0 + tv, sprite, color, transform, litUp);
 
+
         return builder.build();
     }
+
 
     private static void putVertex(BakedQuadBuilder builder, Vector3f normal,
                                   float x, float y, float z, float u, float v,
@@ -164,6 +166,8 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
                                   Transformation transformation, boolean emissive) {
 
         Vector3f posV = RotHlpr.rotateVertexOnCenterBy(x, y, z, transformation.getMatrix());
+        //I hate this. Forge seems to have some rounding errors with numbers close to 0 that arent 0 resulting in incorrect shading
+        posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
 
         builder.pos(posV);
 

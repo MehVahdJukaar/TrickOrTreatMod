@@ -1,18 +1,20 @@
 package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
+import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
-import net.mehvahdjukaar.hauntedharvest.reg.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
+import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,32 +37,41 @@ public class HauntedHarvest {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static boolean SEASON_MOD_INSTALLED = PlatformHelper.isModLoaded(PlatformHelper.getPlatform().isForge() ? "sereneseasons" : "seasons");
-
+    public static final boolean SEASON_MOD_INSTALLED = PlatformHelper.isModLoaded(PlatformHelper.getPlatform().isForge() ? "sereneseasons" : "seasons");
+    public static final boolean SUPP_INSTALLED = PlatformHelper.isModLoaded("supplementaries");
+    public static final boolean FD_INSTALLED = PlatformHelper.isModLoaded("farmersdelight");
 
     public static void commonInit() {
         ModConfigs.earlyLoad();
 
         ModRegistry.init();
+        if (FD_INSTALLED) FDCompat.init();
+        NetworkHandler.registerMessages();
     }
+
+    //TODO: add witches to villages using structure modifiers
+
+    //TODO: give candy to players
+    //TODO: fix when inventory is full
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
         HalloweenVillagerAI.setup();
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.MOD_CARVED_PUMPKIN.get().asItem(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.CORN_SEEDS.get().asItem(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
     }
 
     public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e -> e.isBaby() && e.getMainHandItem().is(Items.BUNDLE);
 
-    public static final TagKey<Item> SWEETS = TagKey.create(Registry.ITEM_REGISTRY, res("sweets"));
-    public static final TagKey<Block> PUMPKIN_SUPPORT = TagKey.create(Registry.BLOCK_REGISTRY, res("pumpkin_support"));
-    public static final Set<Item> EATABLE = new HashSet<>();
+   public static final Set<Item> EATABLE = new HashSet<>();
 
 
     //refresh configs and tag stuff
     public static void onTagLoad() {
         EATABLE.clear();
         Set<Item> temp = new HashSet<>();
-        for (var p : Registry.ITEM.getTagOrEmpty(SWEETS)) {
+        for (var p : Registry.ITEM.getTagOrEmpty(ModTags.SWEETS)) {
             temp.add(p.value());
         }
         temp.add(ModRegistry.DEATH_APPLE.get());
@@ -78,10 +89,6 @@ public class HauntedHarvest {
     }
 
 
-    //TODO: add witches to villages using structure modifiers
-
-    //TODO: give candy to players
-    //TODO: fix when inventory is full
 
 
     public static int TRICK_OR_TREAT_START;
