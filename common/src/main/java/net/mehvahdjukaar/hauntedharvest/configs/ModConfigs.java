@@ -10,6 +10,9 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import java.util.function.Supplier;
 
 public class ModConfigs {
+
+    public static Supplier<Boolean> MOD_TAB;
+
     public static Supplier<Integer> START_DAY;
     public static Supplier<Integer> START_MONTH;
 
@@ -29,6 +32,10 @@ public class ModConfigs {
 
     public static void earlyLoad() {
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON);
+
+        builder.push("general");
+        MOD_TAB = builder.comment("Enable mod creative tab").define("creative_tab", false);
+        builder.pop();
 
         builder.push("pumpkin_carving");
         PUMPKIN_CARVE_MODE = builder.comment("Pumpkin carving mode")

@@ -3,15 +3,14 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.blocks.*;
+import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.items.PaperBagItem;
 import net.mehvahdjukaar.hauntedharvest.items.crafting.ModCarvedPumpkinRecipe;
-import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
@@ -88,10 +87,9 @@ public class ModRegistry {
             HauntedHarvest.res("grim_apple"), () ->
                     new GrimAppleItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).rarity(Rarity.RARE).food(ModFood.DEATH_APPLE)));
 
-    public static final CreativeModeTab MOD_TAB = !RegistryConfigs.MOD_TAB.get() ? null :
+    public static final CreativeModeTab MOD_TAB = !ModConfigs.MOD_TAB.get() ? null :
             PlatformHelper.createModTab(HauntedHarvest.res(HauntedHarvest.MOD_ID),
                     () -> DEATH_APPLE.get().getDefaultInstance(), false);
-
 
 
     public static final Supplier<RecipeSerializer<ModCarvedPumpkinRecipe>> CARVED_PUMPKIN_RECIPE = regRecipe(
@@ -167,9 +165,6 @@ public class ModRegistry {
 
 
 
-
-
-
     public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
         return RegHelper.registerItem(HauntedHarvest.res(name), sup);
     }
@@ -182,11 +177,9 @@ public class ModRegistry {
         return RegHelper.registerBlock(HauntedHarvest.res(name), sup);
     }
 
-
     public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
         return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)));
     }
-
 
     public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties) {
         Supplier<T> block = regBlock(name, blockFactory);

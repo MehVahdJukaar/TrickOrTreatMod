@@ -15,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Map;
+
 public class EatCandy extends Behavior<Villager> {
 
     private int eatingTime;
@@ -22,7 +24,7 @@ public class EatCandy extends Behavior<Villager> {
     private int cooldown = 0;
 
     public EatCandy(int minDur, int maxDur) {
-        super(ImmutableMap.of(), minDur, maxDur);
+        super(Map.of(), minDur, maxDur);
     }
 
     @Override
@@ -35,7 +37,7 @@ public class EatCandy extends Behavior<Villager> {
             cooldown--;
             return false;
         }
-        return pOwner.getInventory().hasAnyOf(HauntedHarvest.EATABLE);
+        return HauntedHarvest.hasCandyOrApple(pOwner.getInventory());
     }
 
     @Override
@@ -51,7 +53,7 @@ public class EatCandy extends Behavior<Villager> {
         SimpleContainer inventory = pEntity.getInventory();
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
-            if (HauntedHarvest.EATABLE.contains(itemstack.getItem())) {
+            if (HauntedHarvest.isCandyOrApple(itemstack)) {
                 ItemStack s = itemstack.split(1);
                 if (itemstack.getCount() == 0) inventory.setItem(i, ItemStack.EMPTY);
                 pEntity.setItemInHand(InteractionHand.MAIN_HAND, s);
@@ -61,7 +63,7 @@ public class EatCandy extends Behavior<Villager> {
 
     @Override
     protected boolean canStillUse(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-        return eatingTime > 0 && HauntedHarvest.EATABLE.contains(pEntity.getMainHandItem().getItem());
+        return eatingTime > 0 && HauntedHarvest.isCandyOrApple(pEntity.getMainHandItem());
     }
 
     @Override
@@ -82,7 +84,7 @@ public class EatCandy extends Behavior<Villager> {
                         0.03, 0.05, 0.03, 0.0D);
             }
             if (eatingTime % 5 == 0) {
-                pOwner.playSound(pOwner.getEatingSound(stack), 0.3F + 0.4F * (float) pLevel.random.nextInt(2),
+                pOwner.playSound(pOwner.getEatingSound(stack), 0.3F + 0.4F * pLevel.random.nextInt(2),
                         (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F + 1.3F);
             }
         }

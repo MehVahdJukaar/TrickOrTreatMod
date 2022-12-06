@@ -77,15 +77,15 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
     protected void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         //hax. pickup candy
-        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.canBabyVillagerEat(stack)) {
+        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.isCandyOrApple(stack)) {
             cir.setReturnValue(true);
         }
     }
 
     @Override
-    public void onItemPickup(ItemEntity pItem) {
-        super.onItemPickup(pItem);
-        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.EATABLE.contains(pItem.getItem().getItem())) {
+    public void onItemPickup(ItemEntity itemEntity) {
+        super.onItemPickup(itemEntity);
+        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.isCandyOrApple(itemEntity.getItem())) {
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte) 14);

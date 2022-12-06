@@ -40,7 +40,8 @@ public class HalloweenVillagerAI {
                 event.addTaskToActivity(Activity.PLAY, Pair.of(9, new EatCandy(100, 130)));
                 event.addTaskToActivity(Activity.PLAY, Pair.of(10, new CarvePumpkin(0.5f)));
 
-                event.scheduleActivity(ModRegistry.TRICK_OR_TREAT.get(), HauntedHarvest.TRICK_OR_TREAT_START, HauntedHarvest.TRICK_OR_TREAT_END);
+                event.scheduleActivity(ModRegistry.TRICK_OR_TREAT.get(), HauntedHarvest.SEASON_MANAGER.getTrickOrTreatStart(),
+                        HauntedHarvest.SEASON_MANAGER.getTrickOrTreatEnd());
 
             } else {
 

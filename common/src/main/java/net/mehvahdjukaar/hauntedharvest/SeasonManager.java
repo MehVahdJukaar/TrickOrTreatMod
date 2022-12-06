@@ -14,6 +14,14 @@ public class SeasonManager {
     private boolean isHalloweenRealTime;
     private boolean useSeasonMod;
 
+    public int getTrickOrTreatEnd() {
+        return trickOrTreatEnd;
+    }
+
+    public int getTrickOrTreatStart() {
+        return trickOrTreatStart;
+    }
+
     public void onConfigReload() {
 
         //refresh date after configs are loaded

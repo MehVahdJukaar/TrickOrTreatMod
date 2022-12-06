@@ -2,9 +2,9 @@ package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
+import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -23,6 +23,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -110,8 +111,12 @@ public class HauntedHarvest {
         return SEASON_MANAGER.isTrickOrTreatTime(level);
     }
 
-    public static boolean canBabyVillagerEat(ItemStack stack) {
+    public static boolean isCandyOrApple(ItemStack stack) {
         return BABY_VILLAGER_EATABLE.contains(stack.getItem());
+    }
+
+    public static boolean hasCandyOrApple(SimpleContainer inventory) {
+        return inventory.hasAnyOf(HauntedHarvest.BABY_VILLAGER_EATABLE);
     }
 
     //refresh configs and tag stuff
@@ -161,5 +166,6 @@ public class HauntedHarvest {
         }
         return InteractionResult.PASS;
     }
+
 
 }
