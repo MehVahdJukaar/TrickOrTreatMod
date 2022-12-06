@@ -77,7 +77,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
     protected void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         //hax. pickup candy
-        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.EATABLE.contains(stack.getItem())) {
+        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.canBabyVillagerEat(stack)) {
             cir.setReturnValue(true);
         }
     }

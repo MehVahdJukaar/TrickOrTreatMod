@@ -63,11 +63,13 @@ public class ModConfigs {
 
         SEASONS_MOD_COMPAT = builder.comment("Enables compatibility with Serene Seasons (Forge) or Fabric Seasons (Fabric). Only takes effect if the mod is installed. Will make autumn season only active during certain seasons. Note that this will override previous time window settings")
                 .define("enabled", HauntedHarvest.SEASON_MOD_INSTALLED);
-        if (HauntedHarvest.SEASON_MOD_INSTALLED) SeasonModCompat.addConfig(builder);
+        if (HauntedHarvest.SEASON_MOD_INSTALLED) {
+            SeasonModCompat.addConfig(builder);
+        }
         builder.pop();
 
 
-        builder.onChange(HauntedHarvest::onConfigReload);
+        builder.onChange(HauntedHarvest.SEASON_MANAGER::onConfigReload);
 
         SPEC = builder.build();
 

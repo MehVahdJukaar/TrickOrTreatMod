@@ -13,8 +13,8 @@ import java.util.function.Supplier;
 //serene seasons
 public class SeasonModCompatImpl {
 
+    private static final List<Season.SubSeason> VALID_WINTER_SEASONS = new ArrayList<>();
     private static Supplier<List<String>> SEASONS_CONFIG;
-    private static List<Season.SubSeason> VALID_WINTER_SEASONS = new ArrayList<>();
 
 
     //if winder AI should be on
@@ -31,6 +31,7 @@ public class SeasonModCompatImpl {
     }
 
     public static void refresh() {
-        VALID_WINTER_SEASONS = SEASONS_CONFIG.get().stream().map(Season.SubSeason::valueOf).toList();
+        VALID_WINTER_SEASONS.clear();
+        VALID_WINTER_SEASONS.addAll(SEASONS_CONFIG.get().stream().map(Season.SubSeason::valueOf).toList());
     }
 }

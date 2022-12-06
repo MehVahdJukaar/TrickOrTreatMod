@@ -1,8 +1,13 @@
 package net.mehvahdjukaar.hauntedharvest.forge;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.integration.forge.configured.ModConfigSelectScreen;
+import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -13,13 +18,32 @@ public class HauntedHarvestForgeClient {
 
 
     @SubscribeEvent
-    public static void init(final FMLClientSetupEvent event) {
+    public static void setup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            //ClientRegistry.setup();
+            ClientRegistry.setup();
 
             if (ModList.get().isLoaded("configured")) {
                 ModConfigSelectScreen.registerConfigScreen(HauntedHarvest.MOD_ID, ModConfigSelectScreen::new);
             }
         });
+    }
+
+    private static ShaderInstance blur;
+
+    @SubscribeEvent
+    public static void registerShader(RegisterShadersEvent event) {
+        try {
+            var blur = new ShaderInstance(event.getResourceManager(), HauntedHarvest.res("blur"),
+                    DefaultVertexFormat.POSITION_TEX);
+
+            event.registerShader(blur, s -> HauntedHarvestForgeClient.blur = s);
+        } catch (Exception e) {
+            HauntedHarvest.LOGGER.error("Failed to parse blur shader");
+        }
+    }
+
+    public static ShaderInstance getBlur(){
+        // blur.getUniform("Radius").set(8f);
+        return blur;
     }
 }

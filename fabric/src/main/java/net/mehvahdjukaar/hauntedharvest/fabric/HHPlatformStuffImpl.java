@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.fabric;
 
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -10,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.SwordItem;
 
-public class HHPlatformImpl {
+public class HHPlatformStuffImpl {
     public static void setItemLifespan(ItemEntity item, int lifespan) {
     }
 

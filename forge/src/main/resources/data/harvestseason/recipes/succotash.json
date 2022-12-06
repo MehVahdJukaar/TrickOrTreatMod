@@ -1,0 +1,28 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "item": "minecraft:beetroot"
+    },
+    {
+      "tag": "forge:crops/tomato"
+    },
+    {
+      "tag": "forge:cooked_pork"
+    },
+    {
+      "tag": "forge:crops/corn"
+    }
+  ],
+  "result": {
+    "item": "harvestseason:succotash"
+  },
+  "experience": 0.35,
+  "cookingtime": 200,
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

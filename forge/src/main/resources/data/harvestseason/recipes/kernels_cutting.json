@@ -1,0 +1,23 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "tag": "forge:crops/corn"
+    }
+  ],
+  "result": [
+    {
+      "count": 6,
+      "item": "harvestseason:kernels"
+    }
+  ],
+  "tool": {
+    "tag": "forge:tools/knives"
+  },
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
