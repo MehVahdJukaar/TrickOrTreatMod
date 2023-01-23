@@ -19,7 +19,7 @@
       "net.mehvahdjukaar.hauntedharvest.fabric.HauntedHarvestFabric"
     ],
     "modmenu": [
-      "net.mehvahdjukaar.hauntedharvest.integration.fabric.modMenu.ModMenuCompat"
+      "net.mehvahdjukaar.hauntedharvest.integration.fabric.mod_menu.ModMenuCompat"
     ]
   },
   "mixins": [

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.fabric;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
@@ -26,23 +27,24 @@ public class HauntedHarvestFabric implements ModInitializer {
         }
 
         UseBlockCallback.EVENT.register(HauntedHarvest::onRightClickBlock);
+
+        CommonLifecycleEvents.TAGS_LOADED.register((a, b) -> HauntedHarvest.onTagLoad());
     }
 
     private static void clientSetup() {
         ClientRegistry.init();
 
-        ClientRegistry.init();
+        ClientRegistry.setup();
+
 
         registerISTER(ModRegistry.MOD_JACK_O_LANTERN_ITEM.get());
         registerISTER(ModRegistry.MOD_CARVED_PUMPKIN_ITEM.get());
 
-        ClientRegistry.setup();
     }
 
     private static void commonSetup() {
         HauntedHarvest.commonSetup();
     }
-
 
 
     private static void registerISTER(ItemLike itemLike) {

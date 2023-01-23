@@ -3,7 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.blocks.*;
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
@@ -30,6 +30,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,8 +43,13 @@ public class ModRegistry {
     public static void init() {
     }
 
-    private static CreativeModeTab getTab(CreativeModeTab tab, String name) {
-        return tab;
+    @Contract
+    @NotNull
+    public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
+        if (RegistryConfigs.isEnabled(regName)) {
+            return MOD_TAB == null ? g : MOD_TAB;
+        }
+        return null;
     }
 
 
@@ -68,26 +75,29 @@ public class ModRegistry {
                     new SensorType<>(PumpkinPoiSensor::new));
 
 
+    public static final String SPLATTERED_EGG_NAME = "splattered_egg";
     public static final Supplier<EntityType<SplatteredEggEntity>> SPLATTERED_EGG_ENTITY = RegHelper.registerEntityType(
-            HauntedHarvest.res("splattered_egg"), () -> (
-                    EntityType.Builder.<SplatteredEggEntity>of(SplatteredEggEntity::new, MobCategory.MISC)
-                            .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE))
-                    .build("splattered_egg"));
+            HauntedHarvest.res(SPLATTERED_EGG_NAME), SplatteredEggEntity::new, MobCategory.MISC,
+            0.5F, 0.5F, 10, Integer.MAX_VALUE);
 
 
     public static final Supplier<SimpleParticleType> SPOOKED_PARTICLE = RegHelper.registerParticle(
             HauntedHarvest.res("spooked"));
 
 
-    public static final Supplier<Item> ROTTEN_APPLE = RegHelper.registerItem(
-            HauntedHarvest.res("rotten_apple"), () ->
-                    new Item(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).food(ModFood.ROTTEN_APPLE)));
+    public static final String GRIM_APPLE_NAME = "grim_apple";
+    public static final Supplier<Item> DEATH_APPLE = regItem(GRIM_APPLE_NAME, () ->
+            new GrimAppleItem(new Item.Properties()
+                    .rarity(Rarity.RARE).food(ModFood.DEATH_APPLE)
+                    .tab(getTab(CreativeModeTab.TAB_FOOD, GRIM_APPLE_NAME))));
 
-    public static final Supplier<Item> DEATH_APPLE = RegHelper.registerItem(
-            HauntedHarvest.res("grim_apple"), () ->
-                    new GrimAppleItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).rarity(Rarity.RARE).food(ModFood.DEATH_APPLE)));
+    public static final String ROTTEN_APPLE_NAME = "rotten_apple";
+    public static final Supplier<Item> ROTTEN_APPLE = regItem(ROTTEN_APPLE_NAME, () ->
+            new Item(new Item.Properties()
+                    .food(ModFood.ROTTEN_APPLE)
+                    .tab(getTab(CreativeModeTab.TAB_FOOD, GRIM_APPLE_NAME))));
 
-    public static final CreativeModeTab MOD_TAB = !ModConfigs.MOD_TAB.get() ? null :
+    public static final CreativeModeTab MOD_TAB = !RegistryConfigs.CREATIVE_TAB.get() ? null :
             PlatformHelper.createModTab(HauntedHarvest.res(HauntedHarvest.MOD_ID),
                     () -> DEATH_APPLE.get().getDefaultInstance(), false);
 
@@ -112,24 +122,41 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(CORN_BASE.get()))
     );
 
-    public static final Supplier<Item> COB_ITEM = regItem("corn", () -> new Item(
-            (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)));
+    public static final String CORN_NAME = "corn";
+    public static final Supplier<Item> COB_ITEM = regItem(CORN_NAME, () -> new Item(
+            new Item.Properties()
+                    .tab(getTab(CreativeModeTab.TAB_MISC, CORN_NAME))));
 
     public static final Supplier<Item> COOKED_COB = regItem("corn_on_the_cob", () -> new Item(
-            (new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).stacksTo(16).food(ModFood.CORN_ON_THE_COB)));
+            new Item.Properties()
+                    .stacksTo(16).food(ModFood.CORN_ON_THE_COB)
+                    .tab(getTab(CreativeModeTab.TAB_FOOD, CORN_NAME))));
 
-    public static final Supplier<Item> POP_CORN = regItem("popcorn", () -> new Item(
-            (new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(ModFood.POPCORN)));
+    public static final Supplier<Item> CORN_SEEDS = regItem("kernels", () -> new ItemNameBlockItem(CORN_BASE.get(),
+            new Item.Properties()
+                    .tab(getTab(CreativeModeTab.TAB_MISC, CORN_NAME))));
 
-    public static final Supplier<Item> CANDY_CORN = regItem("candy_corn", () -> new CandyCornItem(
-            (new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(ModFood.CANDY_CORN)));
+
+    public static final String POPCORN_NAME = "popcorn";
+    public static final Supplier<Item> POP_CORN = regItem(POPCORN_NAME, () -> new Item(
+            new Item.Properties()
+                    .food(ModFood.POPCORN)
+                    .tab(getTab(CreativeModeTab.TAB_FOOD, POPCORN_NAME))));
+
+    public static final String CANDY_CORN_NAME = "candy_corn";
+    public static final Supplier<Item> CANDY_CORN = regItem(CANDY_CORN_NAME, () -> new CandyCornItem(
+            new Item.Properties()
+                    .food(ModFood.CANDY_CORN)
+                    .tab(getTab(CreativeModeTab.TAB_FOOD, CANDY_CORN_NAME))));
 
 
     public static final Supplier<Block> PAPER_BAG = regBlock("paper_bag", () -> new PaperBagBlock(
             BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).strength(0.5f, 0.5f)));
 
-    public static final Supplier<Item> PAPER_BAG_ITEM = regItem("paper_bag", () -> new PaperBagItem(
-            PAPER_BAG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)));
+    public static final String PAPER_BAG_NAME = "paper_bag";
+    public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME, () -> new PaperBagItem(
+            PAPER_BAG.get(), new Item.Properties()
+            .tab(getTab(CreativeModeTab.TAB_MISC, PAPER_BAG_NAME))));
 
 
     public static final Supplier<Block> CANDY_BAG = regBlock("candy_bag", () -> new CandyBagBlock(
@@ -139,15 +166,14 @@ public class ModRegistry {
             "candy_bag", () -> PlatformHelper.newBlockEntityType(
                     CandyBagTile::new, CANDY_BAG.get()));
 
-    public static final Supplier<Item> CORN_SEEDS = regItem("kernels", () -> new ItemNameBlockItem(CORN_BASE.get(),
-            (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)));
-
 
     public static final Supplier<Block> MOD_CARVED_PUMPKIN = regBlock("carved_pumpkin",
             () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)));
 
-    public static final Supplier<Item> MOD_CARVED_PUMPKIN_ITEM = regItem("carved_pumpkin",
-            () -> new ModCarvedPumpkinItem(MOD_CARVED_PUMPKIN.get(), new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)));
+    public static final String CARVED_PUMPKIN_NAME = "carved_pumpkin";
+    public static final Supplier<Item> MOD_CARVED_PUMPKIN_ITEM = regItem(CARVED_PUMPKIN_NAME,
+            () -> new ModCarvedPumpkinItem(MOD_CARVED_PUMPKIN.get(), new Item.Properties()
+                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, CARVED_PUMPKIN_NAME))));
 
 
     public static final Supplier<Block> MOD_JACK_O_LANTERN = regBlock("jack_o_lantern",
@@ -155,14 +181,14 @@ public class ModRegistry {
                     .lightLevel(s -> 15)));
 
     public static final Supplier<Item> MOD_JACK_O_LANTERN_ITEM = regItem("jack_o_lantern",
-            () -> new ModCarvedPumpkinItem(MOD_JACK_O_LANTERN.get(), new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)));
+            () -> new ModCarvedPumpkinItem(MOD_JACK_O_LANTERN.get(), new Item.Properties()
+                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, CARVED_PUMPKIN_NAME))));
 
 
     public static final Supplier<BlockEntityType<ModCarvedPumpkinBlockTile>> MOD_CARVED_PUMPKIN_TILE =
             regTile("carved_pumpkin", () ->
                     PlatformHelper.newBlockEntityType(ModCarvedPumpkinBlockTile::new,
                             MOD_CARVED_PUMPKIN.get(), MOD_JACK_O_LANTERN.get()));
-
 
 
     public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {

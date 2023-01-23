@@ -38,7 +38,7 @@ public class HauntedHarvestForgeClient {
 
             event.registerShader(blur, s -> HauntedHarvestForgeClient.blur = s);
         } catch (Exception e) {
-            HauntedHarvest.LOGGER.error("Failed to parse blur shader");
+            HauntedHarvest.LOGGER.error("Failed to parse blur shader: "+e);
         }
     }
 

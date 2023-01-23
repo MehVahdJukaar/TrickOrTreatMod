@@ -2,13 +2,15 @@ package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -62,22 +64,26 @@ public class HauntedHarvest {
     public static final boolean SUPP_INSTALLED = PlatformHelper.isModLoaded("supplementaries");
     public static final boolean FD_INSTALLED = PlatformHelper.isModLoaded("farmersdelight");
 
-    public static final SeasonManager SEASON_MANAGER = new SeasonManager();
+    private static SeasonManager seasonManager;
 
     private static final Set<Item> BABY_VILLAGER_EATABLE = new HashSet<>();
     public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e ->
             e.isBaby() && e.getMainHandItem().is(Items.BUNDLE);
 
     public static void commonInit() {
-        ModConfigs.earlyLoad();
+        CommonConfigs.init();
 
         ModRegistry.init();
         if (FD_INSTALLED) FDCompat.init();
         NetworkHandler.registerMessages();
+
+        RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
+
     }
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
+
         HalloweenVillagerAI.setup();
         ComposterBlock.COMPOSTABLES.put(ModRegistry.MOD_CARVED_PUMPKIN.get().asItem(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.CORN_SEEDS.get().asItem(), 0.3F);
@@ -93,6 +99,10 @@ public class HauntedHarvest {
         DispenserBlock.registerBehavior(ModRegistry.PAPER_BAG.get(), armorBehavior);
     }
 
+    public static SeasonManager getSeasonManager() {
+        if (seasonManager == null) seasonManager = new SeasonManager();
+        return seasonManager;
+    }
 
     //TODO: add witches to villages using structure modifiers
     //TODO: give candy to players
@@ -104,11 +114,11 @@ public class HauntedHarvest {
     }
 
     public static boolean isHalloweenSeason(Level level) {
-        return SEASON_MANAGER.isHalloween(level);
+        return seasonManager.isHalloween(level);
     }
 
     public static boolean isTrickOrTreatTime(Level level) {
-        return SEASON_MANAGER.isTrickOrTreatTime(level);
+        return seasonManager.isTrickOrTreatTime(level);
     }
 
     public static boolean isCandyOrApple(ItemStack stack) {
@@ -122,6 +132,7 @@ public class HauntedHarvest {
     //refresh configs and tag stuff
     @EventCalled
     public static void onTagLoad() {
+        seasonManager.refresh();
         BABY_VILLAGER_EATABLE.clear();
         Set<Item> temp = new HashSet<>();
         for (var p : Registry.ITEM.getTagOrEmpty(ModTags.SWEETS)) {

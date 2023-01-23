@@ -27,9 +27,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
             HauntedHarvest.res("textures/entity/villager/masks/creeper.png"),
             HauntedHarvest.res("textures/entity/villager/masks/vindicator.png"),
             HauntedHarvest.res("textures/entity/villager/masks/piglin.png"),
-            HauntedHarvest.res("textures/entity/villager/masks/paper_bag.png"),
-            HauntedHarvest.res("textures/entity/villager/masks/mehvahdjukaar.png"),
-            HauntedHarvest.res("textures/entity/villager/masks/plantkillable.png"),
+            HauntedHarvest.res("textures/entity/villager/masks/paper_bag.png")
     };
 
     private final HalloweenMaskModel<T> headModel;
@@ -41,7 +39,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
 
     @Override
     protected ResourceLocation getTextureLocation(T entity) {
-        return TEXTURES[(int) Math.abs(entity.getUUID().getLeastSignificantBits() % 8)];
+        return TEXTURES[(int) Math.abs(entity.getUUID().getLeastSignificantBits() % 9)];
     }
 
     @Override

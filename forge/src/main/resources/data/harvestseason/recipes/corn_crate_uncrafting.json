@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "harvestseason:corn_crate"
+      "item": "hauntedharvest:corn_crate"
     }
   ],
   "result": {
-    "item": "harvestseason:corn",
+    "item": "hauntedharvest:corn",
     "count": 9
   },
   "conditions": [

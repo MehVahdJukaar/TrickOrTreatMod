@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "harvestseason:block/paper_bag_head",
-		"particle": "harvestseason:block/paper_bag_head"
+		"1": "hauntedharvest:block/paper_bag_head",
+		"particle": "hauntedharvest:block/paper_bag_head"
 	},
 	"elements": [
 		{

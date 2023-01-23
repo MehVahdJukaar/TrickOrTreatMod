@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.integration.forge;
 
-import net.mehvahdjukaar.harvestseason.reg.ModFood;
+import net.mehvahdjukaar.hauntedharvest.reg.ModFood;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -15,8 +15,7 @@ import vectorwing.farmersdelight.common.registry.ModItems;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.harvestseason.reg.ModRegistry.regItem;
-import static net.mehvahdjukaar.harvestseason.reg.ModRegistry.regWithItem;
+import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.*;
 
 public class FDCompatImpl {
     public static void init() {
@@ -37,11 +36,13 @@ public class FDCompatImpl {
             FarmersDelight.CREATIVE_TAB
     );
     public static final Supplier<Item> CORNBREAD = regItem(
-            "cornbread", () -> new ConsumableItem(ModItems.foodItem(ModFood.CORNBREAD), false)
+            "cornbread", () -> new ConsumableItem(ModItems.foodItem(ModFood.CORNBREAD)
+                    .tab(getTab(FarmersDelight.CREATIVE_TAB, CORN_NAME)), false)
     );
 
     public static final Supplier<Item> SUCCOTASH = regItem(
-            "succotash", () -> new ConsumableItem(ModItems.bowlFoodItem(SUCCOTASH_FOOD), true)
+            "succotash", () -> new ConsumableItem(ModItems.bowlFoodItem(SUCCOTASH_FOOD)
+                    .tab(getTab(FarmersDelight.CREATIVE_TAB, CORN_NAME)), true)
     );
 
 

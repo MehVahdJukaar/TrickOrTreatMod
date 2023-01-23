@@ -4,7 +4,8 @@ package net.mehvahdjukaar.hauntedharvest.integration.forge.configured;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
@@ -24,7 +25,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
         super(HauntedHarvest.MOD_ID, ModRegistry.DEATH_APPLE.get().asItem().getDefaultInstance(),
                 ChatFormatting.GOLD + "Haunted Harvest Configured",
                 new ResourceLocation("textures/block/cracked_stone_bricks.png"),
-                parent, ModConfigScreen::new, ModConfigs.SPEC);
+                parent, ModConfigScreen::new, CommonConfigs.SPEC, RegistryConfigs.SPEC);
     }
 
 

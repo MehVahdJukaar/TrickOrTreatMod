@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest;
 
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.minecraft.world.level.Level;
 
@@ -22,14 +22,14 @@ public class SeasonManager {
         return trickOrTreatStart;
     }
 
-    public void onConfigReload() {
+    public void refresh() {
 
         //refresh date after configs are loaded
-        int startM = ModConfigs.START_MONTH.get() - 1;
-        int startD = ModConfigs.START_DAY.get();
+        int startM = CommonConfigs.START_MONTH.get() - 1;
+        int startD = CommonConfigs.START_DAY.get();
 
-        int endM = ModConfigs.END_MONTH.get() - 1;
-        int endD = ModConfigs.END_DAY.get();
+        int endM = CommonConfigs.END_MONTH.get() - 1;
+        int endD = CommonConfigs.END_DAY.get();
 
         boolean inv = startM > endM;
 
@@ -42,17 +42,17 @@ public class SeasonManager {
         Date end = calendar.getTime();
 
         Calendar todayCalendar = Calendar.getInstance();
-        if (todayCalendar.before(start) && inv) {
-            todayCalendar.set(1, todayCalendar.get(Calendar.MONTH), todayCalendar.get(Calendar.DATE));
-        }
+        int ii = (todayCalendar.getTime().before(start) && inv) ? 1 : 0;
+        todayCalendar.set(ii, todayCalendar.get(Calendar.MONTH), todayCalendar.get(Calendar.DATE));
+
 
         //if seasonal use pumpkin placement time window
-        isHalloweenRealTime = todayCalendar.after(start) && todayCalendar.before(end);
+        isHalloweenRealTime = todayCalendar.getTime().after(start) && todayCalendar.getTime().before(end);
 
-        trickOrTreatStart = ModConfigs.START_TIME.get();
-        trickOrTreatEnd = ModConfigs.END_TIME.get();
+        trickOrTreatStart = CommonConfigs.START_TIME.get();
+        trickOrTreatEnd = CommonConfigs.END_TIME.get();
 
-        useSeasonMod = HauntedHarvest.SEASON_MOD_INSTALLED && ModConfigs.SEASONS_MOD_COMPAT.get();
+        useSeasonMod = HauntedHarvest.SEASON_MOD_INSTALLED && CommonConfigs.SEASONS_MOD_COMPAT.get();
 
         if (useSeasonMod) {
             SeasonModCompat.refresh();

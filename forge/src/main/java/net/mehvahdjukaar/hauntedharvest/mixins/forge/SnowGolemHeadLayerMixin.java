@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.mixins.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.harvestseason.forge.ICustomPumpkinHolder;
+import net.mehvahdjukaar.hauntedharvest.forge.ICustomPumpkinHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;

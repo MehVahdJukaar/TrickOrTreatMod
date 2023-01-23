@@ -37,10 +37,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Mixin(Villager.class)
 public abstract class VillagerMixin extends AbstractVillager implements IHalloweenVillager {
 
-    private final Map<UUID, Integer> CANDY_COOLDOWNS = new ConcurrentHashMap<>();
+    //adults they have already asked candies
+    private final Map<UUID, Integer> adultCandyCooldown = new ConcurrentHashMap<>();
 
-    public VillagerMixin(EntityType<? extends AbstractVillager> p_35267_, Level p_35268_) {
-        super(p_35267_, p_35268_);
+    protected VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
+        super(entityType, level);
     }
 
 
@@ -49,19 +50,20 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = ("customServerAiStep"), at = @At("RETURN"))
     protected void customServerAiStep(CallbackInfo ci) {
-        for (UUID id : CANDY_COOLDOWNS.keySet()) {
-            Integer i = CANDY_COOLDOWNS.get(id);
+        for (var e : adultCandyCooldown.entrySet()) {
+            UUID id = e.getKey();
+            Integer i = e.getValue();
             if (i <= 0) {
-                CANDY_COOLDOWNS.remove(id);
+                adultCandyCooldown.remove(id);
             } else {
-                CANDY_COOLDOWNS.put(id, i - 1);
+                adultCandyCooldown.put(id, i - 1);
             }
         }
     }
 
     @Override
     public boolean isEntityOnCooldown(Entity e) {
-        return CANDY_COOLDOWNS.containsKey(e.getUUID());
+        return adultCandyCooldown.containsKey(e.getUUID());
     }
 
     @Override
@@ -71,7 +73,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Override
     public void setEntityOnCooldown(Entity e, int cooldownSec) {
-        CANDY_COOLDOWNS.put(e.getUUID(), 20 * (cooldownSec + e.level.random.nextInt(20)));
+        adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level.random.nextInt(20)));
     }
 
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
@@ -129,7 +131,6 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
                         NbtUtils.readBlockPos(compoundNBT.getCompound("Pumpkin"))));
             } catch (Exception ignored) {
             }
-            ;
         }
 
     }

@@ -4,8 +4,9 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.mehvahdjukaar.harvestseason.HarvestSeason;
-import net.mehvahdjukaar.harvestseason.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ import java.util.List;
 @JeiPlugin
 public class JEICompat implements IModPlugin {
 
-    private static final ResourceLocation ID = HarvestSeason.res("jei_plugin");
+    private static final ResourceLocation ID = HauntedHarvest.res("jei_plugin");
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -39,7 +40,7 @@ public class JEICompat implements IModPlugin {
 
     public static List<CraftingRecipe> createPumpkinDuplicate() {
         List<CraftingRecipe> recipes = new ArrayList<>();
-        String group = "harvestseason.jei.carved_pumpkin";
+        String group = "hauntedharvest.jei.carved_pumpkin";
 
         ItemStack output = new ItemStack(ModRegistry.MOD_CARVED_PUMPKIN.get());
         CompoundTag com = new CompoundTag();
@@ -48,10 +49,10 @@ public class JEICompat implements IModPlugin {
         com.putLongArray("Pixels", pixels);
         output.addTagElement("BlockEntityTag", com);
 
-        Ingredient emptyBoard = Ingredient.of(HarvestSeason.CARVABLE_PUMPKINS);
+        Ingredient emptyBoard = Ingredient.of(ModTags.CARVABLE_PUMPKINS);
         Ingredient fullBoard = Ingredient.of(output);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, fullBoard, emptyBoard);
-        ResourceLocation id = new ResourceLocation(HarvestSeason.MOD_ID, "jei_carved_pumpkin");
+        ResourceLocation id = HauntedHarvest.res("jei_carved_pumpkin");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
         recipes.add(recipe);
 
@@ -60,7 +61,7 @@ public class JEICompat implements IModPlugin {
 
     public static List<CraftingRecipe> createJackOLantern() {
         List<CraftingRecipe> recipes = new ArrayList<>();
-        String group = "harvestseason.jei.jack_o_lantern";
+        String group = "hauntedharvest.jei.jack_o_lantern";
 
         ItemStack output = new ItemStack(ModRegistry.MOD_JACK_O_LANTERN_ITEM.get());
         CompoundTag com = new CompoundTag();
@@ -69,7 +70,7 @@ public class JEICompat implements IModPlugin {
         output.addTagElement("BlockEntityTag", com);
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.TORCH), Ingredient.of(ModRegistry.MOD_CARVED_PUMPKIN_ITEM.get()));
-        ResourceLocation id = new ResourceLocation(HarvestSeason.MOD_ID, "jei_jack_o_lantern");
+        ResourceLocation id = HauntedHarvest.res("jei_jack_o_lantern");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
         recipes.add(recipe);
 

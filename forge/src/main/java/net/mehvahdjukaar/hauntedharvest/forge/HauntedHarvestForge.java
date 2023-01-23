@@ -10,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
 
 /**
  * Author: MehVahdJukaar
@@ -53,7 +55,7 @@ public class HauntedHarvestForge {
     }
 
     @SubscribeEvent
-    public static void onTagLoad(TagsUpdatedEvent event) {
+    public void onTagLoad(TagsUpdatedEvent event) {
         HauntedHarvest.onTagLoad();
     }
 

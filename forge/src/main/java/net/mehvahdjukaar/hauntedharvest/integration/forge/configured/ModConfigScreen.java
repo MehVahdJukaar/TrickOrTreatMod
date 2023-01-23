@@ -30,10 +30,14 @@ public class ModConfigScreen extends CustomConfigScreen {
     private static final Map<String, ItemStack> ICONS = new HashMap<>();
 
     static {
-        addIcon("trick or treating", Items.EGG);
-        addIcon("halloween end",Items.CARVED_PUMPKIN);
-        addIcon("halloween start", Items.JACK_O_LANTERN);
-        addIcon("season mod compat", ModRegistry.ROTTEN_APPLE.get());
+        addIcon("trick or treating", ModRegistry.CANDY_CORN.get());
+        addIcon("halloween end",ModRegistry.ROTTEN_APPLE.get());
+        addIcon("halloween start", ModRegistry.DEATH_APPLE.get());
+        addIcon("pumpkin carving", Items.JACK_O_LANTERN);
+        addIcon("season mod compat", ModRegistry.COB_ITEM.get());
+        addIcon("general", Items.SKELETON_SKULL);
+        addIcon("splattered egg", Items.EGG);
+        addIcon("carved pumpkin", Items.CARVED_PUMPKIN);
     }
 
     public ModConfigScreen(CustomConfigSelectScreen parent, IModConfig config) {

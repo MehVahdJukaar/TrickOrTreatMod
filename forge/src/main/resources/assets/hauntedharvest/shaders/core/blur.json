@@ -5,7 +5,7 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "position_tex",
-  "fragment": "harvestseason:blur",
+  "fragment": "hauntedharvest:blur",
   "attributes": [
     "Position",
     "UV0"

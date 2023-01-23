@@ -3,12 +3,12 @@
   "base": {
     "parent": "item/generated",
     "textures": {
-      "layer0": "harvestseason:item/paper_bag"
+      "layer0": "hauntedharvest:item/paper_bag"
     }
   },
   "perspectives": {
     "head": {
-      "parent": "harvestseason:item/paper_bag_head"
+      "parent": "hauntedharvest:item/paper_bag_head"
     }
   },
   "textures": {

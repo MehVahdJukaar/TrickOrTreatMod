@@ -1,27 +1,25 @@
-package net.mehvahdjukaar.hauntedharvest.integration.fabric.modMenu;
+package net.mehvahdjukaar.hauntedharvest.integration.fabric.mod_menu;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
-import net.mehvahdjukaar.moonlight.api.integration.cloth_config.ClothConfigListScreen;
-import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigListScreen;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 
-public class ModConfigScreen extends ClothConfigListScreen {
+public class ModConfigSelectScreen extends FabricConfigListScreen {
 
-    public ModConfigScreen(Screen parent) {
-        super(HauntedHarvest.MOD_ID, ModRegistry.DEATH_APPLE.get().asItem().getDefaultInstance(),
+    public ModConfigSelectScreen(Screen parent) {
+        super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
                 Component.literal(ChatFormatting.GOLD + "Haunted Harvest Configs"),
                 new ResourceLocation("textures/block/cracked_stone_bricks.png"),
-                parent, ModConfigs.SPEC);
+                parent, CommonConfigs.SPEC, RegistryConfigs.SPEC);
     }
 
     @Override
@@ -38,13 +36,13 @@ public class ModConfigScreen extends ClothConfigListScreen {
                 "https://www.patreon.com/user?u=53696377", "Support me on Patreon :D");
 
         LinkButton kofi = LinkButton.create(icons, this, centerX - 45 - 22 * 2, y, 2, 2,
-                "https://ko-fi.com/mehvahdjukaar", "Donate a Coffe");
+                "https://ko-fi.com/mehvahdjukaar", "Donate a Coffee");
 
         LinkButton curseforge = LinkButton.create(icons, this, centerX - 45 - 22 * 3, y, 1, 2,
                 "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest", "CurseForge Page");
 
         LinkButton github = LinkButton.create(icons, this, centerX - 45 - 22 * 4, y, 0, 2,
-                "https://github.com/MehVahdJukaar/TrickOrTreatMod", "Github");
+                "https://github.com/MehVahdJukaar/TrickOrTreatMod", "Mod Wiki");
 
 
         LinkButton discord = LinkButton.create(icons, this, centerX + 45 + 2, y, 1, 1,
@@ -70,15 +68,4 @@ public class ModConfigScreen extends ClothConfigListScreen {
         this.addRenderableWidget(twitter);
     }
 
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-
-        var level = Minecraft.getInstance().level;
-        if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
-            int x = (int) (this.width * 0.93f);
-            this.itemRenderer.renderAndDecorateFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
-        }
-    }
 }
-

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.mixins.forge;
 
-import net.mehvahdjukaar.harvestseason.forge.ICustomPumpkinHolder;
+import net.mehvahdjukaar.hauntedharvest.forge.ICustomPumpkinHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.mixins.forge;
 
-import net.mehvahdjukaar.harvestseason.forge.PumpkinBlurGuiOverlay;
-import net.mehvahdjukaar.harvestseason.items.ModCarvedPumpkinItem;
+import net.mehvahdjukaar.hauntedharvest.forge.PumpkinBlurGuiOverlay;
+import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.entity.player.Player;

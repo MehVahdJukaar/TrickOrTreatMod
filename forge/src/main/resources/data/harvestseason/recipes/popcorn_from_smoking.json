@@ -3,7 +3,7 @@
   "ingredient": {
     "tag": "forge:seeds/corn"
   },
-  "result": "harvestseason:popcorn",
+  "result": "hauntedharvest:popcorn",
   "experience": 0.35,
   "cookingtime": 100
 }

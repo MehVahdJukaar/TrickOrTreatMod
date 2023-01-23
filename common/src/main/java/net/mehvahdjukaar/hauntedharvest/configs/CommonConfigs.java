@@ -9,33 +9,17 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 
 import java.util.function.Supplier;
 
-public class ModConfigs {
+public class CommonConfigs {
 
-    public static Supplier<Boolean> MOD_TAB;
+    public static void init() {
+    }
 
-    public static Supplier<Integer> START_DAY;
-    public static Supplier<Integer> START_MONTH;
-
-    public static Supplier<Integer> END_DAY;
-    public static Supplier<Integer> END_MONTH;
-
-    public static Supplier<Integer> START_TIME;
-    public static Supplier<Integer> END_TIME;
-
-    public static Supplier<ModCarvedPumpkinBlock.CarveMode> PUMPKIN_CARVE_MODE;
-    public static Supplier<ModCarvedPumpkinBlock.CarveMode> JACK_O_LANTERN_CARVE_MODE;
+    public static final ConfigSpec SPEC;
 
 
-    public static Supplier<Boolean> SEASONS_MOD_COMPAT;
-
-    public static ConfigSpec SPEC;
-
-    public static void earlyLoad() {
+    static {
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON);
 
-        builder.push("general");
-        MOD_TAB = builder.comment("Enable mod creative tab").define("creative_tab", false);
-        builder.pop();
 
         builder.push("pumpkin_carving");
         PUMPKIN_CARVE_MODE = builder.comment("Pumpkin carving mode")
@@ -76,13 +60,28 @@ public class ModConfigs {
         builder.pop();
 
 
-        builder.onChange(HauntedHarvest.SEASON_MANAGER::onConfigReload);
+        builder.onChange(()->HauntedHarvest.getSeasonManager().refresh());
 
-        SPEC = builder.build();
-
-        //load early
-        SPEC.loadFromFile();
+        SPEC = builder.buildAndRegister();
     }
 
+    public static final Supplier<Integer> START_DAY;
+    public static final Supplier<Integer> START_MONTH;
 
+    public static final Supplier<Integer> END_DAY;
+    public static final Supplier<Integer> END_MONTH;
+
+    public static final Supplier<Integer> START_TIME;
+    public static final Supplier<Integer> END_TIME;
+
+    public static final Supplier<ModCarvedPumpkinBlock.CarveMode> PUMPKIN_CARVE_MODE;
+    public static final Supplier<ModCarvedPumpkinBlock.CarveMode> JACK_O_LANTERN_CARVE_MODE;
+
+
+    public static final Supplier<Boolean> SEASONS_MOD_COMPAT;
+
+
+    public static boolean isEnabled(String regName) {
+        return true;
+    }
 }

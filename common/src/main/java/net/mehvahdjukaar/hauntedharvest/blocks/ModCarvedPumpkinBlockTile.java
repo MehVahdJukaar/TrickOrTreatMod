@@ -2,7 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager.Key;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingGui;
-import net.mehvahdjukaar.hauntedharvest.configs.ModConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
@@ -215,8 +215,8 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     }
 
     public ModCarvedPumpkinBlock.CarveMode getCarveMode() {
-        if (this.isJackOLantern) return ModConfigs.JACK_O_LANTERN_CARVE_MODE.get();
-        return ModConfigs.PUMPKIN_CARVE_MODE.get();
+        if (this.isJackOLantern) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
+        return CommonConfigs.PUMPKIN_CARVE_MODE.get();
     }
 
     public ItemStack getItemWithNBT() {

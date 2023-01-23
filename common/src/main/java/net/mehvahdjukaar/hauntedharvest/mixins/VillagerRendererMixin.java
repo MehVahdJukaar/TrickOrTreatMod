@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class VillagerRendererMixin extends MobRenderer<Villager, VillagerModel<Villager>> {
 
 
-    public VillagerRendererMixin(EntityRendererProvider.Context context, VillagerModel<Villager> villagerVillagerModel, float v) {
+    protected VillagerRendererMixin(EntityRendererProvider.Context context, VillagerModel<Villager> villagerVillagerModel, float v) {
         super(context, villagerVillagerModel, v);
     }
 

@@ -3,7 +3,7 @@
   "ingredient": {
     "tag": "forge:crops/corn"
   },
-  "result": "harvestseason:corn_on_the_cob",
+  "result": "hauntedharvest:corn_on_the_cob",
   "experience": 0.35,
   "cookingtime": 200
 }

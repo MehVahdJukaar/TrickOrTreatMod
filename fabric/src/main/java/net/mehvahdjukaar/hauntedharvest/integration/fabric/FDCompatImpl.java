@@ -15,8 +15,7 @@ import net.minecraft.world.level.material.Material;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.regItem;
-import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.regWithItem;
+import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.*;
 
 public class FDCompatImpl {
     public static void init() {
@@ -36,11 +35,13 @@ public class FDCompatImpl {
             FarmersDelightMod.ITEM_GROUP
     );
     public static final Supplier<Item> CORNBREAD = regItem(
-            "cornbread", () -> new ConsumableItem(new Item.Properties().tab(FarmersDelightMod.ITEM_GROUP)
+            "cornbread", () -> new ConsumableItem(new Item.Properties()
+                    .tab(getTab(FarmersDelightMod.ITEM_GROUP, CORN_NAME))
                     .food(ModFood.CORNBREAD), false)
     );
     public static final Supplier<Item> SUCCOTASH = regItem(
-            "succotash", () -> new ConsumableItem(bowlFoodItem(SUCCOTASH_FOOD), true)
+            "succotash", () -> new ConsumableItem(bowlFoodItem(SUCCOTASH_FOOD)
+                    .tab(getTab(FarmersDelightMod.ITEM_GROUP, CORN_NAME)), true)
     );
 
     public static Item.Properties bowlFoodItem(FoodProperties food) {
