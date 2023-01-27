@@ -1,0 +1,20 @@
+{
+    "itemGroup.hauntedharvest": "Haunted Harvest",
+	"item.hauntedharvest.grim_apple": "Похмуре яблуко",
+   	"item.hauntedharvest.rotten_apple": "Гниле яблуко",
+	"entity.hauntedharvest.splattered_egg": "Розбризкане яйце",
+   	"gui.hauntedharvest.carving.edit": "Вирізати",
+    	"gui.hauntedharvest.carving.clear": "Очистити",
+    "item.hauntedharvest.corn": "Кукурудза",
+    "item.hauntedharvest.corn_on_the_cob": "Качан кукурудзи",
+    "item.hauntedharvest.popcorn": "Попкорн",
+    "item.hauntedharvest.candy_corn": "Цукерка в формі кукурудзи",
+    "item.hauntedharvest.kernels": "Кукурудзяне зерно",
+    "block.hauntedharvest.paper_bag": "Паперовий мішечок",
+    "block.hauntedharvest.candy_bag": "Мішечок для цукерок",
+    "block.hauntedharvest.jack_o_lantern": "Ліхтар Джека",
+    "block.hauntedharvest.carved_pumpkin": "Вирізаний гарбуз",
+    "item.hauntedharvest.succotash": "Суккоташ",
+    "block.hauntedharvest.corn_crate": "Ящик кукурудзи",
+    "item.hauntedharvest.cornbread": "Кукурудзяний хліб"
+}
