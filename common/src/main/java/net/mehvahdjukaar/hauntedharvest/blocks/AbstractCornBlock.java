@@ -10,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,7 +41,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
             if (this.isValidBonemealTarget(level, pos, state, level.isClientSide)) {
 
                 float f = getGrowthSpeed(this, level, pos);
-                if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
+                if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (30.0F / f) + 1) == 0)) {
                     this.growCropBy(level, pos, state, 1);
                     ForgeHelper.onCropsGrowPost(level, pos, state);
                 }
@@ -109,4 +110,35 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
 
     @Nullable
     protected abstract Block getTopBlock();
+
+    public abstract int getHeight();
+
+    public boolean isPlantFullyGrown(BlockState state, BlockPos pos, Level level) {
+        while (state.getBlock() instanceof AbstractCornBlock cb) {
+            if (!cb.isMaxAge(state)) return false;
+            if (cb.getTopBlock() == null) return true;
+            pos = pos.above();
+            state = level.getBlockState(pos);
+        }
+        return false;
+    }
+
+    public static boolean spawn(BlockPos pos, LevelAccessor level, int age) {
+
+        if (level.getBlockState(pos).isAir()) {
+            if (age > 2) {
+                if (!level.getBlockState(pos.above()).isAir()) return false;
+                BlockPos above1 = pos.above();
+                if (age > 4) {
+                    BlockPos above = pos.above(2);
+                    if (!level.getBlockState(above).isAir()) return false;
+                    level.setBlock(above, ModRegistry.CORN_TOP.get().defaultBlockState().setValue(CornTobBlock.AGE, Math.min(age - 5, 1)), 2);
+                }
+                level.setBlock(above1, ModRegistry.CORN_MIDDLE.get().defaultBlockState().setValue(CornMiddleBlock.AGE, Math.min(age - 3, 2)), 2);
+            }
+            level.setBlock(pos, ModRegistry.CORN_BASE.get().defaultBlockState().setValue(CornBaseBlock.AGE, Math.min(age, 3)), 2);
+            return true;
+        }
+        return false;
+    }
 }

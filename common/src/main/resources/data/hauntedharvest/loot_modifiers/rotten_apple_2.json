@@ -1,6 +1,10 @@
 {
-  "type": "hauntedharvest:add_item",
+  "type": "moonlight:add_item",
   "conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "grim_apple"
+    },
     {
       "condition": "minecraft:random_chance",
       "chance": 0.0008

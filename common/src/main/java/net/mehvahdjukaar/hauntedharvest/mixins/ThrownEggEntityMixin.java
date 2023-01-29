@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import net.mehvahdjukaar.hauntedharvest.ai.IHarmlessProjectile;
+import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +26,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     private boolean hasSpawnedChicken = false;
     private boolean shotFromVillager = false;
 
-    public ThrownEggEntityMixin(EntityType<? extends ThrowableItemProjectile> aSuper, Level level) {
+    protected ThrownEggEntityMixin(EntityType<? extends ThrowableItemProjectile> aSuper, Level level) {
         super(aSuper, level);
     }
 
@@ -44,7 +45,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     protected void onHit(HitResult pResult, CallbackInfo ci) {
         this.hasSpawnedChicken = false;
         if (this.isHarmless()) {
-            if (pResult.getType() == HitResult.Type.BLOCK) {
+            if (pResult.getType() == HitResult.Type.BLOCK && RegistryConfigs.SPLATTERED_EGG_ENABLED.get()) {
                 this.spawnSplatteredEgg(pResult);
                 this.onHitBlock((BlockHitResult) pResult);
                 this.discard();

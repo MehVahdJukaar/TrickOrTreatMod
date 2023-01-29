@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,6 +37,8 @@ public class CornMiddleBlock extends AbstractCornBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        if(true)return true;
+
         if (getAge(state) == getMaxAge()) {
             var top = getTopBlock();
             if (top != null && !level.getBlockState(pos.above()).is(top)) return false;
@@ -66,8 +67,13 @@ public class CornMiddleBlock extends AbstractCornBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
         InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
         if (!old.consumesAction()) {
-            var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
-            if (ev != null) return ev;
+            BlockPos below = pos.below(getHeight());
+            BlockState belowBlock = world.getBlockState(below);
+            if (belowBlock.getBlock() instanceof CornBaseBlock b) {
+              //  return b.use(belowBlock, world, below, player, hand, rayTraceResult);
+                //var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
+                //if (ev != null) return ev;
+            }
         }
         return old;
     }
@@ -77,4 +83,8 @@ public class CornMiddleBlock extends AbstractCornBlock {
         return state.is(ModRegistry.CORN_BASE.get());
     }
 
+    @Override
+    public int getHeight() {
+        return 1;
+    }
 }

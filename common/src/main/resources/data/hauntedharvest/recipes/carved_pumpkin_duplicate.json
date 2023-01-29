@@ -1,3 +1,9 @@
 {
-  "type": "hauntedharvest:carved_pumpkin"
+  "type": "hauntedharvest:carved_pumpkin",
+  "conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "carved_pumpkin"
+    }
+  ]
 }

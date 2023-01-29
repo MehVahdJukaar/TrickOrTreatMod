@@ -1,0 +1,9 @@
+{
+  "type": "hauntedharvest:farm_field",
+  "config": {
+    "has_scarecrow": false,
+    "tries": 30,
+    "xz_spread": 3,
+    "y_spread": 1
+  }
+}

@@ -5,5 +5,11 @@
   },
   "result": "hauntedharvest:corn_on_the_cob",
   "experience": 0.35,
-  "cookingtime": 600
+  "cookingtime": 600,
+  "conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ]
 }

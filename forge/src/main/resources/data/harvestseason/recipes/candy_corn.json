@@ -11,5 +11,11 @@
   "result": {
     "item": "hauntedharvest:candy_corn",
     "count": 3
-  }
+  },
+  "conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "candy_corn"
+    }
+  ]
 }

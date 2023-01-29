@@ -1,13 +1,20 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.integration.QuarkCompat;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -32,8 +39,9 @@ public class CornBaseBlock extends AbstractCornBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        if(true)return true;
         if (getAge(state) == getMaxAge()) {
-            if (!level.getBlockState(pos.above()).is(getTopBlock())){
+            if (!level.getBlockState(pos.above()).is(getTopBlock())) {
                 return false;
             }
         }
@@ -56,8 +64,8 @@ public class CornBaseBlock extends AbstractCornBlock {
         return MAX_AGE;
     }
 
-
-
-
-
+    @Override
+    public int getHeight() {
+        return 0;
+    }
 }

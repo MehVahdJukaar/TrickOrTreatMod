@@ -13,5 +13,11 @@
   "result": {
     "item": "hauntedharvest:paper_bag",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "paper_bag"
+    }
+  ]
 }

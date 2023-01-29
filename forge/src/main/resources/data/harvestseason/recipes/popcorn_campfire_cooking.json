@@ -5,5 +5,11 @@
   },
   "result": "hauntedharvest:popcorn",
   "experience": 0.35,
-  "cookingtime": 300
+  "cookingtime": 300,
+  "conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "popcorn"
+    }
+  ]
 }

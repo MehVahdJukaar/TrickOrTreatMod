@@ -5,12 +5,14 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
+import net.mehvahdjukaar.hauntedharvest.integration.QuarkCompat;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.core.misc.AntiRepostWarning;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -58,23 +60,26 @@ public class HauntedHarvest {
         return new ResourceLocation(MOD_ID, name);
     }
 
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static final boolean SEASON_MOD_INSTALLED = PlatformHelper.isModLoaded(PlatformHelper.getPlatform().isForge() ? "sereneseasons" : "seasons");
     public static final boolean SUPP_INSTALLED = PlatformHelper.isModLoaded("supplementaries");
     public static final boolean FD_INSTALLED = PlatformHelper.isModLoaded("farmersdelight");
-
-    private static SeasonManager seasonManager;
+    public static final boolean QUARK_INSTALLED = PlatformHelper.isModLoaded("quark");
 
     private static final Set<Item> BABY_VILLAGER_EATABLE = new HashSet<>();
     public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e ->
             e.isBaby() && e.getMainHandItem().is(Items.BUNDLE);
+
+    private static SeasonManager seasonManager;
+
 
     public static void commonInit() {
         CommonConfigs.init();
 
         ModRegistry.init();
         if (FD_INSTALLED) FDCompat.init();
+        if (QUARK_INSTALLED) QuarkCompat.init();
         NetworkHandler.registerMessages();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);

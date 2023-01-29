@@ -120,7 +120,9 @@ dependencies {
     modCompileOnly("net.mehvahdjukaar:supplementaries-forge:${project.supplementaries_version}")
     modImplementation("curse.maven:autoreglib-250363:3857246")
     modImplementation("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("curse.maven:quark-243121:4100692")
+    modImplementation("vazkii.quark:Quark:3.4-391")
+
+    /// modImplementation("curse.maven:quark-243121:4366541")
     modImplementation("curse.maven:farmers-delight-398521:3999157")
     modImplementation("curse.maven:jei-238222:3928388")
     modImplementation ("curse.maven:configured-457570:4011355")

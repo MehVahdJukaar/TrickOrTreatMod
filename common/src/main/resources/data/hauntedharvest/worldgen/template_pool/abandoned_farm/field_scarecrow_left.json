@@ -1,0 +1,38 @@
+{
+
+  "name": "hauntedharvest:abandoned_farm/scarecrow_left",
+
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+
+      "weight": 1,
+      "element": {
+
+        "location": "hauntedharvest:scarecrow_left",
+
+        "processors": "minecraft:empty",
+
+        "projection": "rigid",
+
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+
+    {
+
+      "weight": 1,
+      "element": {
+
+        "location": "hauntedharvest:field",
+
+        "processors": "minecraft:empty",
+
+        "projection": "rigid",
+
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

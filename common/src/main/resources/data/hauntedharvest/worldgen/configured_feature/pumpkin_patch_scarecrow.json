@@ -1,0 +1,10 @@
+{
+  "type": "hauntedharvest:farm_field",
+  "config": {
+    "is_pumpkin_patch": true,
+    "has_scarecrow": true,
+    "tries": 60,
+    "xz_spread": 4,
+    "y_spread": 1
+  }
+}

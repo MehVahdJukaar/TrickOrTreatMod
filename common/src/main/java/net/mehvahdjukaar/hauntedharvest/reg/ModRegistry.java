@@ -9,9 +9,13 @@ import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.items.PaperBagItem;
 import net.mehvahdjukaar.hauntedharvest.items.crafting.ModCarvedPumpkinRecipe;
+import net.mehvahdjukaar.hauntedharvest.worldgen.FarmFieldFeature;
+import net.mehvahdjukaar.hauntedharvest.worldgen.ProcessFarmProcessor;
+import net.mehvahdjukaar.hauntedharvest.worldgen.SeedBasedFeaturePoolElement;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -30,6 +34,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,10 +63,22 @@ public class ModRegistry {
     public static final Supplier<Activity> EAT_CANDY = regActivity("eat_candy");
     public static final Supplier<Activity> TRICK_OR_TREAT = regActivity("trick_or_treat");
 
+
+    public static final Supplier<StructureProcessorType<ProcessFarmProcessor>> FARM_PROCESSOR =
+            RegHelper.register(HauntedHarvest.res("process_farm"), () ->
+                    () -> ProcessFarmProcessor.CODEC, Registry.STRUCTURE_PROCESSOR);
+
+    public static final Supplier<StructurePoolElementType<SeedBasedFeaturePoolElement>> RANDOM_FEATURE_POOL =
+            RegHelper.register(HauntedHarvest.res("random_feature_pool_element"), () ->
+                    () -> SeedBasedFeaturePoolElement.CODEC, Registry.STRUCTURE_POOL_ELEMENT);
+
+    public static final Supplier<Feature<FarmFieldFeature.Config>> FARM_FIELD_FEATURE =
+            RegHelper.registerFeature(HauntedHarvest.res("farm_field"), () ->
+                    new FarmFieldFeature(FarmFieldFeature.Config.CODEC));
+
     //do not use
     public static final Supplier<Schedule> HALLOWEEN_VILLAGER_BABY_SCHEDULE =
             RegHelper.registerSchedule(HauntedHarvest.res("villager_baby_halloween"), Schedule::new);
-
 
     public static final Supplier<MemoryModuleType<GlobalPos>> PUMPKIN_POS =
             RegHelper.registerMemoryModule(HauntedHarvest.res("pumpkin_pos"), () ->

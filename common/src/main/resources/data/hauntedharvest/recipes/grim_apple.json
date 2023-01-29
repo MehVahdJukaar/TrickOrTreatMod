@@ -20,5 +20,11 @@
   "result": {
     "item": "hauntedharvest:grim_apple",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "grim_apple"
+    }
+  ]
 }

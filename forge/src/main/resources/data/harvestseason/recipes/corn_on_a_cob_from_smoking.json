@@ -5,5 +5,15 @@
   },
   "result": "hauntedharvest:corn_on_the_cob",
   "experience": 0.35,
-  "cookingtime": 100
+  "cookingtime": 100,
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ]
 }
