@@ -46,11 +46,12 @@ public class ModCommands {
             var e = context.getSource().getEntity();
             if (e instanceof ServerPlayer p) {
                 var item = p.getItemInHand(InteractionHand.MAIN_HAND);
-                if (item.getItem() instanceof ModCarvedPumpkinItem i) {
+                if (item.getItem() instanceof ModCarvedPumpkinItem) {
                     CompoundTag t = item.getTag();
                     if (t != null && t.contains("BlockEntityTag")) {
                         t = t.getCompound("BlockEntityTag");
-                        NetworkHandler.CHANNEL.sendToClientPlayer( p, new ClientBoundCopyCarvingCommand(t.get("Pixels").getAsString()));
+                        NetworkHandler.CHANNEL.sendToClientPlayer( p, new ClientBoundCopyCarvingCommand(t.get("Pixels")
+                                .getAsString().replaceAll("[;L]", "")));
                         context.getSource().sendSuccess(Component.literal("Copied content to clipboard"), false);
                         return 0;
                     }

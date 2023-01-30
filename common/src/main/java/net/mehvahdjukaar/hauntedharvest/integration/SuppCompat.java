@@ -23,13 +23,13 @@ public class SuppCompat {
 
     public static boolean placeFlax(BlockPos.MutableBlockPos p, WorldGenLevel level, RandomSource random) {
         if (level.getBlockState(p).isAir()) {
-            int age = random.nextInt(7);
+            int age = random.nextInt(8);
             if (age >= FlaxBlock.DOUBLE_AGE) {
                 if (!level.getBlockState(p.above()).isAir()) return false;
                 level.setBlock(p.above(), ModRegistry.FLAX.get().defaultBlockState()
                         .setValue(FlaxBlock.HALF, DoubleBlockHalf.UPPER).setValue(FlaxBlock.AGE, age), 2);
             }
-            level.setBlock(p.above(), ModRegistry.FLAX.get().defaultBlockState()
+            level.setBlock(p, ModRegistry.FLAX.get().defaultBlockState()
                     .setValue(FlaxBlock.AGE, age), 2);
             return true;
         }

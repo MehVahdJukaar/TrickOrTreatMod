@@ -92,7 +92,7 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         level.setBlock(right, Block.updateFromNeighbourShapes(Blocks.SPRUCE_FENCE.defaultBlockState(), level, right), 2);
 
         Block toPlace;
-        if (CommonConfigs.CUSTOM_CARVINGS.get()) {
+        if (CommonConfigs.customCarvings()) {
             toPlace = (random.nextInt(7) == 0 ? ModRegistry.MOD_JACK_O_LANTERN : ModRegistry.MOD_CARVED_PUMPKIN).get();
         } else {
             toPlace = (random.nextInt(7) == 0 ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN);

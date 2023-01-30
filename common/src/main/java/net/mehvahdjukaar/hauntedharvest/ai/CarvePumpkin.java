@@ -89,7 +89,7 @@ public class CarvePumpkin extends Behavior<Villager> {
 
                 pLevel.playSound(null, targetPos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                Block toPlace = (!CommonConfigs.CUSTOM_CARVINGS.get() || pLevel.random.nextInt(4) == 0)
+                Block toPlace = (!CommonConfigs.customCarvings() || pLevel.random.nextInt(4) == 0)
                         ? Blocks.CARVED_PUMPKIN : ModRegistry.MOD_CARVED_PUMPKIN.get();
 
                 pLevel.setBlock(targetPos, toPlace.defaultBlockState().setValue(CarvedPumpkinBlock.FACING, dir), 11);

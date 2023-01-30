@@ -84,7 +84,7 @@ public class CommonConfigs {
     public static final Supplier<Boolean> SEASONS_MOD_COMPAT;
 
 
-    public static boolean isEnabled(String regName) {
-        return true;
+    public static boolean customCarvings() {
+        return CUSTOM_CARVINGS.get() && RegistryConfigs.CARVED_PUMPKINS_ENABLED.get();
     }
 }
