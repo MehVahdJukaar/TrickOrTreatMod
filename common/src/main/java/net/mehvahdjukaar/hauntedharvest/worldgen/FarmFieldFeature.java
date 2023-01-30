@@ -2,15 +2,16 @@ package net.mehvahdjukaar.hauntedharvest.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.hauntedharvest.CarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.SuppCompat;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
@@ -27,7 +28,7 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
 
     public FarmFieldFeature(Codec<Config> codec) {
         super(codec);
-   }
+    }
 
     @Override
     public boolean place(FeaturePlaceContext<Config> context) {
@@ -36,7 +37,7 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         CropType crop = config.crop();
-        if(!crop.isEnabled())return false;
+        if (!crop.isEnabled()) return false;
         boolean scarecrow = config.scarecrow();
 
         if (scarecrow) placeScarecrow(blockPos, level, random);
@@ -55,12 +56,12 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
             );
 
             if (level.getBlockState(p.below()).is(BlockTags.DIRT)) {
-                if(switch (crop){
+                if (switch (crop) {
                     default -> placePumpkin(p, level, random);
                     case CORN -> placeCorn(p, level, random);
                     case FLAX -> SuppCompat.placeFlax(p, level, random);
                     case TOMATOES -> placeTomatoes(p, level, random);
-                }){
+                }) {
                     level.setBlock(p.below(), Blocks.FARMLAND.defaultBlockState(), 2);
                     ++i;
                 }
@@ -71,7 +72,7 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
     }
 
     private boolean placeTomatoes(BlockPos.MutableBlockPos p, WorldGenLevel level, RandomSource random) {
-        if(level.getBlockState(p).isAir()){
+        if (level.getBlockState(p).isAir()) {
             level.setBlock(p, FDCompat.getTomato(random), 2);
             return true;
         }
@@ -89,10 +90,14 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         BlockPos right = above.relative(dir.getOpposite());
         level.setBlock(right, Block.updateFromNeighbourShapes(Blocks.SPRUCE_FENCE.defaultBlockState(), level, right), 2);
 
-        level.setBlock(above.above(), Blocks.CARVED_PUMPKIN.defaultBlockState()
+        level.setBlock(above.above(), (random.nextInt(7) == 0 ? ModRegistry.MOD_JACK_O_LANTERN :
+                ModRegistry.MOD_CARVED_PUMPKIN).get().defaultBlockState()
                 .setValue(CarvedPumpkinBlock.FACING, dir.getClockWise()), 2);
 
-
+        if (level.getBlockEntity(above.above()) instanceof ModCarvedPumpkinBlockTile tile) {
+            tile.acceptPixels(CarvingsManager.getRandomCarving(random, true));
+            tile.setChanged();
+        }
     }
 
     private boolean placeCorn(BlockPos.MutableBlockPos pos, WorldGenLevel level, RandomSource random) {
@@ -120,7 +125,7 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         return false;
     }
 
-    public enum CropType implements StringRepresentable{
+    public enum CropType implements StringRepresentable {
         PUMPKIN, CORN, FLAX, TOMATOES;
 
         public boolean isEnabled() {

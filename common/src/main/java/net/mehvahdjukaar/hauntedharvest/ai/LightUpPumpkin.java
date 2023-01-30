@@ -3,6 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -86,7 +88,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
             this.ticksSinceReached++;
 
             BlockState state = pLevel.getBlockState(pos);
-            if (!state.is(Blocks.CARVED_PUMPKIN)) {
+            if (!state.is(ModTags.CARVED_PUMPKINS)) {
                 pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
             } else {
 
@@ -95,7 +97,8 @@ public class LightUpPumpkin extends Behavior<Villager> {
                     SoundType soundtype = Blocks.TORCH.defaultBlockState().getSoundType();
                     pLevel.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
-                    pLevel.setBlockAndUpdate(pos, Blocks.JACK_O_LANTERN.defaultBlockState()
+                    Block toPlace = state.is(ModRegistry.MOD_CARVED_PUMPKIN.get()) ? ModRegistry.MOD_JACK_O_LANTERN.get() : Blocks.JACK_O_LANTERN;
+                    pLevel.setBlockAndUpdate(pos, toPlace.defaultBlockState()
                             .setValue(CarvedPumpkinBlock.FACING, state.getValue(CarvedPumpkinBlock.FACING)));
                 }
             }

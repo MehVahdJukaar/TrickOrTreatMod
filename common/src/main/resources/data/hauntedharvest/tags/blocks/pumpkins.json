@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:pumpkin",
+    "minecraft:carved_pumpkin",
+    "minecraft:jack_o_lantern",
+    "hauntedharvest:carved_pumpkin",
+    "hauntedharvest:jack_o_lantern"
+  ]
+}

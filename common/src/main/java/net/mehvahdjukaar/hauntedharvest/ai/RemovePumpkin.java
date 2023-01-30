@@ -3,6 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -84,7 +85,7 @@ public class RemovePumpkin extends Behavior<Villager> {
             this.ticksSinceReached++;
 
             BlockState state = pLevel.getBlockState(pos);
-            if (!state.is(Blocks.PUMPKIN) && !state.is(Blocks.CARVED_PUMPKIN) && !state.is(Blocks.JACK_O_LANTERN)) {
+            if (!state.is(ModTags.PUMPKINS)) {
                 pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
             } else {
                 //breaking animation. same as fodder lol. might have the same issues
