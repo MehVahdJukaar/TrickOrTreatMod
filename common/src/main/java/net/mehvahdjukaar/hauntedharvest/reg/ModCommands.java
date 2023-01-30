@@ -52,6 +52,7 @@ public class ModCommands {
                         t = t.getCompound("BlockEntityTag");
                         NetworkHandler.CHANNEL.sendToClientPlayer( p, new ClientBoundCopyCarvingCommand(t.get("Pixels").getAsString()));
                         context.getSource().sendSuccess(Component.literal("Copied content to clipboard"), false);
+                        return 0;
                     }
                 }
             }

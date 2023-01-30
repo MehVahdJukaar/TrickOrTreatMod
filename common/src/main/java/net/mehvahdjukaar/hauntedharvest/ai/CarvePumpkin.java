@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.CarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
@@ -88,7 +89,9 @@ public class CarvePumpkin extends Behavior<Villager> {
 
                 pLevel.playSound(null, targetPos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                Block toPlace = pLevel.random.nextInt(4) == 0 ? Blocks.CARVED_PUMPKIN : ModRegistry.MOD_CARVED_PUMPKIN.get();
+                Block toPlace = (!CommonConfigs.CUSTOM_CARVINGS.get() || pLevel.random.nextInt(4) == 0)
+                        ? Blocks.CARVED_PUMPKIN : ModRegistry.MOD_CARVED_PUMPKIN.get();
+
                 pLevel.setBlock(targetPos, toPlace.defaultBlockState().setValue(CarvedPumpkinBlock.FACING, dir), 11);
                 if (pLevel.getBlockEntity(targetPos) instanceof ModCarvedPumpkinBlockTile tile) {
                     tile.acceptPixels(CarvingsManager.getRandomCarving(pLevel.random, false));

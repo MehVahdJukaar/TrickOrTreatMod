@@ -16,10 +16,18 @@
         "features":[
           {
             "data": "hauntedharvest:corn_field",
-            "weight": 2
+            "weight": 4
           },
           {
             "data": "hauntedharvest:pumpkin_patch",
+            "weight": 2
+          },
+          {
+            "data": "hauntedharvest:flax_field",
+            "weight": 1
+          },
+          {
+            "data": "hauntedharvest:tomato_field",
             "weight": 1
           }
         ],

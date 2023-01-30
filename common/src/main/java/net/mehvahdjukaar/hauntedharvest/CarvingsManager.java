@@ -32,6 +32,7 @@ public class CarvingsManager extends SimpleJsonResourceReloadListener {
 
     public static long[] getRandomCarving(RandomSource randomSource, boolean onlyFaces) {
         long[] l;
+        if (FACES.isEmpty()) return new long[]{0, 0, 0, 0};
         if (onlyFaces) l = FACES.get(randomSource.nextInt(FACES.size()));
         else {
             int i = randomSource.nextInt(FACES.size() + FANTASY.size());
@@ -75,11 +76,10 @@ public class CarvingsManager extends SimpleJsonResourceReloadListener {
         return jsonObject;
     }
 
-    private record CustomCarving(String name, String author, boolean isFace, List<Long> pixels) {
+    private record CustomCarving(String author, boolean isFace, List<Long> pixels) {
 
         private static final Codec<CustomCarving> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.STRING.optionalFieldOf("name", "").forGetter(CustomCarving::name),
-                Codec.STRING.optionalFieldOf("author", "").forGetter(CustomCarving::name),
+                Codec.STRING.optionalFieldOf("author", "").forGetter(CustomCarving::author),
                 Codec.BOOL.optionalFieldOf("is_face", false).forGetter(CustomCarving::isFace),
                 Codec.LONG.listOf().fieldOf("pixels").forGetter(CustomCarving::pixels)
         ).apply(i, CustomCarving::new));

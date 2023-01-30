@@ -6,6 +6,7 @@ import net.mehvahdjukaar.hauntedharvest.CarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.SuppCompat;
@@ -90,8 +91,13 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         BlockPos right = above.relative(dir.getOpposite());
         level.setBlock(right, Block.updateFromNeighbourShapes(Blocks.SPRUCE_FENCE.defaultBlockState(), level, right), 2);
 
-        level.setBlock(above.above(), (random.nextInt(7) == 0 ? ModRegistry.MOD_JACK_O_LANTERN :
-                ModRegistry.MOD_CARVED_PUMPKIN).get().defaultBlockState()
+        Block toPlace;
+        if (CommonConfigs.CUSTOM_CARVINGS.get()) {
+            toPlace = (random.nextInt(7) == 0 ? ModRegistry.MOD_JACK_O_LANTERN : ModRegistry.MOD_CARVED_PUMPKIN).get();
+        } else {
+            toPlace = (random.nextInt(7) == 0 ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN);
+        }
+        level.setBlock(above.above(), toPlace.defaultBlockState()
                 .setValue(CarvedPumpkinBlock.FACING, dir.getClockWise()), 2);
 
         if (level.getBlockEntity(above.above()) instanceof ModCarvedPumpkinBlockTile tile) {
@@ -101,10 +107,8 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
     }
 
     private boolean placeCorn(BlockPos.MutableBlockPos pos, WorldGenLevel level, RandomSource random) {
-        int age = random.nextInt(6);
-
+        int age = random.nextInt(7);
         return AbstractCornBlock.spawn(pos, level, age);
-
     }
 
     private boolean placePumpkin(BlockPos.MutableBlockPos pos, WorldGenLevel level, RandomSource random) {

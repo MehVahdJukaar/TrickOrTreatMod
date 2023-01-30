@@ -86,7 +86,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
 
     public void acceptPixels(long[] p) {
         this.pixels = new boolean[16][16];
-        if (p.length == 16) {
+        if (p.length != 0) {
             this.pixels = unpackPixels(p);
         }
     }

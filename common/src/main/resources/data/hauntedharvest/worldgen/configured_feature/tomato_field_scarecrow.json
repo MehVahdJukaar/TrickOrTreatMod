@@ -1,9 +1,9 @@
 {
   "type": "hauntedharvest:farm_field",
   "config": {
-    "crop": "pumpkin",
+    "crop": "tomatoes",
     "has_scarecrow": true,
-    "tries": 60,
+    "tries": 70,
     "xz_spread": 4,
     "y_spread": 1
   }

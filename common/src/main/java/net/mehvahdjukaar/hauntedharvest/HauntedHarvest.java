@@ -83,7 +83,7 @@ public class HauntedHarvest {
         if (QUARK_INSTALLED) QuarkCompat.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
-        PlatformHelper.addServerReloadListener(CarvingsManager.RELOAD_INSTANCE, res("flute_songs"));
+        PlatformHelper.addServerReloadListener(CarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
 
     }
 

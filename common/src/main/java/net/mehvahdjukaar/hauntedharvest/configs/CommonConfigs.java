@@ -22,6 +22,8 @@ public class CommonConfigs {
 
 
         builder.push("pumpkin_carving");
+        CUSTOM_CARVINGS = builder.comment("Allows custom carved pumpkins to be placed by villagers and appear in abandoned farm structure")
+                .define("custom_carvings",true);
         PUMPKIN_CARVE_MODE = builder.comment("Pumpkin carving mode")
                 .define("pumpkin_carve_mode", ModCarvedPumpkinBlock.CarveMode.BOTH);
         JACK_O_LANTERN_CARVE_MODE = builder.comment("Jack o Lantern carving mode")
@@ -74,6 +76,7 @@ public class CommonConfigs {
     public static final Supplier<Integer> START_TIME;
     public static final Supplier<Integer> END_TIME;
 
+    public static final Supplier<Boolean> CUSTOM_CARVINGS;
     public static final Supplier<ModCarvedPumpkinBlock.CarveMode> PUMPKIN_CARVE_MODE;
     public static final Supplier<ModCarvedPumpkinBlock.CarveMode> JACK_O_LANTERN_CARVE_MODE;
 

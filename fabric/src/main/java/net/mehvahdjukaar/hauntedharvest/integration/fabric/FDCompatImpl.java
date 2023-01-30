@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.integration.fabric;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.BuddingTomatoBlock;
+import com.nhoryzon.mc.farmersdelight.block.TomatoVineBlock;
 import com.nhoryzon.mc.farmersdelight.item.ConsumableItem;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
@@ -53,11 +54,11 @@ public class FDCompatImpl {
     }
 
     public static BlockState getTomato(RandomSource randomSource) {
+        int age = randomSource.nextInt(4);
         if (randomSource.nextBoolean()) {
-            int age = randomSource.nextInt(4);
             return BlocksRegistry.BUDDING_TOMATO_CROP.get().defaultBlockState().setValue(BuddingTomatoBlock.AGE, age);
         } else {
-            return BlocksRegistry.TOMATO_CROP.get().defaultBlockState();
+            return BlocksRegistry.TOMATO_CROP.get().defaultBlockState().setValue(TomatoVineBlock.VINE_AGE, age);
         }
     }
 }

@@ -16,10 +16,18 @@
         "features":[
           {
             "data": "hauntedharvest:corn_field_scarecrow",
-            "weight": 2
+            "weight": 4
           },
           {
             "data": "hauntedharvest:pumpkin_patch_scarecrow",
+            "weight": 2
+          },
+          {
+            "data": "hauntedharvest:flax_field_scarecrow",
+            "weight": 1
+          },
+          {
+            "data": "hauntedharvest:tomato_field_scarecrow",
             "weight": 1
           }
         ],
