@@ -15,11 +15,11 @@
       "element": {
         "features":[
           {
-            "feature": "hauntedharvest:corn_field",
-            "weight": 1
+            "data": "hauntedharvest:corn_field",
+            "weight": 2
           },
           {
-            "feature": "hauntedharvest:pumpkin_patch",
+            "data": "hauntedharvest:pumpkin_patch",
             "weight": 1
           }
         ],

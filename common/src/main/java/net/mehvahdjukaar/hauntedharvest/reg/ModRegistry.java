@@ -137,7 +137,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(CORN_BASE.get()))
     );
 
-    public static final Supplier<Block> CORN_TOP = regBlock("corn_top", () -> new CornTobBlock(
+    public static final Supplier<Block> CORN_TOP = regBlock("corn_top", () -> new CornTopBlock(
             BlockBehaviour.Properties.copy(CORN_BASE.get()))
     );
 

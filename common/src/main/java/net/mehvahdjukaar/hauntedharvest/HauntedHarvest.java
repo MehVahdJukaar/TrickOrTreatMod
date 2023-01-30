@@ -6,13 +6,13 @@ import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.QuarkCompat;
+import net.mehvahdjukaar.hauntedharvest.reg.ModCommands;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.core.misc.AntiRepostWarning;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -77,17 +77,19 @@ public class HauntedHarvest {
     public static void commonInit() {
         CommonConfigs.init();
 
+        ModCommands.init();
         ModRegistry.init();
         if (FD_INSTALLED) FDCompat.init();
         if (QUARK_INSTALLED) QuarkCompat.init();
-        NetworkHandler.registerMessages();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
+        PlatformHelper.addServerReloadListener(CarvingsManager.RELOAD_INSTANCE, res("flute_songs"));
 
     }
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
+        NetworkHandler.registerMessages();
 
         HalloweenVillagerAI.setup();
         ComposterBlock.COMPOSTABLES.put(ModRegistry.MOD_CARVED_PUMPKIN.get().asItem(), 0.65F);

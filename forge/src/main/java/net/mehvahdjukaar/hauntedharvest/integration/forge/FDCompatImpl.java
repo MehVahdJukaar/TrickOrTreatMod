@@ -1,15 +1,19 @@
 package net.mehvahdjukaar.hauntedharvest.integration.forge;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModFood;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import vectorwing.farmersdelight.FarmersDelight;
+import vectorwing.farmersdelight.common.block.BuddingTomatoBlock;
 import vectorwing.farmersdelight.common.item.ConsumableItem;
+import vectorwing.farmersdelight.common.registry.ModBlocks;
 import vectorwing.farmersdelight.common.registry.ModEffects;
 import vectorwing.farmersdelight.common.registry.ModItems;
 
@@ -20,6 +24,15 @@ import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.*;
 public class FDCompatImpl {
     public static void init() {
 
+    }
+
+    public static BlockState getTomato(RandomSource randomSource) {
+        if (randomSource.nextBoolean()) {
+            int age = randomSource.nextInt(4);
+            return ModBlocks.BUDDING_TOMATO_CROP.get().defaultBlockState().setValue(BuddingTomatoBlock.AGE, age);
+        } else {
+            return ModBlocks.TOMATO_CROP.get().defaultBlockState();
+        }
     }
 
     public static final FoodProperties SUCCOTASH_FOOD = new FoodProperties.Builder()

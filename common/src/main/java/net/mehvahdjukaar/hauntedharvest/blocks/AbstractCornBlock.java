@@ -126,17 +126,22 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
     public static boolean spawn(BlockPos pos, LevelAccessor level, int age) {
 
         if (level.getBlockState(pos).isAir()) {
+            boolean top = false;
             if (age > 2) {
                 if (!level.getBlockState(pos.above()).isAir()) return false;
                 BlockPos above1 = pos.above();
                 if (age > 4) {
                     BlockPos above = pos.above(2);
                     if (!level.getBlockState(above).isAir()) return false;
-                    level.setBlock(above, ModRegistry.CORN_TOP.get().defaultBlockState().setValue(CornTobBlock.AGE, Math.min(age - 5, 1)), 2);
+                    top = true;
+                    level.setBlock(above, ModRegistry.CORN_TOP.get().defaultBlockState().setValue(CornTopBlock.AGE, Math.min(age - 5, 1)), 2);
                 }
                 level.setBlock(above1, ModRegistry.CORN_MIDDLE.get().defaultBlockState().setValue(CornMiddleBlock.AGE, Math.min(age - 3, 2)), 2);
             }
             level.setBlock(pos, ModRegistry.CORN_BASE.get().defaultBlockState().setValue(CornBaseBlock.AGE, Math.min(age, 3)), 2);
+            if(top && level.getBlockState(pos).isAir()){
+                int aa = 1;
+            }
             return true;
         }
         return false;

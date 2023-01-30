@@ -7,9 +7,9 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.entity.JigsawBlockEntity.JointType;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.pools.FeaturePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection;
@@ -30,17 +29,29 @@ import java.util.List;
 
 public class SeedBasedFeaturePoolElement extends StructurePoolElement {
     public static final Codec<SeedBasedFeaturePoolElement> CODEC = RecordCodecBuilder.create(i -> i.group(
-                    WeightedRandomList.codec(FeatureEntry.CODEC).fieldOf("features").forGetter(e -> e.features),
+                    SimpleWeightedRandomList.wrappedCodec(PlacedFeature.CODEC).fieldOf("features").forGetter(e -> e.features),
                     projectionCodec())
             .apply(i, SeedBasedFeaturePoolElement::new)
     );
-    private final WeightedRandomList<FeatureEntry> features;
+    private final SimpleWeightedRandomList<Holder<PlacedFeature>> features;
     private final CompoundTag defaultJigsawNBT;
 
-    protected SeedBasedFeaturePoolElement(WeightedRandomList<FeatureEntry> features, Projection projection) {
+    protected SeedBasedFeaturePoolElement(SimpleWeightedRandomList<Holder<PlacedFeature>> features, Projection projection) {
         super(projection);
-        this.features = features;
         this.defaultJigsawNBT = this.fillDefaultJigsawNBT();
+        features = this.removeDisabledHack(features);
+        this.features = features;
+    }
+
+    private SimpleWeightedRandomList<Holder<PlacedFeature>> removeDisabledHack(SimpleWeightedRandomList<Holder<PlacedFeature>> original) {
+        var newList = new SimpleWeightedRandomList.Builder<Holder<PlacedFeature>>();
+        for (var v : original.unwrap()) {
+            if (v.getData().value().feature().value().config() instanceof FarmFieldFeature.Config c) {
+                if (!c.crop().isEnabled()) continue;
+            }
+            newList.add(v.getData(), v.getWeight().asInt());
+        }
+        return newList.build();
     }
 
     private CompoundTag fillDefaultJigsawNBT() {
@@ -93,7 +104,7 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
             RandomSource random,
             boolean bl
     ) {
-        return (this.features.getRandom(RandomSource.create(centerPos.asLong())).get().feature.value())
+        return (this.features.getRandom(RandomSource.create(centerPos.asLong())).get().getData().value())
                 .place(level, generator, random, blockPos);
     }
 
@@ -103,20 +114,5 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
 
     public String toString() {
         return "Features[" + this.features + "]";
-    }
-
-    private static class FeatureEntry extends WeightedEntry.IntrusiveBase {
-        public static final Codec<FeatureEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
-                        PlacedFeature.CODEC.fieldOf("feature").forGetter(e -> e.feature),
-                        Weight.CODEC.fieldOf("weight").forGetter(IntrusiveBase::getWeight)
-                ).apply(i, FeatureEntry::new)
-        );
-
-        private final Holder<PlacedFeature> feature;
-
-        public FeatureEntry(Holder<PlacedFeature> feature, Weight i) {
-            super(i);
-            this.feature = feature;
-        }
     }
 }

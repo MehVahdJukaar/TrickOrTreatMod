@@ -41,7 +41,7 @@ dependencies {
     modImplementation ("net.mehvahdjukaar:supplementaries-fabric:${project.supplementaries_version}"){
         exclude group: 'com.nhoryzon'
     }
-    modImplementation("curse.maven:farmers-delight-fabric-482834:4061213")
+    modImplementation("curse.maven:farmers-delight-fabric-482834:4111426")
 }
 
 

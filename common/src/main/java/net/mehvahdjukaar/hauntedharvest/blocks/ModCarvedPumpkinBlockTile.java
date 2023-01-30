@@ -80,14 +80,15 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     public void load(CompoundTag compound) {
         super.load(compound);
         this.loadOwner(compound);
-        loadPixels(compound);
+        this.waxed = compound.contains("Waxed") && compound.getBoolean("Waxed");
+
+        loadPixels(compound.getLongArray("Pixels"));
     }
 
-    public void loadPixels(CompoundTag compound) {
-        this.waxed = compound.contains("Waxed") && compound.getBoolean("Waxed");
+    public void loadPixels(long[] p) {
         this.pixels = new boolean[16][16];
-        if (compound.contains("Pixels")) {
-            this.pixels = unpackPixels(compound.getLongArray("Pixels"));
+        if (p.length == 16) {
+            this.pixels = unpackPixels(p);
         }
     }
 

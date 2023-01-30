@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.integration.fabric;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.block.BuddingTomatoBlock;
 import com.nhoryzon.mc.farmersdelight.item.ConsumableItem;
+import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModFood;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -11,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
 import java.util.function.Supplier;
@@ -46,5 +50,14 @@ public class FDCompatImpl {
 
     public static Item.Properties bowlFoodItem(FoodProperties food) {
         return new Item.Properties().food(food).craftRemainder(Items.BOWL).stacksTo(16).tab(FarmersDelightMod.ITEM_GROUP);
+    }
+
+    public static BlockState getTomato(RandomSource randomSource) {
+        if (randomSource.nextBoolean()) {
+            int age = randomSource.nextInt(4);
+            return BlocksRegistry.BUDDING_TOMATO_CROP.get().defaultBlockState().setValue(BuddingTomatoBlock.AGE, age);
+        } else {
+            return BlocksRegistry.TOMATO_CROP.get().defaultBlockState();
+        }
     }
 }

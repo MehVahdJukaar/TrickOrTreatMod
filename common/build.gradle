@@ -15,6 +15,7 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
     modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
+    modImplementation("com.lowdragmc.shimmer:Shimmer-common:1.19.2-0.1.14")
 
 }
 

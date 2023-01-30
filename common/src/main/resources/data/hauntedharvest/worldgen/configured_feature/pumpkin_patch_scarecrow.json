@@ -1,6 +1,7 @@
 {
   "type": "hauntedharvest:farm_field",
   "config": {
+    "crop": "pumpkin",
     "is_pumpkin_patch": true,
     "has_scarecrow": true,
     "tries": 60,

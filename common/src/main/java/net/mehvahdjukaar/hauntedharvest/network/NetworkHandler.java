@@ -6,16 +6,16 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
 
 public class NetworkHandler {
 
-    public static ChannelHandler CHANNEL;
+    public static final ChannelHandler CHANNEL = ChannelHandler.createChannel(HauntedHarvest.res("network"));
 
 
     public static void registerMessages() {
 
-        CHANNEL = ChannelHandler.createChannel(HauntedHarvest.res("network"));
-
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 ServerBoundCarvePumpkinPacket.class, ServerBoundCarvePumpkinPacket::new);
 
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundCopyCarvingCommand.class, ClientBoundCopyCarvingCommand::new);
 
     }
 

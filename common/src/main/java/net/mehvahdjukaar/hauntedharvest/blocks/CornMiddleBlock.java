@@ -37,8 +37,6 @@ public class CornMiddleBlock extends AbstractCornBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        if(true)return true;
-
         if (getAge(state) == getMaxAge()) {
             var top = getTopBlock();
             if (top != null && !level.getBlockState(pos.above()).is(top)) return false;

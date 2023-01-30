@@ -15,11 +15,11 @@
       "element": {
         "features":[
           {
-            "feature": "hauntedharvest:corn_field_scarecrow",
-            "weight": 1
+            "data": "hauntedharvest:corn_field_scarecrow",
+            "weight": 2
           },
           {
-            "feature": "hauntedharvest:pumpkin_patch_scarecrow",
+            "data": "hauntedharvest:pumpkin_patch_scarecrow",
             "weight": 1
           }
         ],
