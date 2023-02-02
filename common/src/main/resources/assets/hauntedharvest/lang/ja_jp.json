@@ -1,0 +1,22 @@
+{
+    "itemGroup.hauntedharvest": "ホーンテッドハーベスト",
+    "item.hauntedharvest.grim_apple": "恐怖のリンゴ",
+	"item.hauntedharvest.rotten_apple": "腐ったリンゴ",
+	"entity.hauntedharvest.splattered_egg": "投げつけられた卵",
+	"gui.hauntedharvest.carving.edit": "彫刻",
+	"gui.hauntedharvest.carving.clear": "削除",
+    "item.hauntedharvest.corn": "トウモロコシ",
+    "item.hauntedharvest.corn_on_the_cob": "穂軸付きのトウモロコシ",
+    "item.hauntedharvest.popcorn": "ポップコーン",
+    "item.hauntedharvest.candy_corn": "キャンディコーン",
+    "item.hauntedharvest.kernels": "トウモロコシの種",
+    "block.hauntedharvest.paper_bag": "紙袋",
+      "block.hauntedharvest.candy_bag": "キャンディ入りの紙袋",
+    "block.hauntedharvest.jack_o_lantern": "ジャック・オ・ランタン",
+    "block.hauntedharvest.carved_pumpkin": "くり抜かれたカボチャ",
+    "item.hauntedharvest.succotash": "サコタッシュ",
+    "block.hauntedharvest.corn_crate": "トウモロコシ入り木箱",
+    "item.hauntedharvest.cornbread": "コーンブレッド",
+    "gui.hauntedharvest.autumn_season_on": "秋の季節 ON",
+    "gui.hauntedharvest.autumn_season_off": "秋の季節 OFF"
+}
