@@ -8,15 +8,19 @@ import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 
 public class ModConfigSelectScreen extends CustomConfigSelectScreen {
 
@@ -86,11 +90,15 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
         super.render(poseStack, mouseX, mouseY, partialTicks);
 
         var level = Minecraft.getInstance().level;
-        if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
+        if (level != null) {
+            boolean h = HauntedHarvest.isHalloweenSeason(level);
             int x = (int) (this.width * 0.93f);
-            this.itemRenderer.renderAndDecorateFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
+            RenderUtil.renderGuiItemRelative(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16, this.itemRenderer,
+                    (p, s) -> {
+                    }, h ? LightTexture.FULL_BRIGHT : 0, OverlayTexture.NO_OVERLAY);
             if (ScreenUtil.isMouseWithin(x, 16, 16, 16, mouseX, mouseY)) {
-                this.renderTooltip(poseStack, this.font.split(Component.translatable("gui.hauntedharvest.autumn_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
+                String c = h ? "gui.hauntedharvest.autumn_season_on" : "gui.hauntedharvest.autumn_season_off";
+                this.renderTooltip(poseStack, this.font.split(Component.translatable(c).withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
             }
         }
     }

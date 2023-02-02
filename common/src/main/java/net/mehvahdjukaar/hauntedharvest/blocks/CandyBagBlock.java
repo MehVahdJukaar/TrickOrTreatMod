@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -44,8 +43,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import static net.mehvahdjukaar.hauntedharvest.blocks.PaperBagBlock.SHAPE;
-
 public class CandyBagBlock extends Block implements EntityBlock {
 
     public static final EnumProperty<Content> CONTENT = EnumProperty.create("content", Content.class);
@@ -84,7 +81,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return PaperBagBlock.SHAPE;
     }
 
     @Override

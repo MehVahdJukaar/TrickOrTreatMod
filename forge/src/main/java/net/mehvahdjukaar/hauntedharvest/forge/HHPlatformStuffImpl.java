@@ -19,7 +19,7 @@ public class HHPlatformStuffImpl {
 
     public static void addPumpkinData(ModCarvedPumpkinBlockTile tile, SnowGolem snowGolem) {
         if (snowGolem instanceof ICustomPumpkinHolder customPumpkinHolder) {
-            var s = tile.getItemWithNBT();
+            var s = tile.getItemWithNBT(); //no jack
             ItemStack stack = ModRegistry.MOD_CARVED_PUMPKIN_ITEM.get().getDefaultInstance();
             stack.setTag(s.getTag());
             customPumpkinHolder.setCustomPumpkin(stack);

@@ -65,30 +65,28 @@ public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
             case Z -> blockX = Mth.floor(entity.getX());
             case Y -> blockY = Mth.floor(entity.getY());
         }
-
         int l1 = LevelRenderer.getLightColor(entity.level, new BlockPos(blockX, blockY, blockZ));
-
         if (dir == Direction.DOWN) {
-            this.vertex(matrix4f, matrix3f, consumer, p, -0.5f, 0, 1, n, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, n, -0.5f, 1, 1, n, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, n, -0.5f, 1, 0, p, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, p, -0.5f, 0, 0, p, 0, 0, -1, l1);
+            this.vertex(matrix4f, matrix3f, consumer, p, -0.5f, 0, 1, n, 0, -1, 0, l1);
+            this.vertex(matrix4f, matrix3f, consumer, n, -0.5f, 1, 1, n, 0, -1, 0, l1);
+            this.vertex(matrix4f, matrix3f, consumer, n, -0.5f, 1, 0, p, 0, -1, 0, l1);
+            this.vertex(matrix4f, matrix3f, consumer, p, -0.5f, 0, 0, p, 0, -1, 0, l1);
         } else if (dir == Direction.UP) {
-            this.vertex(matrix4f, matrix3f, consumer, n, 0.5f, 0, 1, p, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, n, 0.5f, 1, 1, n, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, p, 0.5f, 1, 0, n, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, p, 0.5f, 0, 0, p, 0, 0, -1, l1);
+            this.vertex(matrix4f, matrix3f, consumer, n, 0.5f, 0, 1, p, 0, 1, 0, l1);
+            this.vertex(matrix4f, matrix3f, consumer, n, 0.5f, 1, 1, n, 0, 1, 0, l1);
+            this.vertex(matrix4f, matrix3f, consumer, p, 0.5f, 1, 0, n, 0, 1, 0, l1);
+            this.vertex(matrix4f, matrix3f, consumer, p, 0.5f, 0, 0, p, 0, 1, 0, l1);
         } else {
-            this.vertex(matrix4f, matrix3f, consumer, p, n, 0, 1, -0.5F, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, n, n, 1, 1, -0.5F, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, n, p, 1, 0, -0.5F, 0, 0, -1, l1);
-            this.vertex(matrix4f, matrix3f, consumer, p, p, 0, 0, -0.5F, 0, 0, -1, l1);
+            this.vertex(matrix4f, matrix3f, consumer, p, n, 0, 1, -0.5F, 0, 0, 1, l1);
+            this.vertex(matrix4f, matrix3f, consumer, n, n, 1, 1, -0.5F, 0, 0, 1, l1);
+            this.vertex(matrix4f, matrix3f, consumer, n, p, 1, 0, -0.5F, 0, 0, 1, l1);
+            this.vertex(matrix4f, matrix3f, consumer, p, p, 0, 0, -0.5F, 0, 0, 1, l1);
         }
     }
 
     private void vertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, float x, float y,
                         float u, float v, float z, int nx, int ny, int nz, int light) {
         vertexConsumer.vertex(matrix4f, x, y, z).color(255, 255, 255, 255)
-                .uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, (float) nx, (float) ny, (float) nz).endVertex();
+                .uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, nx,ny, nz).endVertex();
     }
 }

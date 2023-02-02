@@ -77,12 +77,12 @@ public class ProcessFarmProcessor extends StructureProcessor {
                     lastPlaced = false;
                     replace = Blocks.AIR.defaultBlockState();
                 } else if (copperLantern != null) {
-                    replace = copperLantern;
+                    replace = copperLantern.rotate(settings.getRotation());
                 }
             } else if (randomSource.nextBoolean()) {
                 lastPlaced = true;
                 if (copperLantern != null) {
-                    replace = copperLantern;
+                    replace = copperLantern.rotate(settings.getRotation());
                 }
             } else {
                 lastPlaced = false;

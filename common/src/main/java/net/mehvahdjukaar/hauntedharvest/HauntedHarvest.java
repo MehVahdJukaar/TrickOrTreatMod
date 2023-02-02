@@ -13,6 +13,7 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.core.misc.ModLootPoolEntries;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -45,6 +46,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -76,7 +78,6 @@ public class HauntedHarvest {
 
     public static void commonInit() {
         CommonConfigs.init();
-
         ModCommands.init();
         ModRegistry.init();
         if (FD_INSTALLED) FDCompat.init();
@@ -95,6 +96,10 @@ public class HauntedHarvest {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.MOD_CARVED_PUMPKIN.get().asItem(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.CORN_SEEDS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
+
+        //TODO:
+//        Parrot.TAME_FOOD.add( net.mehvahdjukaar.supplementaries.reg.ModRegistry.FLAX_SEEDS_ITEM.get());
+
 
         DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
             @Override

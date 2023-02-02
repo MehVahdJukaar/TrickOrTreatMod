@@ -9,6 +9,7 @@ import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.items.PaperBagItem;
 import net.mehvahdjukaar.hauntedharvest.items.crafting.ModCarvedPumpkinRecipe;
+import net.mehvahdjukaar.hauntedharvest.worldgen.AbandonedFarmStructure;
 import net.mehvahdjukaar.hauntedharvest.worldgen.FarmFieldFeature;
 import net.mehvahdjukaar.hauntedharvest.worldgen.ProcessFarmProcessor;
 import net.mehvahdjukaar.hauntedharvest.worldgen.SeedBasedFeaturePoolElement;
@@ -35,6 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import org.jetbrains.annotations.Contract;
@@ -62,6 +64,10 @@ public class ModRegistry {
 
     public static final Supplier<Activity> EAT_CANDY = regActivity("eat_candy");
     public static final Supplier<Activity> TRICK_OR_TREAT = regActivity("trick_or_treat");
+
+
+    public static final Supplier<StructureType<AbandonedFarmStructure>> FARM = RegHelper.registerStructure(
+            HauntedHarvest.res("abandoned_farm"), AbandonedFarmStructure.Type::new);
 
 
     public static final Supplier<StructureProcessorType<ProcessFarmProcessor>> FARM_PROCESSOR =

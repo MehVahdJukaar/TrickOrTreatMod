@@ -25,6 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -38,12 +39,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class VillagerMixin extends AbstractVillager implements IHalloweenVillager {
 
     //adults they have already asked candies
+    @Unique
     private final Map<UUID, Integer> adultCandyCooldown = new ConcurrentHashMap<>();
 
     protected VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
     }
-
 
     @Shadow
     public abstract Brain<Villager> getBrain();

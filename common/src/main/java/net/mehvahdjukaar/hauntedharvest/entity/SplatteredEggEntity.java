@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SplatteredEggEntity extends HangingEntity {
 
+    //client
     public boolean altTexture = false;
 
     public SplatteredEggEntity(EntityType<? extends SplatteredEggEntity> type, Level level) {
@@ -65,9 +66,9 @@ public class SplatteredEggEntity extends HangingEntity {
         this.direction = pFacingDirection;
         if (pFacingDirection.getAxis().isHorizontal()) {
             this.setXRot(0.0F);
-            this.setYRot((float) (this.direction.get2DDataValue() * 90));
+            this.setYRot((this.direction.get2DDataValue() * 90));
         } else {
-            this.setXRot((float) (-90 * pFacingDirection.getAxisDirection().getStep()));
+            this.setXRot((-90 * pFacingDirection.getAxisDirection().getStep()));
             this.setYRot(0.0F);
         }
 
@@ -83,9 +84,9 @@ public class SplatteredEggEntity extends HangingEntity {
     @Override
     protected void recalculateBoundingBox() {
         if (this.direction != null) {
-            double d1 = (double) this.pos.getX() + 0.5D - (double) this.direction.getStepX() * 0.46875D;
-            double d2 = (double) this.pos.getY() + 0.5D - (double) this.direction.getStepY() * 0.46875D;
-            double d3 = (double) this.pos.getZ() + 0.5D - (double) this.direction.getStepZ() * 0.46875D;
+            double d1 = this.pos.getX() + 0.5D - this.direction.getStepX() * 0.46875D;
+            double d2 = this.pos.getY() + 0.5D - this.direction.getStepY() * 0.46875D;
+            double d3 = this.pos.getZ() + 0.5D - this.direction.getStepZ() * 0.46875D;
             this.setPosRaw(d1, d2, d3);
             double d4 = this.getWidth();
             double d5 = this.getHeight();

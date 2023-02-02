@@ -10,6 +10,14 @@
       "required": true
     },
     {
+      "id": "hauntedharvest:candy_corn",
+      "required": true
+    },
+    {
+      "id": "hauntedharvest:popcorn",
+      "required": true
+    },
+    {
       "id": "supplementaries:candy",
       "required": false
     },

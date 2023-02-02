@@ -3,12 +3,9 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.CarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
-import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -21,9 +18,7 @@ import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CarvedPumpkinBlock;
 
 public class CarvePumpkin extends Behavior<Villager> {
     private final float speedModifier;
@@ -85,17 +80,12 @@ public class CarvePumpkin extends Behavior<Villager> {
         if (targetPos.closerToCenterThan(pOwner.position(), 2.3)) {
             this.ticksSinceReached++;
             if (ticksSinceReached > 40) {
-                Direction dir = pOwner.getDirection().getOpposite();
 
                 pLevel.playSound(null, targetPos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                Block toPlace = (!CommonConfigs.customCarvings() || pLevel.random.nextInt(4) == 0)
-                        ? Blocks.CARVED_PUMPKIN : ModRegistry.MOD_CARVED_PUMPKIN.get();
-
-                pLevel.setBlock(targetPos, toPlace.defaultBlockState().setValue(CarvedPumpkinBlock.FACING, dir), 11);
-                if (pLevel.getBlockEntity(targetPos) instanceof ModCarvedPumpkinBlockTile tile) {
-                    tile.acceptPixels(CarvingsManager.getRandomCarving(pLevel.random, false));
-                }
+                CarvingsManager.placeRandomPumpkin(targetPos.above(), pLevel,
+                        pOwner.getDirection().getOpposite(),
+                        true, 0.1f, 0, 3);
 
                 pOwner.getBrain().eraseMemory(ModRegistry.NEAREST_PUMPKIN.get());
                 pOwner.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(pLevel.dimension(), targetPos));

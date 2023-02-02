@@ -1,0 +1,54 @@
+{
+    "bookshelf:load_conditions": [
+        {
+            "type": "bookshelf:item_exists",
+            "values": [
+                "hauntedharvest:kernels",
+                "hauntedharvest:corn"
+            ]
+        }
+    ],
+    "type": "botanypots:crop",
+    "seed": {
+        "item": "hauntedharvest:kernels"
+    },
+    "categories": [
+        "dirt",
+        "farmland"
+    ],
+    "growthTicks": 1200,
+    "display": [
+        {
+            "block": "hauntedharvest:corn_base",
+            "properties": {
+                "age": 3
+            }
+        },
+        {
+            "block": "hauntedharvest:corn_middle",
+            "properties": {
+                "age": 2
+            }
+        },
+        {
+            "block": "hauntedharvest:corn_top",
+            "properties": {
+                "age": 1
+            }
+        }
+    ],
+    "drops": [
+        {
+            "chance": 1.00,
+            "output": {
+                "item": "hauntedharvest:corn"
+            }
+        },
+        {
+            "chance": 0.05,
+            "output": {
+                "item": "hauntedharvest:kernels"
+            }
+        }
+    ]
+}

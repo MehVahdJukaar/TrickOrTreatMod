@@ -1,6 +1,6 @@
 {
   // The base structure class to use for the behavior of the structure. In this case, minecraft:jigsaw is good for most structures.
-  "type": "minecraft:jigsaw",
+  "type": "hauntedharvest:abandoned_farm",
 
   // the path to the template pool json file to use
   "start_pool": "hauntedharvest:abandoned_farm/start_pool",
@@ -8,9 +8,6 @@
   // This is how many pieces away from the starting piece a piece of the structure can spawn
   // Think of it like the length of the branch of the structure
   "size": 6,
-
-  // Maximum distance away from center that pieces can spawn. Cannot be greater than 128
-  "max_distance_from_center": 80,
 
   // The biome tag to use for what biomes that this structure can spawn in"
   "biomes": "#hauntedharvest:has_abandoned_farm",
@@ -29,9 +26,8 @@
   // start_height can be used to spawn at a random fixed y value by doing something like: "max_inclusive": { "below_top": 10 }, "min_inclusive": { "above_bottom": 32 }
   // If project_start_to_heightmap is present, the y value chosen in start_height will be added to the terrain's y value.
   // So a start height that gives -5 will sink the structure 5 blocks into the terrain.
-  "start_height": {
-    "absolute": 0
-  },
+  "min_y": 62,
+  "max_y": 90,
 
   // Makes our house snap to top land to spawn at. WORLD_SURFACE_WG will stop at first non-air block.
   // To get top land at even the bottom of oceans, use OCEAN_FLOOR_WG.
@@ -39,7 +35,6 @@
   "project_start_to_heightmap": "WORLD_SURFACE_WG",
 
   // Keep this false. This is only for vanilla legacy villages to make it spawn properly. We don't need no hacks here!
-  "use_expansion_hack": false,
 
   "spawn_overrides": {
 

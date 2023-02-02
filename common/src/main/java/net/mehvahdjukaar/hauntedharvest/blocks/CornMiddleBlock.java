@@ -21,9 +21,9 @@ public class CornMiddleBlock extends AbstractCornBlock {
     public static final int MAX_AGE = 2;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
-            Block.box(1, 0.0, 1, 15.0, 5.0, 15.0),
-            Block.box(1, 0.0, 1, 15.0, 11.0, 15.0),
-            Block.box(1, 0.0, 1, 15.0, 16.0, 15.0)};
+            box(1, 0.0, 1, 15.0, 5.0, 15.0),
+            box(1, 0.0, 1, 15.0, 11.0, 15.0),
+            box(1, 0.0, 1, 15.0, 16.0, 15.0)};
 
 
     public CornMiddleBlock(Properties properties) {

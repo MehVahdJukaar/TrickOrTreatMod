@@ -16,5 +16,7 @@
     "block.hauntedharvest.carved_pumpkin": "Carved Pumpkin",
     "item.hauntedharvest.succotash": "Succotash",
     "block.hauntedharvest.corn_crate": "Corn Crate",
-    "item.hauntedharvest.cornbread": "Cornbread"
+    "item.hauntedharvest.cornbread": "Cornbread",
+    "gui.hauntedharvest.autumn_season_on": "Autumn season on",
+    "gui.hauntedharvest.autumn_season_off": "Autumn season off"
 }

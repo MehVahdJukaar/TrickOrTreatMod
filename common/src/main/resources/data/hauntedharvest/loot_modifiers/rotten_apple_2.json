@@ -2,16 +2,21 @@
   "type": "moonlight:add_item",
   "conditions": [
     {
-      "condition": "hauntedharvest:flag",
-      "flag": "grim_apple"
-    },
-    {
       "condition": "minecraft:random_chance",
       "chance": 0.0008
     },
     {
       "condition": "block_state_property",
       "block": "minecraft:dark_oak_leaves"
+    },
+    {
+      "condition": "moonlight:iconditions",
+      "values": [
+        {
+          "type": "hauntedharvest:flag",
+          "flag": "grim_apple"
+        }
+      ]
     }
   ],
   "item": {
