@@ -16,5 +16,7 @@
     "block.hauntedharvest.carved_pumpkin": "雕刻过的南瓜",
     "item.hauntedharvest.succotash": "玉米杂烩",
     "block.hauntedharvest.corn_crate": "箱装玉米",
-    "item.hauntedharvest.cornbread": "玉米面包"
+    "item.hauntedharvest.cornbread": "玉米面包",
+    "gui.hauntedharvest.autumn_season_on": "秋季万圣节效果：开启",
+    "gui.hauntedharvest.autumn_season_off": "秋季万圣节效果：关闭"
 }
