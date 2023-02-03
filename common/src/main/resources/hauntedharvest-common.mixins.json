@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "package": "net.mehvahdjukaar.hauntedharvest.mixins",
   "mixins": [
+    "AbstractSkeletonMixin",
     "NearestAttackableTargetGoalMixin",
     "ThrownEggEntityMixin",
     "VillagerMixin",
-    "WitchMixin"
+    "WitchMixin",
+    "ZombieMixin"
   ],
   "client": [
     "VillagerRendererMixin"

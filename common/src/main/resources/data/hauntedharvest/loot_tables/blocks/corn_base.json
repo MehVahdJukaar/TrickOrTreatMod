@@ -20,6 +20,12 @@
                 }
               ],
               "name": "hauntedharvest:corn"
+            },
+            {
+              "type": "minecraft:item",
+              "conditions": [
+              ],
+              "name": "hauntedharvest:kernels"
             }
           ]
         }

@@ -15,11 +15,13 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
@@ -29,14 +31,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class CarvingsManager extends SimpleJsonResourceReloadListener {
+public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
 
     private static final List<long[]> FACES = new ArrayList<>();
     private static final List<long[]> FANTASY = new ArrayList<>();
 
     protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    public static final CarvingsManager RELOAD_INSTANCE = new CarvingsManager();
+    public static final CustomCarvingsManager RELOAD_INSTANCE = new CustomCarvingsManager();
 
     public static void placeRandomPumpkin(BlockPos pos, LevelAccessor level, Direction direction,
                                           boolean onlyFaces, float vanillaChance, float lanternChance, int flag) {
@@ -55,6 +57,24 @@ public class CarvingsManager extends SimpleJsonResourceReloadListener {
         }
     }
 
+    public static ItemStack getRandomPumpkinItem(LevelAccessor level, boolean onlyFaces,
+                                                 float vanillaChance, float lanternChance) {
+        boolean isVanilla = !CommonConfigs.customCarvings() || level.getRandom().nextFloat() < vanillaChance;
+        boolean isLantern = level.getRandom().nextFloat() < lanternChance;
+        ItemStack item;
+        if (isVanilla) {
+            item = (isLantern ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN).asItem().getDefaultInstance();
+        } else {
+            item = (isLantern ? ModRegistry.MOD_JACK_O_LANTERN : ModRegistry.MOD_CARVED_PUMPKIN).get().asItem().getDefaultInstance();
+
+            CompoundTag tag = item.getOrCreateTag();
+            CompoundTag t = new CompoundTag();
+            t.putLongArray("Pixels", getRandomCarving(level.getRandom(), onlyFaces));
+            tag.put("BlockEntityTag", t);
+        }
+        return item;
+    }
+
     public static long[] getRandomCarving(RandomSource randomSource, boolean onlyFaces) {
         long[] l;
         if (FACES.isEmpty()) return new long[]{0, 0, 0, 0};
@@ -68,10 +88,10 @@ public class CarvingsManager extends SimpleJsonResourceReloadListener {
         return l;
     }
 
-    public static void debugPlaceAllPumpkins(BlockPos pos, LevelAccessor level){
+    public static void debugPlaceAllPumpkins(BlockPos pos, LevelAccessor level) {
         var l = new ArrayList<>(FACES);
         l.addAll(FANTASY);
-        for(var c : l) {
+        for (var c : l) {
             level.setBlock(pos, ModRegistry.MOD_CARVED_PUMPKIN.get()
                     .defaultBlockState().setValue(CarvedPumpkinBlock.FACING, Direction.WEST), 3);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
@@ -82,7 +102,7 @@ public class CarvingsManager extends SimpleJsonResourceReloadListener {
         }
     }
 
-    private CarvingsManager() {
+    private CustomCarvingsManager() {
         super(GSON, "pumpkin_carvings");
     }
 

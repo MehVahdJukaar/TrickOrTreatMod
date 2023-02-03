@@ -4,6 +4,7 @@ package net.mehvahdjukaar.hauntedharvest.integration.forge.configured;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.api.IModConfig;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import com.simibubi.create.foundation.block.ITE;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
@@ -30,10 +31,10 @@ public class ModConfigScreen extends CustomConfigScreen {
     private static final Map<String, ItemStack> ICONS = new HashMap<>();
 
     static {
-        addIcon("trick or treating", ModRegistry.CANDY_CORN.get());
-        addIcon("halloween end",ModRegistry.ROTTEN_APPLE.get());
-        addIcon("halloween start", ModRegistry.DEATH_APPLE.get());
-        addIcon("pumpkin carving", Items.JACK_O_LANTERN);
+        addIcon("trick or treating time", ModRegistry.CANDY_CORN.get());
+        //addIcon("halloween season", Items.JACK_O_LANTERN);
+        addIcon("mob pumpkins season", Items.ZOMBIE_HEAD);
+        addIcon("pumpkin carving", Items.CARVED_PUMPKIN);
         addIcon("season mod compat", ModRegistry.COB_ITEM.get());
         addIcon("general", Items.SKELETON_SKULL);
         addIcon("splattered egg", Items.EGG);

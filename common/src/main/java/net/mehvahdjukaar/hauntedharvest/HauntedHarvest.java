@@ -13,7 +13,6 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.core.misc.ModLootPoolEntries;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -30,6 +29,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -46,7 +47,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -84,7 +84,7 @@ public class HauntedHarvest {
         if (QUARK_INSTALLED) QuarkCompat.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
-        PlatformHelper.addServerReloadListener(CarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
+        PlatformHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
 
     }
 
@@ -94,12 +94,10 @@ public class HauntedHarvest {
 
         HalloweenVillagerAI.setup();
         ComposterBlock.COMPOSTABLES.put(ModRegistry.MOD_CARVED_PUMPKIN.get().asItem(), 0.65F);
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.CORN_SEEDS.get().asItem(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
 
-        //TODO:
-//        Parrot.TAME_FOOD.add( net.mehvahdjukaar.supplementaries.reg.ModRegistry.FLAX_SEEDS_ITEM.get());
-
+        //Parrot.TAME_FOOD.add(ModRegistry.KERNELS.get());
 
         DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
             @Override
@@ -119,6 +117,7 @@ public class HauntedHarvest {
     //TODO: add witches to villages using structure modifiers
     //TODO: give candy to players
     //TODO: fix when inventory is full
+    //custom carve sounds
 
 
     public static boolean isPlayerOnCooldown(LivingEntity self) {

@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -41,8 +42,8 @@ public class ModCarvedPumpkinItem extends BlockItem implements ICustomItemRender
     }
 
     @PlatformOnly(PlatformOnly.FORGE)
-    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
-        return armorType == EquipmentSlot.HEAD;
+    public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
+        return EquipmentSlot.HEAD;
     }
 
     @PlatformOnly(PlatformOnly.FORGE)

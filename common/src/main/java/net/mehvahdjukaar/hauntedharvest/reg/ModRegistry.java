@@ -157,7 +157,7 @@ public class ModRegistry {
                     .stacksTo(16).food(ModFood.CORN_ON_THE_COB)
                     .tab(getTab(CreativeModeTab.TAB_FOOD, CORN_NAME))));
 
-    public static final Supplier<Item> CORN_SEEDS = regItem("kernels", () -> new ItemNameBlockItem(CORN_BASE.get(),
+    public static final Supplier<Item> KERNELS = regItem("kernels", () -> new ItemNameBlockItem(CORN_BASE.get(),
             new Item.Properties()
                     .tab(getTab(CreativeModeTab.TAB_MISC, CORN_NAME))));
 

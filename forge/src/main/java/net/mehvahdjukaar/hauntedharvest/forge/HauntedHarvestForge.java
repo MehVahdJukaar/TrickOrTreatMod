@@ -1,13 +1,26 @@
 package net.mehvahdjukaar.hauntedharvest.forge;
 
+import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
-import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -39,6 +52,10 @@ public class HauntedHarvestForge {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static void init(final FMLCommonSetupEvent event) {
+        event.enqueueWork(HauntedHarvest::commonSetup);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onUseBlock(PlayerInteractEvent.RightClickBlock event) {
         if (!event.isCanceled()) {
@@ -54,11 +71,6 @@ public class HauntedHarvestForge {
     public void onTagLoad(TagsUpdatedEvent event) {
         HauntedHarvest.onTagLoad();
     }
-
-    public static void init(final FMLCommonSetupEvent event) {
-        event.enqueueWork(HauntedHarvest::commonSetup);
-    }
-
 
     @SubscribeEvent
     public void onRemapBlocks(MissingMappingsEvent event) {

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.hauntedharvest.CarvingsManager;
+import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
@@ -88,7 +88,7 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         BlockPos right = above.relative(dir.getOpposite());
         level.setBlock(right, Block.updateFromNeighbourShapes(Blocks.SPRUCE_FENCE.defaultBlockState(), level, right), 2);
 
-        CarvingsManager.placeRandomPumpkin(above.above(), level, dir.getClockWise(),
+        CustomCarvingsManager.placeRandomPumpkin(above.above(), level, dir.getClockWise(),
                 true, 0.2f, 0.15f, 2);
     }
 

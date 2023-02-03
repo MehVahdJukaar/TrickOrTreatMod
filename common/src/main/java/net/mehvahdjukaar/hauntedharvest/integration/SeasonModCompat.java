@@ -12,6 +12,11 @@ public class SeasonModCompat {
     }
 
     @ExpectPlatform
+    public static boolean shouldMobWearPumpkin(Level level) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static void addConfig(ConfigBuilder builder) {
         throw new AssertionError();
     }

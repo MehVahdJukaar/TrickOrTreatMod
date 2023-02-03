@@ -81,7 +81,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
 
     @Override
     protected ItemLike getBaseSeedId() {
-        return ModRegistry.CORN_SEEDS.get();
+        return ModRegistry.KERNELS.get();
     }
 
     @Override

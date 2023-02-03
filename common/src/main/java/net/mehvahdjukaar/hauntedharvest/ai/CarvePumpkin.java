@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.hauntedharvest.CarvingsManager;
+import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
@@ -83,7 +83,7 @@ public class CarvePumpkin extends Behavior<Villager> {
 
                 pLevel.playSound(null, targetPos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                CarvingsManager.placeRandomPumpkin(targetPos.above(), pLevel,
+                CustomCarvingsManager.placeRandomPumpkin(targetPos.above(), pLevel,
                         pOwner.getDirection().getOpposite(),
                         true, 0.1f, 0, 3);
 
