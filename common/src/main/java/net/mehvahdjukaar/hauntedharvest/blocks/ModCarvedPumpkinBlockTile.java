@@ -27,8 +27,6 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
 
     public static final ModelDataKey<Key> CARVING = new ModelDataKey<>(Key.class);
 
-    private final boolean isJackOLantern;
-
     private UUID owner = null;
     private boolean waxed = false;
     private boolean[][] pixels = new boolean[16][16];
@@ -39,13 +37,12 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     public ModCarvedPumpkinBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.MOD_CARVED_PUMPKIN_TILE.get(), pos, state);
         this.clear();
-        isJackOLantern = (state.is(ModRegistry.MOD_JACK_O_LANTERN.get()));
     }
 
-    public boolean isJackOLantern() {
-        return isJackOLantern;
+    public PumpkinType getPumpkinType() {
+        BlockState state = this.getBlockState();
+        return ((ModCarvedPumpkinBlock) state.getBlock()).getType(state);
     }
-
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
@@ -59,7 +56,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     }
 
     public void refreshTextureKey() {
-        this.textureKey = Key.of(packPixels(this.pixels), this.isJackOLantern);
+        this.textureKey = Key.of(packPixels(this.pixels), this.getPumpkinType());
     }
 
     @Override
@@ -215,7 +212,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     }
 
     public ModCarvedPumpkinBlock.CarveMode getCarveMode() {
-        if (this.isJackOLantern) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
+        if (this.getPumpkinType().isGlowing()) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
         return CommonConfigs.PUMPKIN_CARVE_MODE.get();
     }
 

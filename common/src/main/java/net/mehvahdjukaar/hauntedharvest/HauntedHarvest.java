@@ -2,17 +2,20 @@ package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
+import net.mehvahdjukaar.hauntedharvest.integration.AutumnityCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.QuarkCompat;
-import net.mehvahdjukaar.hauntedharvest.reg.ModCommands;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
+import net.mehvahdjukaar.hauntedharvest.reg.ModCommands;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.AnimalFoodHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -29,8 +32,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -68,6 +69,7 @@ public class HauntedHarvest {
     public static final boolean SUPP_INSTALLED = PlatformHelper.isModLoaded("supplementaries");
     public static final boolean FD_INSTALLED = PlatformHelper.isModLoaded("farmersdelight");
     public static final boolean QUARK_INSTALLED = PlatformHelper.isModLoaded("quark");
+    public static final boolean AUTUMNITY_INSTALLED = PlatformHelper.isModLoaded("autumnity");
 
     private static final Set<Item> BABY_VILLAGER_EATABLE = new HashSet<>();
     public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e ->
@@ -81,6 +83,7 @@ public class HauntedHarvest {
         ModCommands.init();
         ModRegistry.init();
         if (FD_INSTALLED) FDCompat.init();
+        if (AUTUMNITY_INSTALLED) AutumnityCompat.init();
         if (QUARK_INSTALLED) QuarkCompat.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
@@ -90,14 +93,18 @@ public class HauntedHarvest {
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
+        PumpkinType.setup();
+        if(AUTUMNITY_INSTALLED)AutumnityCompat.setup();
+
         NetworkHandler.registerMessages();
 
         HalloweenVillagerAI.setup();
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.MOD_CARVED_PUMPKIN.get().asItem(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.CARVED_PUMPKIN.get().asItem(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
 
-        //Parrot.TAME_FOOD.add(ModRegistry.KERNELS.get());
+        AnimalFoodHelper.addChickenFood(ModRegistry.KERNELS.get());
+        AnimalFoodHelper.addParrotFood(ModRegistry.KERNELS.get());
 
         DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
             @Override
@@ -180,7 +187,7 @@ public class HauntedHarvest {
                     stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                     level.gameEvent(player, GameEvent.SHEAR, pos);
-                    level.setBlock(pos, ModRegistry.MOD_CARVED_PUMPKIN.get().withPropertiesOf(state)
+                    level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
                             .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);

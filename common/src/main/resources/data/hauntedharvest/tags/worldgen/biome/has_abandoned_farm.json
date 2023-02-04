@@ -7,7 +7,11 @@
       "required": false
     },
     {
-      "id": "#forge:is_plains",
+      "id": "autumnity:pumpkin_fields",
+      "required": false
+    },
+    {
+      "id": "#minecraft:has_structure/village_plains",
       "required": false
     }
   ]

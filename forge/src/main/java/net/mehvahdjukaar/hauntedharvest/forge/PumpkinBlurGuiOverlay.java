@@ -2,11 +2,13 @@ package net.mehvahdjukaar.hauntedharvest.forge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -39,7 +41,8 @@ public class PumpkinBlurGuiOverlay extends Gui implements IGuiOverlay {
             if (com != null && com.contains("Pixels")) {
                 packed = com.getLongArray("Pixels");
             }
-            var carving = CarvingManager.getInstance(CarvingManager.Key.of(packed, false));
+            ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock)((BlockItem)itemstack.getItem()).getBlock();
+            var carving = CarvingManager.getInstance(CarvingManager.Key.of(packed, block.getType(block.defaultBlockState())));
             var textureLocation = carving.getPumpkinBlur();
 
             RenderSystem.disableDepthTest();

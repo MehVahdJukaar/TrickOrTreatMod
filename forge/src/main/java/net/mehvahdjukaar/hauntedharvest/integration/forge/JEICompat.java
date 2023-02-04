@@ -42,7 +42,7 @@ public class JEICompat implements IModPlugin {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "hauntedharvest.jei.carved_pumpkin";
 
-        ItemStack output = new ItemStack(ModRegistry.MOD_CARVED_PUMPKIN.get());
+        ItemStack output = new ItemStack(ModRegistry.CARVED_PUMPKIN.get());
         CompoundTag com = new CompoundTag();
 
         var pixels = new long[]{2238290114314764288L, 3458817360039263256L, 4330272718253469696L, 16785168L};
@@ -63,13 +63,13 @@ public class JEICompat implements IModPlugin {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "hauntedharvest.jei.jack_o_lantern";
 
-        ItemStack output = new ItemStack(ModRegistry.MOD_JACK_O_LANTERN_ITEM.get());
+        ItemStack output = new ItemStack(ModRegistry.JACK_O_LANTERN.get());
         CompoundTag com = new CompoundTag();
         var pixels = new long[]{4499109221882658816L, 2017679119407127804L, 4537409593239146464L, 26388795002096L};
         com.putLongArray("Pixels", pixels);
         output.addTagElement("BlockEntityTag", com);
 
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.TORCH), Ingredient.of(ModRegistry.MOD_CARVED_PUMPKIN_ITEM.get()));
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.TORCH), Ingredient.of(ModRegistry.CARVED_PUMPKIN.get()));
         ResourceLocation id = HauntedHarvest.res("jei_jack_o_lantern");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
         recipes.add(recipe);

@@ -97,7 +97,7 @@ public class LightUpPumpkin extends Behavior<Villager> {
                     SoundType soundtype = Blocks.TORCH.defaultBlockState().getSoundType();
                     pLevel.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
-                    Block toPlace = state.is(ModRegistry.MOD_CARVED_PUMPKIN.get()) ? ModRegistry.MOD_JACK_O_LANTERN.get() : Blocks.JACK_O_LANTERN;
+                    Block toPlace = state.is(ModRegistry.CARVED_PUMPKIN.get()) ? ModRegistry.JACK_O_LANTERN.get() : Blocks.JACK_O_LANTERN;
                     pLevel.setBlockAndUpdate(pos, toPlace.defaultBlockState()
                             .setValue(CarvedPumpkinBlock.FACING, state.getValue(CarvedPumpkinBlock.FACING)));
                 }

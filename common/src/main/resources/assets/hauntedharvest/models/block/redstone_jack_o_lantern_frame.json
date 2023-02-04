@@ -1,0 +1,13 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "hauntedharvest:block/pumpkin_frame_lit",
+    "render_type": "cutout",
+	"textures": {
+		"3": "hauntedharvest:block/redstone_jack_o_lantern_top",
+		"top_overlay": "hauntedharvest:block/redstone_jack_o_lantern_top",
+		"4": "block/pumpkin_top",
+		"particle": "block/pumpkin_side",
+		"side": "block/pumpkin_side",
+		"background": "block/pumpkin_side"
+	}
+}

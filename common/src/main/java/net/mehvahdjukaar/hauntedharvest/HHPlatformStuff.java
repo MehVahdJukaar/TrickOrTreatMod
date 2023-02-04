@@ -8,6 +8,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
 
+import java.util.List;
+
 public class HHPlatformStuff {
 
     @ExpectPlatform
@@ -28,6 +30,12 @@ public class HHPlatformStuff {
 
     @ExpectPlatform
     public static ShaderInstance getBlur() {
+        throw new AssertionError();
+    }
+
+    @Deprecated(forRemoval = true)
+    @ExpectPlatform
+    public static List<String> getMods(){
         throw new AssertionError();
     }
 }

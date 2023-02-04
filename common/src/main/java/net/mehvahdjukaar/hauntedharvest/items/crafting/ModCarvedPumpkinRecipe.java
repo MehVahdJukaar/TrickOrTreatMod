@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.items.crafting;
 
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.core.NonNullList;
@@ -13,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 public class ModCarvedPumpkinRecipe extends CustomRecipe {
     public ModCarvedPumpkinRecipe(ResourceLocation idIn) {
@@ -33,18 +34,17 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
-            if (item == ModRegistry.MOD_CARVED_PUMPKIN.get().asItem() && itemstack == null) {
+            if (item == ModRegistry.CARVED_PUMPKIN.get().asItem() && itemstack == null) {
                 if (isFilled(stack)) {
                     itemstack = stack;
                 }
-            }else if(item == Items.TORCH || stack.is(ModTags.CARVABLE_PUMPKINS)){
+            } else if (PumpkinType.getFromTorch(item) != null || stack.is(ModTags.CARVABLE_PUMPKINS)) {
                 if (itemstack1 != null) {
                     return false;
                 }
 
                 itemstack1 = stack;
-            }
-            else if (!stack.isEmpty()) return false;
+            } else if (!stack.isEmpty()) return false;
         }
 
         return itemstack != null && itemstack1 != null;
@@ -52,15 +52,18 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
 
     @Override
     public ItemStack assemble(CraftingContainer inv) {
-        boolean torch = false;
+        Item jack = ModRegistry.CARVED_PUMPKIN.get().asItem();
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
-            if(inv.getItem(i).getItem() == Items.TORCH)torch = true;
+            Block b = PumpkinType.getFromTorch(inv.getItem(i).getItem());
+            if(b != null){
+                jack = b.asItem();
+            }
         }
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (isFilled(stack)) {
-                ItemStack s =(torch ? ModRegistry.MOD_JACK_O_LANTERN_ITEM : ModRegistry.MOD_CARVED_PUMPKIN_ITEM).get().getDefaultInstance();
+                ItemStack s = new ItemStack(jack);
                 s.setCount(1);
                 s.setTag(stack.getTag().copy());
                 return s;

@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
@@ -31,7 +32,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 public class CarvingManager {
 
@@ -53,7 +54,7 @@ public class CarvingManager {
     public static Carving getInstance(Key key) {
         Carving textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new Carving(ModCarvedPumpkinBlockTile.unpackPixels(key.values), key.glow);
+            textureInstance = new Carving(ModCarvedPumpkinBlockTile.unpackPixels(key.values), key.type);
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
@@ -62,19 +63,19 @@ public class CarvingManager {
     @Immutable
     public static class Key implements TooltipComponent {
         private final long[] values;
-        private final boolean glow;
+        private final PumpkinType type;
 
-        Key(long[] packed, boolean glowing) {
-            values = packed;
-            glow = glowing;
+        Key(long[] packed, PumpkinType type) {
+            this.values = packed;
+            this.type = type;
         }
 
-        public static Key of(long[] packPixels, boolean glowing) {
+        public static Key of(long[] packPixels, PumpkinType glowing) {
             return new Key(packPixels, glowing);
         }
 
         public static Key of(long[] packPixels) {
-            return new Key(packPixels, false);
+            return new Key(packPixels, PumpkinType.NORMAL);
         }
 
         @Override
@@ -89,7 +90,7 @@ public class CarvingManager {
                 return false;
             }
             Key key = (Key) another;
-            return Arrays.equals(this.values, key.values) && glow == key.glow;
+            return Arrays.equals(this.values, key.values) && type == key.type;
         }
 
         @Override
@@ -105,7 +106,7 @@ public class CarvingManager {
         //models for each direction
         private final Map<Direction, List<BakedQuad>> quadsCache = new EnumMap<>(Direction.class);
         private final boolean[][] pixels;
-        private final boolean glow;
+        private final PumpkinType type;
         //he is lazy
         @Nullable
         private DynamicTexture texture;
@@ -113,22 +114,18 @@ public class CarvingManager {
         private RenderType renderType;
         @Nullable
         private ResourceLocation textureLocation;
-        @Nullable
-        private DynamicTexture blurTexture;
-        @Nullable
-        private ResourceLocation blurTextureLocation;
 
-        private Carving(boolean[][] pixels, boolean glow) {
+        private Carving(boolean[][] pixels, PumpkinType type) {
             this.pixels = pixels;
-            this.glow = glow;
+            this.type = type;
         }
 
         public boolean[][] getPixels() {
             return pixels;
         }
 
-        public boolean isGlow() {
-            return glow;
+        public PumpkinType getType() {
+            return type;
         }
 
         //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
@@ -136,7 +133,7 @@ public class CarvingManager {
         private void initializeTexture() {
             this.texture = new DynamicTexture(WIDTH, WIDTH, false);
 
-            Material[][] materials = PumpkinTextureGenerator.getTexturePerPixel(this.pixels, this.glow);
+            Material[][] materials = PumpkinTextureGenerator.getTexturePerPixel(this.pixels, this.type);
 
             for (int y = 0; y < pixels.length && y < WIDTH; y++) {
                 for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
@@ -154,8 +151,8 @@ public class CarvingManager {
 
 
         @Nonnull
-        public List<BakedQuad> getOrCreateModel(Direction dir, Supplier<List<BakedQuad>> modelFactory) {
-            return this.quadsCache.computeIfAbsent(dir, d -> modelFactory.get());
+        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<Carving, Direction, List<BakedQuad>> modelFactory) {
+            return this.quadsCache.computeIfAbsent(dir, d -> modelFactory.apply(this, d));
         }
 
         @Nonnull

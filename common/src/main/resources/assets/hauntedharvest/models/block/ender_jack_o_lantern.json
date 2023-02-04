@@ -1,0 +1,24 @@
+{
+  "loader": "hauntedharvest:carved_pumpkin",
+  "render_type": "cutout",
+  "model": {
+    "parent": "hauntedharvest:block/pumpkin_frame_lit",
+    "render_type": "cutout",
+    "textures": {
+		"side": "block/pumpkin_side",
+		"background": "hauntedharvest:block/ender_jack_o_lantern_background",
+		"3": "hauntedharvest:block/ender_jack_o_lantern_top",
+		"top_overlay": "hauntedharvest:block/ender_jack_o_lantern_top",
+		"4": "block/pumpkin_top",
+		"particle": "block/pumpkin_side"
+    }
+  },
+  "textures": {
+	  "side": "block/pumpkin_side",
+	  "background": "hauntedharvest:block/ender_jack_o_lantern_background",
+	  "3": "hauntedharvest:block/ender_jack_o_lantern_top",
+	  "top_overlay": "hauntedharvest:block/ender_jack_o_lantern_top",
+	  "4": "block/pumpkin_top",
+	  "particle": "block/pumpkin_side"
+  }
+}

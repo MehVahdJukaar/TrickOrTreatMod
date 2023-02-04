@@ -48,7 +48,7 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
             level.setBlock(pos, (isLantern ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN)
                     .defaultBlockState().setValue(CarvedPumpkinBlock.FACING, direction), flag);
         } else {
-            level.setBlock(pos, (isLantern ? ModRegistry.MOD_JACK_O_LANTERN : ModRegistry.MOD_CARVED_PUMPKIN).get()
+            level.setBlock(pos, (isLantern ? ModRegistry.JACK_O_LANTERN : ModRegistry.CARVED_PUMPKIN).get()
                     .defaultBlockState().setValue(CarvedPumpkinBlock.FACING, direction), flag);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
                 tile.acceptPixels(getRandomCarving(level.getRandom(), onlyFaces));
@@ -65,7 +65,7 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
         if (isVanilla) {
             item = (isLantern ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN).asItem().getDefaultInstance();
         } else {
-            item = (isLantern ? ModRegistry.MOD_JACK_O_LANTERN : ModRegistry.MOD_CARVED_PUMPKIN).get().asItem().getDefaultInstance();
+            item = (isLantern ? ModRegistry.JACK_O_LANTERN : ModRegistry.CARVED_PUMPKIN).get().asItem().getDefaultInstance();
 
             CompoundTag tag = item.getOrCreateTag();
             CompoundTag t = new CompoundTag();
@@ -92,7 +92,7 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
         var l = new ArrayList<>(FACES);
         l.addAll(FANTASY);
         for (var c : l) {
-            level.setBlock(pos, ModRegistry.MOD_CARVED_PUMPKIN.get()
+            level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get()
                     .defaultBlockState().setValue(CarvedPumpkinBlock.FACING, Direction.WEST), 3);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
                 tile.acceptPixels(c);

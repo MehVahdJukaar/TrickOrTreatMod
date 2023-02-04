@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.client;
 
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.minecraft.client.resources.model.Material;
 
@@ -14,7 +15,7 @@ public class PumpkinTextureGenerator {
      * Turns carved pixels matrix into a usable color matrix for the carved section of a pumpkin
      * Rest of the texture is simply using vanilla texture
      */
-    public static Material[][] getTexturePerPixel(boolean[][] pixels, boolean jackOLantern) {
+    public static Material[][] getTexturePerPixel(boolean[][] pixels, PumpkinType pumpkinType) {
         Type[][] colors = new Type[16][16];
 
         forEachPixel(colors, (j, i) -> {
@@ -30,36 +31,10 @@ public class PumpkinTextureGenerator {
         });
 
         addExtraShade(colors);
-        forEachPixel(colors, (j, i) -> {
-            addHighlight(colors, j, i);
-        });
+        forEachPixel(colors, (j, i) -> addHighlight(colors, j, i));
         Material[][] materials = new Material[16][16];
-        if (jackOLantern) {
-            mapJackOLanternMaterials(colors, materials);
-        } else {
-            mapCarvedMaterials(colors, materials);
-        }
+        forEachPixel(materials, (j, i) -> materials[j][i] = ClientRegistry.getMaterial(pumpkinType, colors[j][i].ordinal()));
         return materials;
-    }
-
-    private static void mapCarvedMaterials(Type[][] colors, Material[][] materials) {
-        forEachPixel(materials, (j, i) -> materials[j][i] = switch (colors[j][i]) {
-                    case UNCARVED -> ClientRegistry.PUMPKIN;
-                    case SHADE -> ClientRegistry.CARVED_PUMPKIN_SHADE;
-                    case BACKGROUND -> ClientRegistry.CARVED_PUMPKIN_BACKGROUND;
-                    case HIGHLIGHT -> ClientRegistry.PUMPKIN_HIGHLIGHT;
-                }
-        );
-    }
-
-    private static void mapJackOLanternMaterials(Type[][] colors, Material[][] materials) {
-        forEachPixel(materials, (j, i) -> materials[j][i] = switch (colors[j][i]) {
-                    case UNCARVED -> ClientRegistry.PUMPKIN;
-                    case SHADE -> ClientRegistry.JACK_O_LANTERN_SHADE_1;
-                    case BACKGROUND -> ClientRegistry.JACK_O_LANTERN_BACKGROUND;
-                    case HIGHLIGHT -> ClientRegistry.PUMPKIN_HIGHLIGHT;
-                }
-        );
     }
 
     private static void addExtraShade(Type[][] px) {
@@ -120,8 +95,8 @@ public class PumpkinTextureGenerator {
 
     public enum Type {
         UNCARVED,
-        BACKGROUND,
         SHADE,
+        BACKGROUND,
         HIGHLIGHT
     }
 }

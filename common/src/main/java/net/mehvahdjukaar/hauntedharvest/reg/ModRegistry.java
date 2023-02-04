@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.reg;
 
+import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.blocks.*;
@@ -192,29 +193,41 @@ public class ModRegistry {
                     CandyBagTile::new, CANDY_BAG.get()));
 
 
-    public static final Supplier<Block> MOD_CARVED_PUMPKIN = regBlock("carved_pumpkin",
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)));
-
     public static final String CARVED_PUMPKIN_NAME = "carved_pumpkin";
-    public static final Supplier<Item> MOD_CARVED_PUMPKIN_ITEM = regItem(CARVED_PUMPKIN_NAME,
-            () -> new ModCarvedPumpkinItem(MOD_CARVED_PUMPKIN.get(), new Item.Properties()
-                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, CARVED_PUMPKIN_NAME))));
+    public static final Supplier<ModCarvedPumpkinBlock> CARVED_PUMPKIN = regPumpkin(CARVED_PUMPKIN_NAME,
+            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN), PumpkinType.NORMAL),
+            CreativeModeTab.TAB_DECORATIONS, true);
 
 
-    public static final Supplier<Block> MOD_JACK_O_LANTERN = regBlock("jack_o_lantern",
+    public static final Supplier<ModCarvedPumpkinBlock> JACK_O_LANTERN = regPumpkin("jack_o_lantern",
             () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
-                    .lightLevel(s -> 15)));
+                    .lightLevel(s -> 15), PumpkinType.JACK), CreativeModeTab.TAB_DECORATIONS, true);
 
-    public static final Supplier<Item> MOD_JACK_O_LANTERN_ITEM = regItem("jack_o_lantern",
-            () -> new ModCarvedPumpkinItem(MOD_JACK_O_LANTERN.get(), new Item.Properties()
-                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, CARVED_PUMPKIN_NAME))));
+    public static final Supplier<ModCarvedPumpkinBlock> SOUL_JACK_O_LANTERN = regPumpkin("soul_jack_o_lantern",
+            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
+                    .lightLevel(s -> 10), PumpkinType.SOUL), CreativeModeTab.TAB_DECORATIONS, hasBlock("soul_jack_o_lantern"));
+
+
+    public static final Supplier<ModCarvedPumpkinBlock> REDSTONE_JACK_O_LANTERN = regPumpkin("redstone_jack_o_lantern",
+            () -> new RedstoneCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN),
+                    PumpkinType.REDSTONE), CreativeModeTab.TAB_DECORATIONS, hasBlock("redstone_jack_o_lantern"));
 
 
     public static final Supplier<BlockEntityType<ModCarvedPumpkinBlockTile>> MOD_CARVED_PUMPKIN_TILE =
             regTile("carved_pumpkin", () ->
                     PlatformHelper.newBlockEntityType(ModCarvedPumpkinBlockTile::new,
-                            MOD_CARVED_PUMPKIN.get(), MOD_JACK_O_LANTERN.get()));
+                            PumpkinType.getTypes().stream().map(PumpkinType::getPumpkin).toArray(Block[]::new)));
 
+    public static Supplier<ModCarvedPumpkinBlock> regPumpkin(String name, Supplier<ModCarvedPumpkinBlock> supplier,
+                                                             CreativeModeTab tab, boolean shown) {
+        var block = regBlock(name, supplier);
+
+        var item = regItem(name,
+                () -> new ModCarvedPumpkinItem(block.get(), new Item.Properties()
+                        .tab(shown ? getTab(tab, CARVED_PUMPKIN_NAME) : null)));
+
+        return block;
+    }
 
     public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
         return RegHelper.registerItem(HauntedHarvest.res(name), sup);
@@ -248,6 +261,14 @@ public class ModRegistry {
 
     private static Supplier<Activity> regActivity(String name) {
         return RegHelper.registerActivity(HauntedHarvest.res(name), () -> new Activity(name));
+    }
+
+    private static boolean hasBlock(String name) {
+        if (HauntedHarvest.AUTUMNITY_INSTALLED) return true;
+        for (var id : HHPlatformStuff.getMods()) {
+            if (Registry.ITEM.getOptional(new ResourceLocation(id, name)).isPresent()) return true;
+        }
+        return false;
     }
 
 }

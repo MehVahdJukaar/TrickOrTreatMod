@@ -83,17 +83,18 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         if (data != ExtraModelData.EMPTY && state != null && side == state.getValue(ModCarvedPumpkinBlock.FACING)) {
             CarvingManager.Key key = data.get(ModCarvedPumpkinBlockTile.CARVING);
             if (key != null) {
-                var textureInstance = CarvingManager.getInstance(key);
-                quads.addAll(textureInstance.getOrCreateModel(side, () ->
-                        generateQuads(textureInstance.getPixels(), this.modelTransform, textureInstance.isGlow(), side)));
+                var carving = CarvingManager.getInstance(key);
+                quads.addAll(carving.getOrCreateModel(side, this::generateQuads));
             }
         }
 
         return quads;
     }
 
-    private List<BakedQuad> generateQuads(boolean[][] px, ModelState modelTransform, boolean jackOLantern, Direction direction) {
-        Material[][] pixels = PumpkinTextureGenerator.getTexturePerPixel(px, jackOLantern);
+    private List<BakedQuad> generateQuads(CarvingManager.Carving carving, Direction direction) {
+        var px = carving.getPixels();
+        var type = carving.getType();
+        Material[][] pixels = PumpkinTextureGenerator.getTexturePerPixel(px, type);
         List<BakedQuad> quads;
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();

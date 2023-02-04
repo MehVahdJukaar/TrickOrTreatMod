@@ -8,6 +8,6 @@
 		"4": "block/pumpkin_top",
 		"particle": "block/pumpkin_side",
 		"side": "block/pumpkin_side",
-		"background": "hauntedharvest:block/jack_o_lantern_background"
+		"background": "block/pumpkin_side"
 	}
 }

@@ -103,6 +103,10 @@ repositories{
         dirs "mods"
     }
     mavenCentral()
+
+    maven { url "https://maven.jaackson.me" }
+    maven { url "https://dvs1.progwml6.com/files/maven/" }
+    maven { url "https://modmaven.k-4u.nl" }
 }
 
 dependencies {
@@ -121,6 +125,11 @@ dependencies {
     modImplementation("curse.maven:autoreglib-250363:3857246")
     modImplementation("curse.maven:quark-oddities-301051:3575623")
     modImplementation("vazkii.quark:Quark:3.4-391")
+    modImplementation("com.teamabnormals:autumnity:1.19.2-4.0.0")
+    modImplementation("com.teamabnormals:blueprint:1.19.2-6.1.0")
+
+    modCompileOnly("curse.maven:incubation-361718:3906687")
+    modCompileOnly("com.teamabnormals:boatload:1.19-4.0.0")
 
     /// modImplementation("curse.maven:quark-243121:4366541")
     modImplementation("curse.maven:farmers-delight-398521:3999157")

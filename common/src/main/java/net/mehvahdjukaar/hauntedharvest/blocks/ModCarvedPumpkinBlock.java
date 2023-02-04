@@ -41,8 +41,15 @@ import java.util.function.Predicate;
 public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityBlock {
 
 
-    public ModCarvedPumpkinBlock(Properties properties) {
+    private final PumpkinType type;
+
+    public ModCarvedPumpkinBlock(Properties properties, PumpkinType type) {
         super(properties);
+        this.type = type;
+    }
+
+    public PumpkinType getType(BlockState state) {
+        return type;
     }
 
     public static Vec2i getHitSubPixel(BlockHitResult hit) {
@@ -78,22 +85,25 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                 level.levelEvent(player, 3003, pos, 0);
                 te.setWaxed(true);
                 return InteractionResult.sidedSuccess(level.isClientSide);
-            } else if (!te.isJackOLantern() && i == Items.TORCH) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                }
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
-                CompoundTag tag = new CompoundTag();
-                te.saveAdditional(tag);
-                level.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1, 1.3f);
-                level.setBlockAndUpdate(pos, ModRegistry.MOD_JACK_O_LANTERN.get().withPropertiesOf(state));
-                if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile jack) {
-                    jack.load(tag);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
             }
+                Block b = PumpkinType.getFromTorch(i);
+                if(b != null) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                    }
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                    }
+                    CompoundTag tag = new CompoundTag();
+                    te.saveAdditional(tag);
+                    level.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1, 1.3f);
+                    level.setBlockAndUpdate(pos, b.withPropertiesOf(state));
+                    if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile jack) {
+                        jack.load(tag);
+                    }
+                    return InteractionResult.sidedSuccess(level.isClientSide);
+                }
+
 
             CarveMode mode = te.getCarveMode();
 

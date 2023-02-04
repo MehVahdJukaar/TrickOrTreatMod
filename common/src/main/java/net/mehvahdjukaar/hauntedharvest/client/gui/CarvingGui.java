@@ -117,7 +117,7 @@ public class CarvingGui extends Screen {
         this.renderBackground(poseStack);
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
-        Material[][] materials = PumpkinTextureGenerator.getTexturePerPixel(getPixelMatrix(), tile.isJackOLantern());
+        Material[][] materials = PumpkinTextureGenerator.getTexturePerPixel(getPixelMatrix(), tile.getPumpkinType());
 
         poseStack.pushPose();
         //float ff = 93.75F/16f;
