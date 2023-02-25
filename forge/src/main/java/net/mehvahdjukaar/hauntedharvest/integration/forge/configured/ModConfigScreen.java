@@ -59,11 +59,6 @@ public class ModConfigScreen extends CustomConfigScreen {
 
 
     @Override
-    public boolean hasFancyBooleans() {
-        return this.config.getFileName().contains("registry");
-    }
-
-    @Override
     public void onSave() {
     }
 
