@@ -27,8 +27,4 @@ public class HHPlatformStuffImpl {
         return null;
     }
 
-    @Deprecated(forRemoval = true)
-    public static List<String> getMods() {
-       return FabricLoader.getInstance().getAllMods().stream().map(m->m.getMetadata().getId()).toList();
-    }
 }

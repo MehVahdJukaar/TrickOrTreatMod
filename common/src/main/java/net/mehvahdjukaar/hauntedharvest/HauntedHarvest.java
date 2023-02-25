@@ -88,7 +88,7 @@ public class HauntedHarvest {
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
         PlatformHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
-
+        //TODO: pillager outposts pumpkins
     }
 
     //needs to be fired after configs are loaded

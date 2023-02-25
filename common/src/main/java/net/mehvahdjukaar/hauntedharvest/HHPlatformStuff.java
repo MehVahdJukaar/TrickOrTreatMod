@@ -32,10 +32,4 @@ public class HHPlatformStuff {
     public static ShaderInstance getBlur() {
         throw new AssertionError();
     }
-
-    @Deprecated(forRemoval = true)
-    @ExpectPlatform
-    public static List<String> getMods(){
-        throw new AssertionError();
-    }
 }

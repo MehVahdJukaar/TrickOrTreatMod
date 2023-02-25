@@ -2,7 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.integration;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlaxBlock;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -18,7 +18,7 @@ public class SuppCompat {
     }
 
     public static boolean isFlaxOn() {
-        return RegistryConfigs.FLAX_ENABLED.get();
+        return CommonConfigs.isEnabled("flax");
     }
 
     public static boolean placeFlax(BlockPos.MutableBlockPos p, WorldGenLevel level, RandomSource random) {

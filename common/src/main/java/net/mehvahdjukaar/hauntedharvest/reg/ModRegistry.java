@@ -265,8 +265,8 @@ public class ModRegistry {
 
     private static boolean hasBlock(String name) {
         if (HauntedHarvest.AUTUMNITY_INSTALLED) return true;
-        for (var id : HHPlatformStuff.getMods()) {
-            if (Registry.ITEM.getOptional(new ResourceLocation(id, name)).isPresent()) return true;
+        for (var id : PlatformHelper.getInstalledMods()) {
+            if (Registry.BLOCK.getOptional(new ResourceLocation(id, name)).isPresent()) return true;
         }
         return false;
     }

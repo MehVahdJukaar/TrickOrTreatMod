@@ -3,6 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.mixins;
 import net.mehvahdjukaar.hauntedharvest.ai.IHarmlessProjectile;
 import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
@@ -16,6 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,7 +25,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ThrownEgg.class)
 public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile implements IHarmlessProjectile {
 
+    @Unique
     private boolean hasSpawnedChicken = false;
+    @Unique
     private boolean shotFromVillager = false;
 
     protected ThrownEggEntityMixin(EntityType<? extends ThrowableItemProjectile> aSuper, Level level) {
@@ -46,7 +50,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
         this.hasSpawnedChicken = false;
         if (this.isHarmless()) {
             if (pResult.getType() == HitResult.Type.BLOCK && RegistryConfigs.SPLATTERED_EGG_ENABLED.get()) {
-                this.spawnSplatteredEgg(pResult);
+                SplatteredEggEntity.spawn(pResult,this);
                 this.onHitBlock((BlockHitResult) pResult);
                 this.discard();
             }
@@ -64,30 +68,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     @Inject(method = "onHit", at = @At(value = "INVOKE", shift = At.Shift.BEFORE,
             target = "Lnet/minecraft/world/entity/projectile/ThrownEgg;discard()V"))
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci) {
-        if (!this.hasSpawnedChicken) this.spawnSplatteredEgg(pResult);
+        if (!this.hasSpawnedChicken) SplatteredEggEntity.spawn(pResult,this);
     }
-
-
-    protected void spawnSplatteredEgg(HitResult pResult) {
-        var type = pResult.getType();
-        if (type == HitResult.Type.BLOCK) {
-            BlockHitResult hit = (BlockHitResult) pResult;
-
-            BlockPos blockpos = hit.getBlockPos();
-            Direction direction = hit.getDirection();
-            BlockPos relative = blockpos.relative(direction);
-
-            HangingEntity hangingentity = new SplatteredEggEntity(level, relative, direction);
-
-            if (hangingentity.survives()) {
-                if (!level.isClientSide) {
-                    hangingentity.playPlacementSound();
-                    level.gameEvent(this.getOwner(), GameEvent.ENTITY_PLACE, blockpos);
-                    level.addFreshEntity(hangingentity);
-                }
-            }
-        }
-    }
-
 
 }

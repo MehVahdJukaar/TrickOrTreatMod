@@ -33,9 +33,4 @@ public class HHPlatformStuffImpl {
     public static ShaderInstance getBlur() {
         return HauntedHarvestForgeClient.getBlur();
     }
-
-    @Deprecated(forRemoval = true)
-    public static List<String> getMods() {
-        return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
-    }
 }

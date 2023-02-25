@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
@@ -36,9 +37,9 @@ public class HauntedHarvestFabric implements ModInitializer {
 
         ClientRegistry.setup();
 
-
-        registerISTER(ModRegistry.MOD_JACK_O_LANTERN_ITEM.get());
-        registerISTER(ModRegistry.MOD_CARVED_PUMPKIN_ITEM.get());
+        for (PumpkinType type : PumpkinType.getTypes()) {
+            registerISTER(type.getPumpkin().asItem());
+        }
 
     }
 

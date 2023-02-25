@@ -8,7 +8,8 @@
   ],
   "mixins": [
     "SelfCarvedPumpkinItemMixin",
-    "SnowGolemMixin"
+    "SnowGolemMixin",
+    "CompatTurkeyEggEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.hauntedharvest.integration.forge;
 
 import com.google.common.base.Suppliers;
+import com.teamabnormals.autumnity.common.item.TurkeyEggItem;
+import com.teamabnormals.autumnity.core.other.AutumnityCompat;
+import com.teamabnormals.autumnity.core.registry.AutumnityBlocks;
+import com.teamabnormals.autumnity.core.registry.AutumnityFeatures;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.minecraft.core.Registry;
@@ -34,7 +38,7 @@ public class AutumnityCompatImpl {
     public static final Supplier<ModCarvedPumpkinBlock> ENDER_JACK_O_LANTERN = regPumpkin("ender_jack_o_lantern",
             () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
                     .lightLevel(s -> 10), AutumnityCompatImpl.ENDER),
-            CreativeModeTab.TAB_DECORATIONS, true);
+            CreativeModeTab.TAB_DECORATIONS, ENDERGEtIC);
 
 
     private static final PumpkinType ENDER = PumpkinType.register(new PumpkinType("ender_jack_o_lantern",
@@ -43,7 +47,7 @@ public class AutumnityCompatImpl {
     public static final Supplier<ModCarvedPumpkinBlock> GREEN_JACK_O_LANTERN = regPumpkin("green_jack_o_lantern",
             () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
                     .lightLevel(s -> 10), AutumnityCompatImpl.GREEN),
-            CreativeModeTab.TAB_DECORATIONS, ENDERGEtIC);
+            CreativeModeTab.TAB_DECORATIONS, false);
 
 
     private static final PumpkinType GREEN = PumpkinType.register(new PumpkinType("green_jack_o_lantern",

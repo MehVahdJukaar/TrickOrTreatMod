@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.hauntedharvest.entity;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,12 +15,16 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +44,27 @@ public class SplatteredEggEntity extends HangingEntity {
     public SplatteredEggEntity(EntityType<? extends SplatteredEggEntity> type, Level level, BlockPos pos, Direction direction) {
         super(type, level, pos);
         this.setDirection(direction);
+    }
+
+    public static void spawn(HitResult pResult, ThrowableProjectile egg) {
+        var type = pResult.getType();
+        if (type == HitResult.Type.BLOCK) {
+            BlockHitResult hit = (BlockHitResult) pResult;
+
+            BlockPos blockpos = hit.getBlockPos();
+            Direction direction = hit.getDirection();
+            BlockPos relative = blockpos.relative(direction);
+            Level level = egg.level;
+            HangingEntity hangingentity = new SplatteredEggEntity(level, relative, direction);
+
+            if (hangingentity.survives()) {
+                if (!level.isClientSide) {
+                    hangingentity.playPlacementSound();
+                    level.gameEvent(egg.getOwner(), GameEvent.ENTITY_PLACE, blockpos);
+                    level.addFreshEntity(hangingentity);
+                }
+            }
+        }
     }
 
     //vanilla client factory
