@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
-import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -18,7 +17,10 @@ import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -86,8 +88,9 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                 te.setWaxed(true);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
+            if(this.type == PumpkinType.NORMAL) {
                 Block b = PumpkinType.getFromTorch(i);
-                if(b != null) {
+                if (b != null && b != this) {
                     if (player instanceof ServerPlayer serverPlayer) {
                         CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     }
@@ -103,7 +106,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-
+            }
 
             CarveMode mode = te.getCarveMode();
 
@@ -165,7 +168,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
         if (blockPatternMatch != null) {
 
             SnowGolem snowGolem = EntityType.SNOW_GOLEM.create(level);
-            if(level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
+            if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
                 HHPlatformStuff.addPumpkinData(tile, snowGolem);
             }
 

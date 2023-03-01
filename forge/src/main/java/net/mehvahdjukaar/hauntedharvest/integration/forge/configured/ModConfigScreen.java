@@ -39,6 +39,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("general", Items.SKELETON_SKULL);
         addIcon("splattered egg", Items.EGG);
         addIcon("carved pumpkin", Items.CARVED_PUMPKIN);
+        addIcon("features", ModRegistry.PAPER_BAG.get());
     }
 
     public ModConfigScreen(CustomConfigSelectScreen parent, IModConfig config) {

@@ -31,7 +31,7 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        //if (RegistryConfigs.BLACKBOARD_ENABLED.get()) {
+        //if (CommonConfigs.BLACKBOARD_ENABLED.get()) {
         registry.addRecipes(RecipeTypes.CRAFTING, createPumpkinDuplicate());
         registry.addRecipes(RecipeTypes.CRAFTING, createJackOLantern());
         // }

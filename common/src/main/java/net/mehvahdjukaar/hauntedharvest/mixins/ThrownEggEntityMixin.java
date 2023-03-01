@@ -1,20 +1,13 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import net.mehvahdjukaar.hauntedharvest.ai.IHarmlessProjectile;
-import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,8 +42,8 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     protected void onHit(HitResult pResult, CallbackInfo ci) {
         this.hasSpawnedChicken = false;
         if (this.isHarmless()) {
-            if (pResult.getType() == HitResult.Type.BLOCK && RegistryConfigs.SPLATTERED_EGG_ENABLED.get()) {
-                SplatteredEggEntity.spawn(pResult,this);
+            if (pResult.getType() == HitResult.Type.BLOCK && CommonConfigs.SPLATTERED_EGG_ENABLED.get()) {
+                SplatteredEggEntity.spawn(pResult, this);
                 this.onHitBlock((BlockHitResult) pResult);
                 this.discard();
             }
@@ -68,7 +61,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     @Inject(method = "onHit", at = @At(value = "INVOKE", shift = At.Shift.BEFORE,
             target = "Lnet/minecraft/world/entity/projectile/ThrownEgg;discard()V"))
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci) {
-        if (!this.hasSpawnedChicken) SplatteredEggEntity.spawn(pResult,this);
+        if (!this.hasSpawnedChicken) SplatteredEggEntity.spawn(pResult, this);
     }
 
 }

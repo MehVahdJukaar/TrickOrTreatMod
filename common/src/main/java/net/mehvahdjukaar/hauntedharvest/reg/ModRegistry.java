@@ -4,7 +4,7 @@ import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.blocks.*;
-import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
@@ -56,7 +56,7 @@ public class ModRegistry {
     @Contract
     @NotNull
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
-        if (RegistryConfigs.isEnabled(regName)) {
+        if (CommonConfigs.isEnabled(regName)) {
             return MOD_TAB == null ? g : MOD_TAB;
         }
         return null;
@@ -123,7 +123,7 @@ public class ModRegistry {
                     .food(ModFood.ROTTEN_APPLE)
                     .tab(getTab(CreativeModeTab.TAB_FOOD, GRIM_APPLE_NAME))));
 
-    public static final CreativeModeTab MOD_TAB = !RegistryConfigs.CREATIVE_TAB.get() ? null :
+    public static final CreativeModeTab MOD_TAB = !CommonConfigs.CREATIVE_TAB.get() ? null :
             PlatformHelper.createModTab(HauntedHarvest.res(HauntedHarvest.MOD_ID),
                     () -> DEATH_APPLE.get().getDefaultInstance(), false);
 

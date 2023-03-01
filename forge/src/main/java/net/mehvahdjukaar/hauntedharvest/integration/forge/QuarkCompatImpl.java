@@ -1,20 +1,25 @@
 package net.mehvahdjukaar.hauntedharvest.integration.forge;
 
+import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.fml.ModList;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import vazkii.quark.api.event.SimpleHarvestEvent;
 
 public class QuarkCompatImpl {
-
-
+    
     public static void init() {
-        var v = ModList.get().getModContainerById("quark").get().getModInfo().getVersion();
-        if (v.compareTo(new DefaultArtifactVersion("3.4-390")) > 0) {
-            MinecraftForge.EVENT_BUS.register(QuarkStuff2.class);
-        }
+        MinecraftForge.EVENT_BUS.register(QuarkCompatImpl.class);
     }
 
+    @SubscribeEvent
+    public static void onSimpleHarvest(SimpleHarvestEvent event) {
+        Block b = event.blockState.getBlock();
+        if (b instanceof AbstractCornBlock c) {
+            if (!c.isPlantFullyGrown(event.blockState, event.pos, event.player.level)) {
+                event.setCanceled(true);
+            } else event.setTargetPos(event.pos.below(c.getHeight()));
+        }
+    }
 
 }

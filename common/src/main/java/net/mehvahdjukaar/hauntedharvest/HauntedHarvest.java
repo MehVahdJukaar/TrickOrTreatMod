@@ -4,7 +4,6 @@ import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
-import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.AutumnityCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.QuarkCompat;
@@ -86,7 +85,7 @@ public class HauntedHarvest {
         if (AUTUMNITY_INSTALLED) AutumnityCompat.init();
         if (QUARK_INSTALLED) QuarkCompat.init();
 
-        RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
+        RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
         PlatformHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
         //TODO: pillager outposts pumpkins
     }
@@ -94,7 +93,7 @@ public class HauntedHarvest {
     //needs to be fired after configs are loaded
     public static void commonSetup() {
         PumpkinType.setup();
-        if(AUTUMNITY_INSTALLED)AutumnityCompat.setup();
+        if (AUTUMNITY_INSTALLED) AutumnityCompat.setup();
 
         NetworkHandler.registerMessages();
 

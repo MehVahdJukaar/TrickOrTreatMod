@@ -3,7 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.configs.RegistryConfigs;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -38,7 +38,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
         this.headModel = new HalloweenMaskModel<>(context.bakeLayer(ModelLayers.VILLAGER));
     }
 
-    private final int skins = RegistryConfigs.PAPER_BAG.get() ? 9 : 8;
+    private final int skins = CommonConfigs.PAPER_BAG.get() ? 9 : 8;
 
     @Override
     protected ResourceLocation getTextureLocation(T entity) {

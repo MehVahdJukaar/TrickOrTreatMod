@@ -3,10 +3,13 @@ package net.mehvahdjukaar.hauntedharvest.configs;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class CommonConfigs {
@@ -74,9 +77,31 @@ public class CommonConfigs {
         builder.pop();
 
 
+
+        builder.push("general");
+        CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab", false);
+
+        CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
+                .define("custom_configured_screen", true);
+        builder.pop();
+
+        builder.comment("Here are configs that need reloading to take effect");
+        builder.push("features");
+        CORN_ENABLED = feature(builder, ModRegistry.CORN_NAME, true);
+        GRIM_APPLE = feature(builder, ModRegistry.GRIM_APPLE_NAME, true);
+        PAPER_BAG = feature(builder, ModRegistry.PAPER_BAG_NAME, true);
+        POPCORN_ENABLED = feature(builder, ModRegistry.POPCORN_NAME, true);
+        CARVED_PUMPKINS_ENABLED = feature(builder, ModRegistry.CARVED_PUMPKIN_NAME, true);
+        SPLATTERED_EGG_ENABLED = feature(builder, ModRegistry.SPLATTERED_EGG_NAME, true);
+        CANDY_CORN_ENABLED = feature(builder, ModRegistry.CANDY_CORN_NAME, true);
+        builder.pop();
+
         builder.onChange(()->HauntedHarvest.getSeasonManager().refresh());
 
         SPEC = builder.buildAndRegister();
+        SPEC.loadFromFile();        //load early
+
+
     }
 
     public static final Supplier<Integer> START_DAY;
@@ -101,7 +126,35 @@ public class CommonConfigs {
     public static final Supplier<Boolean> SEASONS_MOD_COMPAT;
 
 
+
+    private static final Map<String, Supplier<Boolean>> FEATURES = new HashMap<>();
+
+    public static final Supplier<Boolean> CORN_ENABLED;
+    public static final Supplier<Boolean> GRIM_APPLE;
+    public static final Supplier<Boolean> PAPER_BAG;
+    public static final Supplier<Boolean> POPCORN_ENABLED;
+    public static final Supplier<Boolean> SPLATTERED_EGG_ENABLED;
+    public static final Supplier<Boolean> CARVED_PUMPKINS_ENABLED;
+    public static final Supplier<Boolean> CANDY_CORN_ENABLED;
+
+
+    public static final Supplier<Boolean> CREATIVE_TAB;
+    public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+
+
     public static boolean customCarvings() {
-        return CUSTOM_CARVINGS.get() && RegistryConfigs.CARVED_PUMPKINS_ENABLED.get();
+        return CUSTOM_CARVINGS.get() && CARVED_PUMPKINS_ENABLED.get();
     }
+
+
+    private static Supplier<Boolean> feature(ConfigBuilder builder, String name, Boolean value) {
+        var config = builder.define(name, value);
+        FEATURES.put(name, config);
+        return config;
+    }
+
+    public static boolean isEnabled(String key) {
+        return FEATURES.getOrDefault(key, () -> true).get();
+    }
+
 }
