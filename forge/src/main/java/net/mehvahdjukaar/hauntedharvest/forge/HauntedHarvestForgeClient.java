@@ -5,8 +5,8 @@ import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.integration.forge.configured.ModConfigSelectScreen;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -38,11 +38,11 @@ public class HauntedHarvestForgeClient {
 
             event.registerShader(blur, s -> HauntedHarvestForgeClient.blur = s);
         } catch (Exception e) {
-            HauntedHarvest.LOGGER.error("Failed to parse blur shader: "+e);
+            HauntedHarvest.LOGGER.error("Failed to parse blur shader: " + e);
         }
     }
 
-    public static ShaderInstance getBlur(){
+    public static ShaderInstance getBlur() {
         // blur.getUniform("Radius").set(8f);
         return blur;
     }

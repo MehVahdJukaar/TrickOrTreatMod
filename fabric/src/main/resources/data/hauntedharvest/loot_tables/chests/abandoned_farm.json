@@ -46,6 +46,15 @@
         {
           "condition": "minecraft:random_chance",
           "chance": 0.7
+        },
+        {
+          "condition": "moonlight:iconditions",
+          "values": [
+            {
+              "type": "hauntedharvest:flag",
+              "flag": "grim_apple"
+            }
+          ]
         }
       ]
     },
@@ -88,6 +97,17 @@
             }
           ],
           "name": "hauntedharvest:kernels"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "moonlight:iconditions",
+          "values": [
+            {
+              "type": "hauntedharvest:flag",
+              "flag": "corn"
+            }
+          ]
         }
       ]
     },
@@ -193,7 +213,18 @@
               "add": false
             }
           ],
-          "name": "hauntedharvest:corn"
+          "name": "hauntedharvest:corn",
+          "conditions": [
+            {
+              "condition": "moonlight:iconditions",
+              "values": [
+                {
+                  "type": "hauntedharvest:flag",
+                  "flag": "corn"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

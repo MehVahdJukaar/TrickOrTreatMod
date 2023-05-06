@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.client.HalloweenMaskLayer;
 import net.minecraft.client.model.VillagerModel;
@@ -21,7 +22,11 @@ public abstract class VillagerRendererMixin extends MobRenderer<Villager, Villag
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void init(EntityRendererProvider.Context context, CallbackInfo ci){
-        this.addLayer(new HalloweenMaskLayer<>(this, context));
+        try {
+            this.addLayer(new HalloweenMaskLayer<>(this, context));
+        }catch (Exception e){
+            HauntedHarvest.LOGGER.error("Failed to add villager mask layers. This might be due to failed mod loading");
+        }
     }
 
     @Override

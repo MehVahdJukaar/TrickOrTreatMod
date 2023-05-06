@@ -18,9 +18,11 @@ public class CommonConfigs {
     }
 
     public static final ConfigSpec SPEC;
+    private static final Map<String, Supplier<Boolean>> FEATURES;
 
 
     static {
+        FEATURES = new HashMap<>();
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON);
 
 
@@ -127,7 +129,6 @@ public class CommonConfigs {
 
 
 
-    private static final Map<String, Supplier<Boolean>> FEATURES = new HashMap<>();
 
     public static final Supplier<Boolean> CORN_ENABLED;
     public static final Supplier<Boolean> GRIM_APPLE;
