@@ -1,6 +1,9 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.1' apply false
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 architectury {
@@ -9,6 +12,9 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "io.github.juuxel.loom-quiltflower"
+    apply plugin: "com.matthewprenger.cursegradle"
+    apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -23,6 +29,70 @@ subprojects {
             }
         }
     }
+
+    var env = System.getenv()
+    var modLoader = name
+
+    var changelogFile = rootProject.file("changelog.md")
+    var changelogText = changelogFile.exists() ? changelogFile.text : ""
+
+    if (env.MODRINTH_TOKEN) {
+        modrinth {
+            projectId = rootProject.mod_id
+            uploadFile = tasks.remapJar
+            gameVersions = [rootProject.minecraft_version]
+            loaders = [modLoader]
+            changelog = changelogText
+
+            if (modLoader == "fabric") {
+                dependencies {
+                    required.project "fabric-api"
+                    required.project "moonlight"
+                }
+            } else {
+                dependencies {
+                    required.project "moonlight"
+
+                }
+            }
+        }
+    }
+
+    if (env.CURSEFORGE_TOKEN) {
+        curseforge {
+            apiKey = env.CURSEFORGE_TOKEN
+            project {
+                id = rootProject.project_id
+                changelog = changelogText
+                releaseType = 'release'
+                addGameVersion rootProject.minecraft_version
+                addGameVersion modLoader.capitalize()
+
+                mainArtifact(tasks.remapJar)
+
+                if (modLoader == "fabric") {
+                    relations {
+                        requiredDependency "fabric-api"
+                        requiredDependency "selene"
+
+                        optionalDependency("fabric-seasons")
+                        optionalDependency("supplementaries")
+                        optionalDependency("farmers-delight-fabric")
+                    }
+                } else {
+                    relations {
+                        requiredDependency("selene")
+
+                        optionalDependency("autumnity")
+                        optionalDependency("serene-seasons")
+                        optionalDependency("quark")
+                        optionalDependency("supplementaries")
+                        optionalDependency("farmers-delight")
+                    }
+                }
+            }
+        }
+    }
 }
 
 allprojects {
@@ -33,6 +103,8 @@ allprojects {
     archivesBaseName = rootProject.mod_id
     version = rootProject.mod_version
     group = rootProject.maven_group
+    required_moonlight_version = rootProject.required_moonlight_version
+
 
     repositories {
 
@@ -45,12 +117,12 @@ allprojects {
         maven { url "https://maven.parchmentmc.org" }
 
         maven {
-            url "https://maven.firstdarkdev.xyz/snapshots"
+            url = "https://www.cursemaven.com"
+            allowInsecureProtocol = true
         }
 
         maven {
-            url = "https://www.cursemaven.com"
-            allowInsecureProtocol = true
+            url "https://maven.firstdarkdev.xyz/snapshots"
         }
 
     }
