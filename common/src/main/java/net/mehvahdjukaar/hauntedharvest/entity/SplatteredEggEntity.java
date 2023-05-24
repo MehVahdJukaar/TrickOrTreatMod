@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.hauntedharvest.entity;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -69,7 +69,7 @@ public class SplatteredEggEntity extends HangingEntity {
 
     //vanilla client factory
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this, this.direction.get3DDataValue(), this.getPos());
     }
 
@@ -210,7 +210,7 @@ public class SplatteredEggEntity extends HangingEntity {
 
     @Override
     public boolean isInvulnerableTo(DamageSource pSource) {
-        if (pSource.isProjectile()) return true;
+        if (pSource.is(DamageTypeTags.IS_PROJECTILE)) return true;
         return super.isInvulnerableTo(pSource);
     }
 }

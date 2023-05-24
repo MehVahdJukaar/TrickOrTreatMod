@@ -48,7 +48,6 @@ public class CarvingGui extends Screen {
 
     @Override
     public void removed() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new image to the server
         boolean[][] pixels = getPixelMatrix();
         getPixelMatrix();
@@ -105,10 +104,12 @@ public class CarvingGui extends Screen {
             }
         }
 
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, CLEAR, (b) -> this.clear()));
-        this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addRenderableWidget(Button.builder(CLEAR, (b) -> this.clear())
+                .bounds( this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20)
+                .build());
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (b) -> this.close())
+                .bounds(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20)
+                .build());
     }
 
     @Override

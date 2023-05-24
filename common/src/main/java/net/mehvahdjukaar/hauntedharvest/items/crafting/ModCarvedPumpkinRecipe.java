@@ -4,19 +4,23 @@ import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 public class ModCarvedPumpkinRecipe extends CustomRecipe {
-    public ModCarvedPumpkinRecipe(ResourceLocation idIn) {
-        super(idIn);
+    public ModCarvedPumpkinRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+        super(idIn, category);
     }
 
     private boolean isFilled(ItemStack stack) {
@@ -50,7 +54,7 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
         Item jack = ModRegistry.CARVED_PUMPKIN.get().asItem();
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {

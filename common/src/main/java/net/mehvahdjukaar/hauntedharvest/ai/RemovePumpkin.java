@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +41,7 @@ public class RemovePumpkin extends Behavior<Villager> {
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
         if (HauntedHarvest.isHalloweenSeason(pLevel)) return false;
         if (cooldown-- > 0) return false;
-        if (!PlatformHelper.isMobGriefingOn(pLevel, pOwner)) {
+        if (!PlatHelper.isMobGriefingOn(pLevel, pOwner)) {
             cooldown = 20 * 60;
             return false;
         }

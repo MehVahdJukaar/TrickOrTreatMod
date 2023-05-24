@@ -2,9 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -17,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
 
@@ -30,7 +30,7 @@ public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
     @Override
     public void render(SplatteredEggEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         pMatrixStack.pushPose();
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - pEntityYaw));
+        pMatrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - pEntityYaw));
 
         pMatrixStack.scale(0.0625F, 0.0625F, 0.0625F);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(pEntity)));

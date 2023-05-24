@@ -6,7 +6,7 @@ import com.nhoryzon.mc.farmersdelight.block.TomatoVineBlock;
 import com.nhoryzon.mc.farmersdelight.item.ConsumableItem;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
-import net.mehvahdjukaar.hauntedharvest.reg.ModFood;
+import net.mehvahdjukaar.hauntedharvest.reg.ModFoods;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
@@ -42,7 +42,7 @@ public class FDCompatImpl {
     public static final Supplier<Item> CORNBREAD = regItem(
             "cornbread", () -> new ConsumableItem(new Item.Properties()
                     .tab(getTab(FarmersDelightMod.ITEM_GROUP, CORN_NAME))
-                    .food(ModFood.CORNBREAD), false)
+                    .food(ModFoods.CORNBREAD), false)
     );
     public static final Supplier<Item> SUCCOTASH = regItem(
             "succotash", () -> new ConsumableItem(bowlFoodItem(SUCCOTASH_FOOD)

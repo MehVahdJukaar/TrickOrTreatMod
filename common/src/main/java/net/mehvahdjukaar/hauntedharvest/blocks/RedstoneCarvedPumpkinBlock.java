@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class RedstoneCarvedPumpkinBlock extends ModCarvedPumpkinBlock {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;

@@ -2,6 +2,8 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -19,9 +21,9 @@ public class ModTags {
     public static final TagKey<Item> CARVABLE_PUMPKINS = itemTag("carvable_pumpkins");
 
     private static TagKey<Item> itemTag(String name) {
-        return TagKey.create(Registry.ITEM_REGISTRY, HauntedHarvest.res(name));
+        return TagKey.create(Registries.ITEM, HauntedHarvest.res(name));
     }
     private static TagKey<Block> blockTag(String name) {
-        return TagKey.create(Registry.BLOCK_REGISTRY, HauntedHarvest.res(name));
+        return TagKey.create(Registries.BLOCK, HauntedHarvest.res(name));
     }
 }

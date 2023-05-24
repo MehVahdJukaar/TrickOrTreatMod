@@ -1,26 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.forge;
 
-import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
-import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
-import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.minecraft.core.Registry;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -45,7 +31,7 @@ public class HauntedHarvestForge {
 
         HauntedHarvest.commonInit();
 
-        if (PlatformHelper.getEnv().isClient()) {
+        if (PlatHelper.getPhysicalSide().isClient()) {
             ClientRegistry.init();
         }
 
@@ -76,17 +62,17 @@ public class HauntedHarvestForge {
     public void onRemapBlocks(MissingMappingsEvent event) {
         for (var m : event.getMappings(ForgeRegistries.BLOCKS.getRegistryKey(), "harvestseason")) {
             String name = m.getKey().getPath();
-            var o = Registry.BLOCK.getOptional(HauntedHarvest.res(name));
+            var o = BuiltInRegistries.BLOCK.getOptional(HauntedHarvest.res(name));
             o.ifPresent(m::remap);
         }
         for (var m : event.getMappings(ForgeRegistries.ITEMS.getRegistryKey(), "harvestseason")) {
             String name = m.getKey().getPath();
-            var o = Registry.ITEM.getOptional(HauntedHarvest.res(name));
+            var o = BuiltInRegistries.ITEM.getOptional(HauntedHarvest.res(name));
             o.ifPresent(m::remap);
         }
         for (var m : event.getMappings(ForgeRegistries.BLOCK_ENTITY_TYPES.getRegistryKey(), "harvestseason")) {
             String name = m.getKey().getPath();
-            var o = Registry.BLOCK_ENTITY_TYPE.getOptional(HauntedHarvest.res(name));
+            var o = BuiltInRegistries.BLOCK_ENTITY_TYPE.getOptional(HauntedHarvest.res(name));
             o.ifPresent(m::remap);
         }
     }

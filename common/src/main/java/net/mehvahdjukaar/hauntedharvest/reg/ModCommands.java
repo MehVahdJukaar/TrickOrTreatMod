@@ -10,6 +10,7 @@ import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.network.ClientBoundCopyCarvingCommand;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
@@ -24,25 +25,23 @@ public class ModCommands {
         RegHelper.addCommandRegistration(ModCommands::register);
     }
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    private static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandBuildContext, Commands.CommandSelection commandSelection) {
         dispatcher.register(
                 Commands.literal(HauntedHarvest.MOD_ID)
                         .then(CopyCarvings.register(dispatcher))
         );
     }
 
-    public static class CopyCarvings implements Command<CommandSourceStack> {
-
-        private static final CopyCarvings CMD = new CopyCarvings();
+    private static class CopyCarvings implements Command<CommandSourceStack> {
 
         public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
             return Commands.literal("copycarving")
                     .requires((p) -> p.hasPermission(0))
-                    .executes(CMD);
+                    .executes(new CopyCarvings());
         }
 
         @Override
-        public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        public int run(CommandContext<CommandSourceStack> context) {
             var e = context.getSource().getEntity();
             if (e instanceof ServerPlayer p) {
                 var item = p.getItemInHand(InteractionHand.MAIN_HAND);

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class ProcessFarmProcessor extends StructureProcessor {
@@ -32,7 +33,7 @@ public class ProcessFarmProcessor extends StructureProcessor {
 
 
     public ProcessFarmProcessor() {
-        this.copperLantern = Registry.BLOCK.getOptional(new ResourceLocation("supplementaries:copper_lantern"))
+        this.copperLantern = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation("supplementaries:copper_lantern"))
                 .map(c -> c.defaultBlockState().setValue(LanternBlock.HANGING, true).
                         setValue(BlockStateProperties.LIT, false)).orElse(null);
         this.validBlocks = Set.of(Blocks.OAK_PLANKS, Blocks.OAK_STAIRS, Blocks.OAK_SLAB, Blocks.RED_TERRACOTTA, Blocks.STRIPPED_OAK_LOG, Blocks.OAK_LOG);

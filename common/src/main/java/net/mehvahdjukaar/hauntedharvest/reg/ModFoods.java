@@ -4,7 +4,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 
-public class ModFood {
+public class ModFoods {
 
     public static final FoodProperties POPCORN = (new FoodProperties.Builder())
             .nutrition(2).saturationMod(0.4f).fast().alwaysEat().build();

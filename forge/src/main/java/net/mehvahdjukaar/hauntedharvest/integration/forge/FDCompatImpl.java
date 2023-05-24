@@ -1,12 +1,11 @@
 package net.mehvahdjukaar.hauntedharvest.integration.forge;
 
-import net.mehvahdjukaar.hauntedharvest.reg.ModFood;
+import net.mehvahdjukaar.hauntedharvest.reg.ModFoods;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,8 +23,9 @@ import java.util.function.Supplier;
 import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.*;
 
 public class FDCompatImpl {
-    public static void init() {
 
+    public static void init() {
+        //TODO: tabs
     }
 
     public static BlockState getTomato(RandomSource randomSource) {
@@ -48,17 +48,15 @@ public class FDCompatImpl {
                     new Block(BlockBehaviour.Properties.of(Material.WOOD)
                             .strength(2.0F, 3.0F)
                             .sound(SoundType.WOOD)),
-            FarmersDelight.CREATIVE_TAB
+            new Item.Properties()
     );
     public static final Supplier<Item> CORNBREAD = regItem(
-            "cornbread", () -> new ConsumableItem(ModItems.foodItem(ModFood.CORNBREAD)
-                    .tab(getTab(FarmersDelight.CREATIVE_TAB, CORN_NAME)), false)
-    );
+            "cornbread", () -> new ConsumableItem(ModItems.foodItem(ModFoods.CORNBREAD)
+                    , false));
 
     public static final Supplier<Item> SUCCOTASH = regItem(
-            "succotash", () -> new ConsumableItem(ModItems.bowlFoodItem(SUCCOTASH_FOOD)
-                    .tab(getTab(FarmersDelight.CREATIVE_TAB, CORN_NAME)), true)
-    );
+            "succotash", () -> new ConsumableItem(ModItems.bowlFoodItem(SUCCOTASH_FOOD),
+                    true));
 
 
 }

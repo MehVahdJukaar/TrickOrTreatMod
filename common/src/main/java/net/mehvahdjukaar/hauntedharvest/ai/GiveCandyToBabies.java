@@ -6,6 +6,7 @@ import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -21,8 +22,8 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class GiveCandyToBabies extends Behavior<Villager> {
@@ -89,7 +90,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
             else if (r < 3) {
                 spookVillager(pOwner, target);
             } else {
-                ItemStack stack = Registry.ITEM.getTag(ModTags.SWEETS)
+                ItemStack stack = BuiltInRegistries.ITEM.getTag(ModTags.SWEETS)
                         .get().getRandomElement(pLevel.random).get().value().getDefaultInstance();
                 throwCandy(pOwner, target, stack);
 
@@ -110,11 +111,12 @@ public class GiveCandyToBabies extends Behavior<Villager> {
 
 
         //hax
+        DamageSource dmg = target.level.damageSources().generic();
         target.setLastHurtByMob(cause);
-        target.hurt(DamageSource.GENERIC, 0.1f);
+        target.hurt(dmg, 0.1f);
         target.heal(0.1f);
         target.getBrain().setActiveActivityIfPossible(Activity.PANIC);
-        target.getBrain().setMemory(MemoryModuleType.HURT_BY, DamageSource.GENERIC);
+        target.getBrain().setMemory(MemoryModuleType.HURT_BY, dmg);
         target.getBrain().setMemory(MemoryModuleType.HURT_BY_ENTITY, cause);
     }
 
@@ -123,11 +125,11 @@ public class GiveCandyToBabies extends Behavior<Villager> {
 
         Vec3 vec3 = pTarget.getDeltaMovement();
         double pX = pTarget.getX() + vec3.x - self.getX();
-        double d1 = pTarget.getEyeY() - (double) 1.1F - self.getY();
+        double d1 = pTarget.getEyeY() - 1.1F - self.getY();
         double pZ = pTarget.getZ() + vec3.z - self.getZ();
         double d3 = Math.sqrt(pX * pX + pZ * pZ);
 
-        double d0 = self.getEyeY() - (double) 0.3F;
+        double d0 = self.getEyeY() - 0.3F;
         ItemEntity itementity = new ItemEntity(self.level, self.getX(), d0, self.getZ(), stack);
 
         double pVelocity = 0.179 + d3 * 0.022;

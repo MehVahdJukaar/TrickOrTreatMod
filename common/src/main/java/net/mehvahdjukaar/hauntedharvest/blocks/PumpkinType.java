@@ -5,9 +5,12 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class PumpkinType {
@@ -15,10 +18,10 @@ public class PumpkinType {
     private static final Map<String, PumpkinType> TYPES = new HashMap<>();
     private static final Map<Item, Block> TORCH_MAP = new Object2ObjectOpenHashMap<>();
 
-    public static final PumpkinType NORMAL = register(new PumpkinType("carved_pumpkin", ()->null, ModRegistry.CARVED_PUMPKIN));
+    public static final PumpkinType NORMAL = register(new PumpkinType("carved_pumpkin", () -> null, ModRegistry.CARVED_PUMPKIN));
     public static final PumpkinType JACK = register(new PumpkinType("jack_o_lantern", () -> Items.TORCH, ModRegistry.JACK_O_LANTERN));
     public static final PumpkinType SOUL = register(new PumpkinType("soul_jack_o_lantern", () -> Items.SOUL_TORCH, ModRegistry.SOUL_JACK_O_LANTERN));
-    public static final PumpkinType REDSTONE =register( new PumpkinType("redstone_jack_o_lantern", () -> Items.REDSTONE_TORCH, ModRegistry.REDSTONE_JACK_O_LANTERN));
+    public static final PumpkinType REDSTONE = register(new PumpkinType("redstone_jack_o_lantern", () -> Items.REDSTONE_TORCH, ModRegistry.REDSTONE_JACK_O_LANTERN));
 
     private final String name;
     private final Supplier<? extends Item> torch;
@@ -64,9 +67,7 @@ public class PumpkinType {
     //call during mod setup
     public static void setup() {
         for (var t : TYPES.values()) {
-            if(t.getTorch() != null && t.getPumpkin().asItem().getItemCategory() != null) {
-                TORCH_MAP.put(t.getTorch(), t.getPumpkin());
-            }
+            TORCH_MAP.put(t.getTorch(), t.getPumpkin());
         }
     }
 

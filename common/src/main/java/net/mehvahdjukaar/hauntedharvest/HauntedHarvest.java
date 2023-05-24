@@ -10,9 +10,10 @@ import net.mehvahdjukaar.hauntedharvest.integration.QuarkCompat;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.reg.ModCommands;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.AnimalFoodHelper;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -22,6 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -64,11 +66,11 @@ public class HauntedHarvest {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static final boolean SEASON_MOD_INSTALLED = PlatformHelper.isModLoaded(PlatformHelper.getPlatform().isForge() ? "sereneseasons" : "seasons");
-    public static final boolean SUPP_INSTALLED = PlatformHelper.isModLoaded("supplementaries");
-    public static final boolean FD_INSTALLED = PlatformHelper.isModLoaded("farmersdelight");
-    public static final boolean QUARK_INSTALLED = PlatformHelper.isModLoaded("quark");
-    public static final boolean AUTUMNITY_INSTALLED = PlatformHelper.isModLoaded("autumnity");
+    public static final boolean SEASON_MOD_INSTALLED = PlatHelper.isModLoaded(PlatHelper.getPlatform().isForge() ? "sereneseasons" : "seasons");
+    public static final boolean SUPP_INSTALLED = PlatHelper.isModLoaded("supplementaries");
+    public static final boolean FD_INSTALLED = PlatHelper.isModLoaded("farmersdelight");
+    public static final boolean QUARK_INSTALLED = PlatHelper.isModLoaded("quark");
+    public static final boolean AUTUMNITY_INSTALLED = PlatHelper.isModLoaded("autumnity");
 
     private static final Set<Item> BABY_VILLAGER_EATABLE = new HashSet<>();
     public static final Predicate<LivingEntity> IS_TRICK_OR_TREATING = e ->
@@ -81,23 +83,26 @@ public class HauntedHarvest {
         CommonConfigs.init();
         ModCommands.init();
         ModRegistry.init();
+        ModTabs.init();
         if (FD_INSTALLED) FDCompat.init();
         if (AUTUMNITY_INSTALLED) AutumnityCompat.init();
         if (QUARK_INSTALLED) QuarkCompat.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
-        PlatformHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
+        PlatHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
         //TODO: pillager outposts pumpkins
     }
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
         PumpkinType.setup();
+
         if (AUTUMNITY_INSTALLED) AutumnityCompat.setup();
 
         NetworkHandler.registerMessages();
 
         HalloweenVillagerAI.setup();
+
         ComposterBlock.COMPOSTABLES.put(ModRegistry.CARVED_PUMPKIN.get().asItem(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
@@ -152,7 +157,7 @@ public class HauntedHarvest {
         seasonManager.refresh();
         BABY_VILLAGER_EATABLE.clear();
         Set<Item> temp = new HashSet<>();
-        for (var p : Registry.ITEM.getTagOrEmpty(ModTags.SWEETS)) {
+        for (var p : BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.SWEETS)) {
             temp.add(p.value());
         }
         temp.add(ModRegistry.DEATH_APPLE.get());

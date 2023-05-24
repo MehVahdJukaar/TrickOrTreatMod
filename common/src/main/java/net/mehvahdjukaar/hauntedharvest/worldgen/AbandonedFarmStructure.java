@@ -39,7 +39,7 @@ public final class AbandonedFarmStructure extends Structure {
     private final int minY;
 
     private static Function<AbandonedFarmStructure, DataResult<AbandonedFarmStructure>> verifyRange() {
-        return (jigsawStructure) -> jigsawStructure.maxY < jigsawStructure.minY ? DataResult.error("MaxY cannot be < MinY") : DataResult.success(jigsawStructure);
+        return (jigsawStructure) -> jigsawStructure.maxY < jigsawStructure.minY ? DataResult.error(() -> "MaxY cannot be < MinY") : DataResult.success(jigsawStructure);
     }
 
     public AbandonedFarmStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> startPool,

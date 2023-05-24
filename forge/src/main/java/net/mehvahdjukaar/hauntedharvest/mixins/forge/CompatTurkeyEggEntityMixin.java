@@ -1,18 +1,15 @@
 package net.mehvahdjukaar.hauntedharvest.mixins.forge;
 
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.settings.KeyMappingLookup;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xfacthd.framedblocks.client.util.KeyMappings;
 
 @Mixin(targets = "com.teamabnormals.autumnity.common.entity.projectile.ThrownTurkeyEgg")
 public abstract class CompatTurkeyEggEntityMixin extends ThrowableItemProjectile {

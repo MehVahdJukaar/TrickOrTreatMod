@@ -3,20 +3,17 @@ package net.mehvahdjukaar.hauntedharvest.blocks;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.block.IBeeGrowable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowable {
     protected AbstractCornBlock(Properties properties) {
@@ -35,7 +32,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (!PlatformHelper.isAreaLoaded(level, pos, 1))
+        if (!PlatHelper.isAreaLoaded(level, pos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (level.getRawBrightness(pos, 0) >= 9 && level.random.nextFloat() < 0.6) {
             if (this.isValidBonemealTarget(level, pos, state, level.isClientSide)) {
@@ -85,7 +82,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
     }
 
     @Override
-    public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
         int age = this.getAge(state);
         int maxAge = this.getMaxAge();
         if (age + 1 < maxAge) { //isn't max age or about to grow second stage
@@ -93,9 +90,9 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
         } else {
             //if it can grow or place block above
             BlockPos above = pos.above();
-            BlockState aboveState = worldIn.getBlockState(above);
+            BlockState aboveState = level.getBlockState(above);
             if (age == maxAge) { //needs to grow
-                return aboveState.getBlock() instanceof AbstractCornBlock cb && cb.isValidBonemealTarget(worldIn, above, aboveState, false);
+                return aboveState.getBlock() instanceof AbstractCornBlock cb && cb.isValidBonemealTarget(level, above, aboveState, false);
             } else {
                 //place top
                 return this.getTopBlock() == null || aboveState.getMaterial().isReplaceable();

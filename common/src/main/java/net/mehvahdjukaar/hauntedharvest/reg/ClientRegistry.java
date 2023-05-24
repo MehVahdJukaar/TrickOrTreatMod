@@ -9,7 +9,7 @@ import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.mehvahdjukaar.hauntedharvest.client.SplatteredEggRenderer;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.Util;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.RenderType;
@@ -20,9 +20,10 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Map;
 
-import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
-
 public class ClientRegistry {
+
+    public static final ResourceLocation LOCATION_BLOCKS = new ResourceLocation("textures/atlas/blocks.png");
+    
 
     public static final Material PUMPKIN_HIGHLIGHT = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/pumpkin_highlight"));
     public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, new ResourceLocation("block/pumpkin_side"));
@@ -60,61 +61,49 @@ public class ClientRegistry {
     }
 
     public static void init() {
-        ClientPlatformHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
-        ClientPlatformHelper.addParticleRegistration(ClientRegistry::registerParticles);
-        ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, ClientRegistry::registerTextures);
-        ClientPlatformHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
-        ClientPlatformHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
-        ClientPlatformHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
-        ClientPlatformHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
+        ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
+        ClientHelper.addParticleRegistration(ClientRegistry::registerParticles);
+        ClientHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
+        ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
+        ClientHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
+        ClientHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
     }
 
     public static void setup() {
-        ClientPlatformHelper.registerRenderType(ModRegistry.CORN_BASE.get(), RenderType.cutout());
-        ClientPlatformHelper.registerRenderType(ModRegistry.CORN_MIDDLE.get(), RenderType.cutout());
-        ClientPlatformHelper.registerRenderType(ModRegistry.CORN_TOP.get(), RenderType.cutout());
-        PumpkinType.getTypes().forEach(t -> ClientPlatformHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
-        ClientPlatformHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.CORN_BASE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.CORN_MIDDLE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.CORN_TOP.get(), RenderType.cutout());
+        PumpkinType.getTypes().forEach(t -> ClientHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
+        ClientHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
     }
 
     @EventCalled
-    private static void registerParticles(ClientPlatformHelper.ParticleEvent event) {
+    private static void registerParticles(ClientHelper.ParticleEvent event) {
         event.register(ModRegistry.SPOOKED_PARTICLE.get(), HeartParticle.AngryVillagerProvider::new);
     }
 
     @EventCalled
-    private static void registerEntityRenderers(ClientPlatformHelper.EntityRendererEvent event) {
+    private static void registerEntityRenderers(ClientHelper.EntityRendererEvent event) {
         event.register(ModRegistry.SPLATTERED_EGG_ENTITY.get(), SplatteredEggRenderer::new);
     }
 
     @EventCalled
-    private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
+    private static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(CarvingManager.Key.class, CarvingTooltipComponent::new);
     }
 
     @EventCalled
-    private static void registerTextures(ClientPlatformHelper.AtlasTextureEvent event) {
-        for (var t : PUMPKIN_MATERIALS.values()) {
-            event.addSprite(t[1].texture());
-            event.addSprite(t[2].texture());
-        }
-
-        event.addSprite(PUMPKIN_HIGHLIGHT.texture());
-        event.addSprite(CARVING_OUTLINE.texture());
-    }
-
-    @EventCalled
-    private static void registerBlockEntityRenderers(ClientPlatformHelper.BlockEntityRendererEvent event) {
+    private static void registerBlockEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
         event.register(ModRegistry.MOD_CARVED_PUMPKIN_TILE.get(), CarvedPumpkinTileRenderer::new);
     }
 
     @EventCalled
-    private static void registerModelLoaders(ClientPlatformHelper.ModelLoaderEvent event) {
+    private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
         event.register(HauntedHarvest.res("carved_pumpkin"), new CarvedPumpkinBlockLoader());
     }
 
     @EventCalled
-    private static void registerSpecialModels(ClientPlatformHelper.SpecialModelEvent event) {
+    private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         for (var v : PUMPKIN_FRAMES.values()) {
             event.register(v);
         }

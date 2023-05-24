@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PlacePumpkin extends Behavior<Villager> {
     private final float speedModifier;
@@ -52,7 +52,7 @@ public class PlacePumpkin extends Behavior<Villager> {
             cooldown = 20 * 20;
             return false;
         }
-        if (!PlatformHelper.isMobGriefingOn(pLevel, pOwner)) {
+        if (!PlatHelper.isMobGriefingOn(pLevel, pOwner)) {
             cooldown = 20 * 60;
             return false;
         }

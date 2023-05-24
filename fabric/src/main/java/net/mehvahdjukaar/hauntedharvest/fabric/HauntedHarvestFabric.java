@@ -8,7 +8,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
 import net.minecraft.world.level.ItemLike;
 
@@ -23,7 +23,7 @@ public class HauntedHarvestFabric implements ModInitializer {
         FabricSetupCallbacks.COMMON_SETUP.add(HauntedHarvestFabric::commonSetup);
 
 
-        if (PlatformHelper.getEnv().isClient()) {
+        if (PlatHelper.getEnv().isClient()) {
             FabricSetupCallbacks.CLIENT_SETUP.add(HauntedHarvestFabric::clientSetup);
         }
 

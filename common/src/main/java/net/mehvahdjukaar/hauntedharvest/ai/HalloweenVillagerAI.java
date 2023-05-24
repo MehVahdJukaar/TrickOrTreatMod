@@ -35,7 +35,7 @@ public class HalloweenVillagerAI {
             event.addSensor(ModRegistry.PUMPKIN_POI_SENSOR.get());
 
             if (villager.isBaby()) {
-                event.addOrReplaceActivity(ModRegistry.TRICK_OR_TREAT.get(), getTrickOrTreatPackage(0.5f));
+                event.addOrReplaceActivity(ModRegistry.TRICK_OR_TREAT.get(), (ImmutableList<? extends Pair<Integer, ? extends Behavior<? super Villager>>>)(Object) getTrickOrTreatPackage(0.5f));
 
                 event.addTaskToActivity(Activity.PLAY, Pair.of(9, new EatCandy(100, 130)));
                 event.addTaskToActivity(Activity.PLAY, Pair.of(10, new CarvePumpkin(0.5f)));
@@ -56,7 +56,7 @@ public class HalloweenVillagerAI {
     }
 
 
-    private static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getTrickOrTreatPackage(float speed) {
+    private static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super Villager>>> getTrickOrTreatPackage(float speed) {
 
         return ImmutableList.of(
                 //finds interaction and walk target
@@ -77,10 +77,10 @@ public class HalloweenVillagerAI {
                                 MemoryModuleType.INTERACTION_TARGET, MemoryStatus.VALUE_ABSENT),
                         ImmutableList.of(
                                 //Pair.of(new SetClosestHomeAsWalkTarget(speed), 7),
-                                Pair.of(new InsideBrownianWalk(speed), 7),
-                                Pair.of(new GoToClosestVillage(speed, 4), 10),
-                                Pair.of(new StrollAroundPoi(MemoryModuleType.MEETING_POINT, 1, 50), 2),
-                                Pair.of(new VillageBoundRandomStroll(speed, 25, 7), 1)
+                                Pair.of(InsideBrownianWalk.create(speed), 7),
+                                Pair.of(GoToClosestVillage.create(speed, 4), 10),
+                                Pair.of(StrollAroundPoi.create(MemoryModuleType.MEETING_POINT, 1, 50), 2),
+                                Pair.of(VillageBoundRandomStroll.create(speed, 25, 7), 1)
                         ))),
 
 
@@ -91,6 +91,6 @@ public class HalloweenVillagerAI {
                 //Pair.of(5, new VillageBoundRandomStroll(speed, 20, 7)),
                 //Pair.of(10, new LocateHidingPlace(32, speed, 6)),
 
-                Pair.of(99, new UpdateActivityFromSchedule()));
+                Pair.of(99, UpdateActivityFromSchedule.create()));
     }
 }

@@ -29,12 +29,13 @@ public class CarvingTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer, int pBlitOffset) {
+    public void renderImage(Font font, int x, int y, PoseStack poseStack, ItemRenderer itemRenderer) {
+
         poseStack.pushPose();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, texture);
-        GuiComponent.blit(poseStack, x, y, pBlitOffset, 0, 0, SIZE, SIZE, SIZE, SIZE);
+        GuiComponent.blit(poseStack, x, y, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
 
         poseStack.popPose();
     }

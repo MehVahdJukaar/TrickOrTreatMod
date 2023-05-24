@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.client;
 
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
@@ -20,6 +19,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,9 +133,9 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
     public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
                                             TextureAtlasSprite sprite, int color, Transformation transform,
                                             boolean litUp, Direction dd) {
-
-        float tu = (1 - (1 + sprite.getWidth() * width));
-        float tv = (1 - (1 + sprite.getHeight() * height));
+        var contents = sprite.contents();;
+        float tu = (1 - (1 + contents.width() * width));
+        float tv = (1 - (1 + contents.height() * height));
         float u0 = (1 - x) * 16;
         float v0 = (1 - y) * 16;
 

@@ -20,6 +20,12 @@
     ],
     "modmenu": [
       "net.mehvahdjukaar.hauntedharvest.integration.fabric.mod_menu.ModMenuCompat"
+    ],
+    "rei_client": [
+      "net.mehvahdjukaar.hauntedharvest.integration.REICompat"
+    ],
+    "jei_mod_plugin": [
+      "net.mehvahdjukaar.hauntedharvest.integration.JEICompat"
     ]
   },
   "mixins": [

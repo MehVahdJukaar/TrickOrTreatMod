@@ -2,7 +2,6 @@ package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
-import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,9 +33,12 @@ import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 //TODO: IOwner protected
@@ -54,7 +56,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
         return type;
     }
 
-    public static Vec2i getHitSubPixel(BlockHitResult hit) {
+    public static Vector2i getHitSubPixel(BlockHitResult hit) {
         Vec3 pos = hit.getLocation();
         Vec3 v = pos.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
         double fx = ((v.x % 1) * 16);
@@ -63,7 +65,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
 
         int y = 15 - (int) Mth.clamp(Math.abs((v.y % 1) * 16), 0, 15);
         if (pos.y < 0) y = 15 - y; //crappy logic
-        return new Vec2i(x, y);
+        return new Vector2i(x, y);
     }
 
     public static boolean isCarverItem(ItemStack stack) {
@@ -113,7 +115,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
             if (mode != CarveMode.NONE) {
                 if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw() && isCarverItem(stack)) {
 
-                    Vec2i v = getHitSubPixel(hit);
+                    Vector2i v = getHitSubPixel(hit);
                     int x = v.x();
                     int y = v.y();
 

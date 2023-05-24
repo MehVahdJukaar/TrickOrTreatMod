@@ -4,7 +4,6 @@ package net.mehvahdjukaar.hauntedharvest.integration.forge.configured;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.api.IModConfig;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
-import com.simibubi.create.foundation.block.ITE;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
@@ -44,7 +43,6 @@ public class ModConfigScreen extends CustomConfigScreen {
 
     public ModConfigScreen(CustomConfigSelectScreen parent, IModConfig config) {
         super(parent, config);
-        this.icons.putAll(ICONS);
     }
 
     public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background,
@@ -75,7 +73,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         var level = Minecraft.getInstance().level;
         if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
             int x = (int) (this.width * 0.93f);
-            this.itemRenderer.renderAndDecorateFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
+            this.itemRenderer.renderAndDecorateFakeItem(poseStack, Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
             if (ScreenUtil.isMouseWithin(x, 16, 16, 16, mouseX, mouseY)) {
                 this.renderTooltip(poseStack, this.font.split(Component.translatable("gui.hauntedharvest.autumn_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
             }

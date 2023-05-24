@@ -9,6 +9,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -171,7 +172,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
     public Item getContent(BlockState state) {
         var c = state.getValue(CONTENT);
         if (c.drop != null) {
-            var i = Registry.ITEM.getOptional(new ResourceLocation(c.drop));
+            var i = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(c.drop));
             if (i.isPresent()) return i.get();
         }
         return null;

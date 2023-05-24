@@ -13,7 +13,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -22,11 +22,12 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import oshi.annotation.concurrent.Immutable;
+
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -137,7 +138,7 @@ public class CarvingManager {
 
             for (int y = 0; y < pixels.length && y < WIDTH; y++) {
                 for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
-                    int c = ClientPlatformHelper.getPixelRGBA(materials[x][y].sprite(), 0, x, y);
+                    int c = ClientHelper.getPixelRGBA(materials[x][y].sprite(), 0, x, y);
 
                     this.texture.getPixels().setPixelRGBA(x, y, c);
                 }
@@ -150,12 +151,10 @@ public class CarvingManager {
         }
 
 
-        @Nonnull
         public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<Carving, Direction, List<BakedQuad>> modelFactory) {
             return this.quadsCache.computeIfAbsent(dir, d -> modelFactory.apply(this, d));
         }
 
-        @Nonnull
         public ResourceLocation getTextureLocation() {
             if (textureLocation == null) {
                 //I can only initialize it here since this is guaranteed to be on render thread
@@ -168,7 +167,6 @@ public class CarvingManager {
             return getBlurTexture(this);
         }
 
-        @Nonnull
         public RenderType getRenderType() {
             if (renderType == null) {
                 //I can only initialize it here since this is guaranteed to be on render thread
@@ -215,7 +213,7 @@ public class CarvingManager {
             if (x == 0 || x == 17 || y == 0 || y == 17 || !pixels[x - 1][y - 1]) {
                 alpha = 255;
             }
-            p.setPixelRGBA(x, y, NativeImage.combine(alpha, 0, 0, 0));
+            p.setPixelRGBA(x, y, FastColor.ABGR32.color(alpha, 0, 0, 0));
         });
 
         dummy.upload();

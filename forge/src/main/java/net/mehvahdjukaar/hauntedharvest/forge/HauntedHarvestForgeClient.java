@@ -33,7 +33,7 @@ public class HauntedHarvestForgeClient {
     @SubscribeEvent
     public static void registerShader(RegisterShadersEvent event) {
         try {
-            var blur = new ShaderInstance(event.getResourceManager(), HauntedHarvest.res("blur"),
+            var blur = new ShaderInstance(event.getResourceProvider(), HauntedHarvest.res("blur"),
                     DefaultVertexFormat.POSITION_TEX);
 
             event.registerShader(blur, s -> HauntedHarvestForgeClient.blur = s);
