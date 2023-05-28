@@ -21,13 +21,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 
-import java.util.Iterator;
-
 public class ModConfigSelectScreen extends CustomConfigSelectScreen {
 
 
     public ModConfigSelectScreen(Screen parent) {
-        super(HauntedHarvest.MOD_ID, ModRegistry.DEATH_APPLE.get().asItem().getDefaultInstance(),
+        super(HauntedHarvest.MOD_ID, ModRegistry.GRIM_APPLE.get().asItem().getDefaultInstance(),
                 ChatFormatting.GOLD + "Haunted Harvest Configured",
                 new ResourceLocation("textures/block/cracked_stone_bricks.png"),
                 parent, ModConfigScreen::new, CommonConfigs.SPEC);

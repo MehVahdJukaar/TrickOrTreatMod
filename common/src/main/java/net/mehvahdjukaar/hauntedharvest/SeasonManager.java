@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.minecraft.world.level.Level;
 
@@ -42,7 +43,7 @@ public class SeasonManager {
         trickOrTreatStart = CommonConfigs.START_TIME.get();
         trickOrTreatEnd = CommonConfigs.END_TIME.get();
 
-        useSeasonMod = HauntedHarvest.SEASON_MOD_INSTALLED && CommonConfigs.SEASONS_MOD_COMPAT.get();
+        useSeasonMod = CompatHandler.SEASON_MOD_INSTALLED && CommonConfigs.SEASONS_MOD_COMPAT.get();
 
         if (useSeasonMod) {
             SeasonModCompat.refresh();

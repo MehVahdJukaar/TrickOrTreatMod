@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.configs;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
+import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
@@ -72,8 +73,8 @@ public class CommonConfigs {
         builder.push("season_mod_compat");
 
         SEASONS_MOD_COMPAT = builder.comment("Enables compatibility with Serene Seasons (Forge) or Fabric Seasons (Fabric). Only takes effect if the mod is installed. Will make halloween season only active during certain seasons. Note that this will override previous time window settings")
-                .define("enabled", HauntedHarvest.SEASON_MOD_INSTALLED);
-        if (HauntedHarvest.SEASON_MOD_INSTALLED) {
+                .define("enabled", CompatHandler.SEASON_MOD_INSTALLED);
+        if (CompatHandler.SEASON_MOD_INSTALLED) {
             SeasonModCompat.addConfig(builder);
         }
         builder.pop();

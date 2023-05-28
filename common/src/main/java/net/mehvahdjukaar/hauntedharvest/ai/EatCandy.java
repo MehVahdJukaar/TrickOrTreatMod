@@ -37,7 +37,7 @@ public class EatCandy extends Behavior<Villager> {
             cooldown--;
             return false;
         }
-        return HauntedHarvest.hasCandyOrApple(pOwner.getInventory());
+        return HalloweenVillagerAI.hasCandyOrApple(pOwner.getInventory());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class EatCandy extends Behavior<Villager> {
         SimpleContainer inventory = pEntity.getInventory();
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
-            if (HauntedHarvest.isCandyOrApple(itemstack)) {
+            if (HalloweenVillagerAI.isCandyOrApple(itemstack)) {
                 ItemStack s = itemstack.split(1);
                 if (itemstack.getCount() == 0) inventory.setItem(i, ItemStack.EMPTY);
                 pEntity.setItemInHand(InteractionHand.MAIN_HAND, s);
@@ -63,7 +63,7 @@ public class EatCandy extends Behavior<Villager> {
 
     @Override
     protected boolean canStillUse(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-        return eatingTime > 0 && HauntedHarvest.isCandyOrApple(pEntity.getMainHandItem());
+        return eatingTime > 0 && HalloweenVillagerAI.isCandyOrApple(pEntity.getMainHandItem());
     }
 
     @Override

@@ -7,9 +7,13 @@ import com.nhoryzon.mc.farmersdelight.item.ConsumableItem;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModFoods;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -24,6 +28,11 @@ import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.*;
 
 public class FDCompatImpl {
     public static void init() {
+        RegHelper.addItemsToTabsRegistration(FDCompatImpl::addItemToTabsEvent);
+    }
+
+    public static void addItemToTabsEvent(RegHelper.ItemToTabEvent event) {
+        ModTabs.after(event, Items.BREAD, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, CORNBREAD);
     }
 
     public static final FoodProperties SUCCOTASH_FOOD = new FoodProperties.Builder()
@@ -36,21 +45,17 @@ public class FDCompatImpl {
             "corn_crate", () ->
                     new Block(BlockBehaviour.Properties.of(Material.WOOD)
                             .strength(2.0F, 3.0F)
-                            .sound(SoundType.WOOD)),
-            FarmersDelightMod.ITEM_GROUP
-    );
+                            .sound(SoundType.WOOD)));
+
     public static final Supplier<Item> CORNBREAD = regItem(
             "cornbread", () -> new ConsumableItem(new Item.Properties()
-                    .tab(getTab(FarmersDelightMod.ITEM_GROUP, CORN_NAME))
-                    .food(ModFoods.CORNBREAD), false)
-    );
+                    .food(ModFoods.CORNBREAD), false));
+
     public static final Supplier<Item> SUCCOTASH = regItem(
-            "succotash", () -> new ConsumableItem(bowlFoodItem(SUCCOTASH_FOOD)
-                    .tab(getTab(FarmersDelightMod.ITEM_GROUP, CORN_NAME)), true)
-    );
+            "succotash", () -> new ConsumableItem(bowlFoodItem(SUCCOTASH_FOOD), true));
 
     public static Item.Properties bowlFoodItem(FoodProperties food) {
-        return new Item.Properties().food(food).craftRemainder(Items.BOWL).stacksTo(16).tab(FarmersDelightMod.ITEM_GROUP);
+        return new Item.Properties().food(food).craftRemainder(Items.BOWL).stacksTo(16);
     }
 
     public static BlockState getTomato(RandomSource randomSource) {

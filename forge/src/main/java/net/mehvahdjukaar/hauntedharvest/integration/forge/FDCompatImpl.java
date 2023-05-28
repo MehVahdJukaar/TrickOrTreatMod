@@ -1,16 +1,22 @@
 package net.mehvahdjukaar.hauntedharvest.integration.forge;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModFoods;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.core.misc.forge.ModLootConditions;
+import net.mehvahdjukaar.moonlight.forge.MoonlightForgeClient;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import vectorwing.farmersdelight.FarmersDelight;
 import vectorwing.farmersdelight.common.block.BuddingTomatoBlock;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 import vectorwing.farmersdelight.common.item.ConsumableItem;
@@ -20,12 +26,17 @@ import vectorwing.farmersdelight.common.registry.ModItems;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.*;
+import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.regItem;
+import static net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.regWithItem;
 
 public class FDCompatImpl {
 
     public static void init() {
-        //TODO: tabs
+        RegHelper.addItemsToTabsRegistration(FDCompatImpl::addItemToTabsEvent);
+    }
+
+    public static void addItemToTabsEvent(RegHelper.ItemToTabEvent event) {
+        ModTabs.after(event, Items.BREAD, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, CORNBREAD);
     }
 
     public static BlockState getTomato(RandomSource randomSource) {
@@ -47,12 +58,11 @@ public class FDCompatImpl {
             "corn_crate", () ->
                     new Block(BlockBehaviour.Properties.of(Material.WOOD)
                             .strength(2.0F, 3.0F)
-                            .sound(SoundType.WOOD)),
-            new Item.Properties()
-    );
+                            .sound(SoundType.WOOD)));
+
     public static final Supplier<Item> CORNBREAD = regItem(
-            "cornbread", () -> new ConsumableItem(ModItems.foodItem(ModFoods.CORNBREAD)
-                    , false));
+            "cornbread", () -> new ConsumableItem(ModItems.foodItem(ModFoods.CORNBREAD),
+                    false));
 
     public static final Supplier<Item> SUCCOTASH = regItem(
             "succotash", () -> new ConsumableItem(ModItems.bowlFoodItem(SUCCOTASH_FOOD),

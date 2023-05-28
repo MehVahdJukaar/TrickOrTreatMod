@@ -94,7 +94,7 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
     private List<BakedQuad> generateQuads(CarvingManager.Carving carving, Direction direction) {
         var px = carving.getPixels();
         var type = carving.getType();
-        Material[][] pixels = PumpkinTextureGenerator.getTexturePerPixel(px, type);
+        Material[][] pixels = PumpkinTextureGenerator.computePixelMaterialMap(px, type);
         List<BakedQuad> quads;
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();

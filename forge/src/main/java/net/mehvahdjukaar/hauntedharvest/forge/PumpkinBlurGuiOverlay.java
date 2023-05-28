@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -41,9 +42,10 @@ public class PumpkinBlurGuiOverlay extends Gui implements IGuiOverlay {
             if (com != null && com.contains("Pixels")) {
                 packed = com.getLongArray("Pixels");
             }
-            ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock)((BlockItem)itemstack.getItem()).getBlock();
+            ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock) ((BlockItem) itemstack.getItem()).getBlock();
             var carving = CarvingManager.getInstance(CarvingManager.Key.of(packed, block.getType(block.defaultBlockState())));
-            var textureLocation = carving.getPumpkinBlur();
+            ResourceLocation textureLocation = carving.getPumpkinBlur();
+            if (textureLocation == null) return;
 
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);

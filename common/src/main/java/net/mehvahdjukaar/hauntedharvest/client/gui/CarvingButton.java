@@ -127,7 +127,7 @@ public class CarvingButton extends GuiComponent implements Renderable, GuiEventL
     }
 
     public boolean isHovered() {
-        return this.isHovered || this.focused;
+        return this.isHovered;
     }
 
     @Override

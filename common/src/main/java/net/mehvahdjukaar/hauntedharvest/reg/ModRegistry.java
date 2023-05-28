@@ -107,7 +107,7 @@ public class ModRegistry {
             0.5F, 0.5F, 10, Integer.MAX_VALUE);
 
     public static final String GRIM_APPLE_NAME = "grim_apple";
-    public static final Supplier<Item> DEATH_APPLE = regItem(GRIM_APPLE_NAME, () ->
+    public static final Supplier<Item> GRIM_APPLE = regItem(GRIM_APPLE_NAME, () ->
             new GrimAppleItem(new Item.Properties()
                     .rarity(Rarity.RARE).food(ModFoods.DEATH_APPLE)));
 
@@ -216,6 +216,10 @@ public class ModRegistry {
         Supplier<T> block = regBlock(name, blockFactory);
         regBlockItem(name, block, properties);
         return block;
+    }
+
+    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory) {
+        return regWithItem(name, blockFactory, new Item.Properties());
     }
 
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {

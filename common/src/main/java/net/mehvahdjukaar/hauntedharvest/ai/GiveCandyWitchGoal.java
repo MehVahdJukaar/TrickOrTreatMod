@@ -97,7 +97,7 @@ public class GiveCandyWitchGoal extends Goal {
             int r = this.witch.level.getRandom().nextInt(12);
 
             if (r == 0) {
-                ItemStack stack = new ItemStack(ModRegistry.DEATH_APPLE.get());
+                ItemStack stack = new ItemStack(ModRegistry.GRIM_APPLE.get());
                 GiveCandyToBabies.throwCandy(this.witch, target, stack);
                 this.witch.level.broadcastEntityEvent(this.witch, (byte) 15);
             }

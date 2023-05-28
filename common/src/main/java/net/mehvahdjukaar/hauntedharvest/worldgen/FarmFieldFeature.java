@@ -6,6 +6,7 @@ import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
 import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.SuppCompat;
 import net.minecraft.core.BlockPos;
@@ -121,9 +122,9 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
         public boolean isEnabled() {
             return switch (this) {
                 case CORN -> CommonConfigs.CORN_ENABLED.get();
-                case FLAX -> HauntedHarvest.SUPP_INSTALLED && SuppCompat.isFlaxOn();
+                case FLAX -> CompatHandler.SUPP_INSTALLED && SuppCompat.isFlaxOn();
                 case PUMPKIN -> true;
-                case TOMATOES -> HauntedHarvest.FD_INSTALLED;
+                case TOMATOES -> CompatHandler.FD_INSTALLED;
             };
         }
 

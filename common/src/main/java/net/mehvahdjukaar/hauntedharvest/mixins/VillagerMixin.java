@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
@@ -80,7 +81,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
     protected void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         //hax. pickup candy
-        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.isCandyOrApple(stack)) {
+        if (HalloweenVillagerAI.isTrickOrTreater(this) && HalloweenVillagerAI.isCandyOrApple(stack)) {
             cir.setReturnValue(true);
         }
     }
@@ -88,7 +89,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Override
     public void onItemPickup(ItemEntity itemEntity) {
         super.onItemPickup(itemEntity);
-        if (HauntedHarvest.IS_TRICK_OR_TREATING.test(this) && HauntedHarvest.isCandyOrApple(itemEntity.getItem())) {
+        if (HalloweenVillagerAI.isTrickOrTreater(this) && HalloweenVillagerAI.isCandyOrApple(itemEntity.getItem())) {
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte) 14);

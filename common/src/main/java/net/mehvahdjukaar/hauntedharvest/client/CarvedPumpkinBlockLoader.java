@@ -30,6 +30,7 @@ public class CarvedPumpkinBlockLoader implements CustomModelLoader {
 
         @Override
         public CustomBakedModel bake(ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
+            this.model.resolveParents(bakery::getModel);
             BakedModel bakedOverlay = this.model.bake(bakery, model, spriteGetter, modelTransform, modelLocation, true);
             return new CarvedPumpkinBakedModel(model, bakedOverlay, spriteGetter, modelTransform);
         }

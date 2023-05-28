@@ -47,7 +47,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
     }
 
     public static boolean isValidTrickOrTreater(LivingEntity self, LivingEntity villagerTarget) {
-        if (!HauntedHarvest.IS_TRICK_OR_TREATING.test(villagerTarget)) return false;
+        if (!HalloweenVillagerAI.isTrickOrTreater(villagerTarget)) return false;
         if (self.distanceToSqr(villagerTarget) <= 4 * 3 && !(villagerTarget instanceof IHalloweenVillager e && e.isEntityOnCooldown(self))) {
             Entity lookTarget = villagerTarget.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
             return lookTarget == self;

@@ -1,11 +1,8 @@
 {
-    "bookshelf:load_conditions": [
+    "global_conditions": [
         {
-            "type": "bookshelf:item_exists",
-            "values": [
-                "hauntedharvest:kernels",
-                "hauntedharvest:corn"
-            ]
+            "modid": "botanypots",
+            "type": "forge:mod_loaded"
         }
     ],
     "type": "botanypots:crop",

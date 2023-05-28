@@ -1,4 +1,10 @@
 {
+  "global_conditions": [
+    {
+      "modid": "botanypots",
+      "type": "forge:mod_loaded"
+    }
+  ],
   "type": "minecraft:block",
   "pools": [
     {

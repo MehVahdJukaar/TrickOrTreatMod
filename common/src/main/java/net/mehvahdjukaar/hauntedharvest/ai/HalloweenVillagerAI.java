@@ -6,16 +6,28 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.events.IVillagerBrainEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.util.VillagerAIManager;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class HalloweenVillagerAI {
+
+    private static final Set<Item> BABY_VILLAGER_EATABLE = new HashSet<>();
 
     public static void setup() {
 
@@ -35,7 +47,7 @@ public class HalloweenVillagerAI {
             event.addSensor(ModRegistry.PUMPKIN_POI_SENSOR.get());
 
             if (villager.isBaby()) {
-                event.addOrReplaceActivity(ModRegistry.TRICK_OR_TREAT.get(), (ImmutableList<? extends Pair<Integer, ? extends Behavior<? super Villager>>>)(Object) getTrickOrTreatPackage(0.5f));
+                event.addOrReplaceActivity(ModRegistry.TRICK_OR_TREAT.get(),  getTrickOrTreatPackage(0.5f));
 
                 event.addTaskToActivity(Activity.PLAY, Pair.of(9, new EatCandy(100, 130)));
                 event.addTaskToActivity(Activity.PLAY, Pair.of(10, new CarvePumpkin(0.5f)));
@@ -92,5 +104,33 @@ public class HalloweenVillagerAI {
                 //Pair.of(10, new LocateHidingPlace(32, speed, 6)),
 
                 Pair.of(99, UpdateActivityFromSchedule.create()));
+    }
+
+
+    public static boolean isTrickOrTreater(LivingEntity entity) {
+        return entity.isBaby() && entity.getMainHandItem().is(Items.BUNDLE);
+    }
+
+    public static boolean isCandyOrApple(ItemStack stack) {
+        return BABY_VILLAGER_EATABLE.contains(stack.getItem());
+    }
+
+    public static boolean hasCandyOrApple(SimpleContainer inventory) {
+        return inventory.hasAnyOf(BABY_VILLAGER_EATABLE);
+    }
+
+    public static void refreshCandies() {
+        BABY_VILLAGER_EATABLE.clear();
+        Set<Item> temp = new HashSet<>();
+        for (var p : BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.SWEETS)) {
+            temp.add(p.value());
+        }
+        temp.add(ModRegistry.GRIM_APPLE.get());
+        temp.add(ModRegistry.ROTTEN_APPLE.get());
+        for (Item i : temp) {
+            if (i != Items.AIR) {
+                BABY_VILLAGER_EATABLE.add(i);
+            }
+        }
     }
 }
