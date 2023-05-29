@@ -48,7 +48,7 @@ public class ModCarvedPumpkinItem extends BlockItem implements ICustomItemRender
 
     @PlatformOnly(PlatformOnly.FORGE)
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
-        return type.isGlowing() ? null : EquipmentSlot.HEAD;
+        return type.isJackOLantern() ? null : EquipmentSlot.HEAD;
     }
 
     @PlatformOnly(PlatformOnly.FORGE)

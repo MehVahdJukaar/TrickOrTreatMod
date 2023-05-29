@@ -4,10 +4,7 @@ import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,17 +30,14 @@ import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 //TODO: IOwner protected
 public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityBlock {
-
 
     private final PumpkinType type;
 
@@ -90,25 +84,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                 te.setWaxed(true);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            if(this.type == PumpkinType.NORMAL) {
-                Block b = PumpkinType.getFromTorch(i);
-                if (b != null && b != this) {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                    }
-                    if (!player.isCreative()) {
-                        stack.shrink(1);
-                    }
-                    CompoundTag tag = new CompoundTag();
-                    te.saveAdditional(tag);
-                    level.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1, 1.3f);
-                    level.setBlockAndUpdate(pos, b.withPropertiesOf(state));
-                    if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile jack) {
-                        jack.load(tag);
-                    }
-                    return InteractionResult.sidedSuccess(level.isClientSide);
-                }
-            }
+            //torch is handled by event since it needs to cover vanilla ones aswell
 
             CarveMode mode = te.getCarveMode();
 
@@ -166,7 +142,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     }
 
     protected void trySpawnGolemWithCustomPumpkin(Level level, BlockPos pos) {
-        BlockPattern.BlockPatternMatch blockPatternMatch = this.getOrCreateSnowGolemFull().find(level, pos);
+        BlockPattern.BlockPatternMatch blockPatternMatch = SNOW_GOLEM_FULL.find(level, pos);
         if (blockPatternMatch != null) {
 
             SnowGolem snowGolem = EntityType.SNOW_GOLEM.create(level);
@@ -174,7 +150,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                 HHPlatformStuff.addPumpkinData(tile, snowGolem);
             }
 
-            for (int i = 0; i < this.getOrCreateSnowGolemFull().getHeight(); ++i) {
+            for (int i = 0; i < SNOW_GOLEM_FULL.getHeight(); ++i) {
                 BlockInWorld blockInWorld = blockPatternMatch.getBlock(0, i, 0);
                 level.setBlock(blockInWorld.getPos(), Blocks.AIR.defaultBlockState(), 2);
                 level.levelEvent(2001, blockInWorld.getPos(), Block.getId(blockInWorld.getState()));
@@ -183,7 +159,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
             BlockPos blockPos = blockPatternMatch.getBlock(0, 2, 0).getPos();
             spawnToLocation(level, blockPos, snowGolem);
 
-            for (int j = 0; j < this.getOrCreateSnowGolemFull().getHeight(); ++j) {
+            for (int j = 0; j < SNOW_GOLEM_FULL.getHeight(); ++j) {
                 BlockInWorld blockInWorld2 = blockPatternMatch.getBlock(0, j, 0);
                 level.blockUpdated(blockInWorld2.getPos(), Blocks.AIR);
             }
@@ -222,22 +198,13 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
         }
     }
 
-    @org.jetbrains.annotations.Nullable
-    private BlockPattern snowGolemFull;
-
     private static final Predicate<BlockState> PUMPKINS_PREDICATE = blockState -> blockState != null
             && blockState.getBlock() instanceof ModCarvedPumpkinBlock;
 
-    private BlockPattern getOrCreateSnowGolemFull() {
-        if (this.snowGolemFull == null) {
-            this.snowGolemFull = BlockPatternBuilder.start()
-                    .aisle("^", "#", "#")
-                    .where('^', BlockInWorld.hasState(PUMPKINS_PREDICATE))
-                    .where('#', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.SNOW_BLOCK)))
-                    .build();
-        }
-
-        return this.snowGolemFull;
-    }
+    private static final BlockPattern SNOW_GOLEM_FULL = BlockPatternBuilder.start()
+            .aisle("^", "#", "#")
+            .where('^', BlockInWorld.hasState(PUMPKINS_PREDICATE))
+            .where('#', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.SNOW_BLOCK)))
+            .build();
 
 }

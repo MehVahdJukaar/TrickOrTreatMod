@@ -180,14 +180,6 @@ public class ModRegistry {
             () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
                     .lightLevel(s -> 15), PumpkinType.JACK));
 
-    public static final Supplier<ModCarvedPumpkinBlock> SOUL_JACK_O_LANTERN = regPumpkin("soul_jack_o_lantern",
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
-                    .lightLevel(s -> 10), PumpkinType.SOUL));
-
-    public static final Supplier<ModCarvedPumpkinBlock> REDSTONE_JACK_O_LANTERN = regPumpkin("redstone_jack_o_lantern",
-            () -> new RedstoneCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN),
-                    PumpkinType.REDSTONE));
-
 
     public static final Supplier<BlockEntityType<ModCarvedPumpkinBlockTile>> MOD_CARVED_PUMPKIN_TILE =
             regTile("carved_pumpkin", () ->

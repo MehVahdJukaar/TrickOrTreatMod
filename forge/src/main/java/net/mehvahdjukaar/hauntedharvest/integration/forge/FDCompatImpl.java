@@ -36,7 +36,9 @@ public class FDCompatImpl {
     }
 
     public static void addItemToTabsEvent(RegHelper.ItemToTabEvent event) {
-        ModTabs.after(event, Items.BREAD, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, CORNBREAD);
+        //TODO: FD tab
+        //ModTabs.after(event, Items.BREAD, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, CORNBREAD);
+        //ModTabs.after(event, Items.BEETROOT_SOUP, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, SUCCOTASH);
     }
 
     public static BlockState getTomato(RandomSource randomSource) {

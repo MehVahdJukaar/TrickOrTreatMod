@@ -47,7 +47,7 @@ public class HalloweenVillagerAI {
             event.addSensor(ModRegistry.PUMPKIN_POI_SENSOR.get());
 
             if (villager.isBaby()) {
-                event.addOrReplaceActivity(ModRegistry.TRICK_OR_TREAT.get(),  getTrickOrTreatPackage(0.5f));
+                event.addOrReplaceActivity(ModRegistry.TRICK_OR_TREAT.get(), getTrickOrTreatPackage(0.5f));
 
                 event.addTaskToActivity(Activity.PLAY, Pair.of(9, new EatCandy(100, 130)));
                 event.addTaskToActivity(Activity.PLAY, Pair.of(10, new CarvePumpkin(0.5f)));

@@ -5,8 +5,12 @@ import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
@@ -23,17 +27,30 @@ public class ModTabs {
 
     public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(HauntedHarvest.res(HauntedHarvest.MOD_ID),
-                    b -> b.icon(() -> ModRegistry.GRIM_APPLE.get().getDefaultInstance()));
+                    b -> b.title(Component.translatable("itemGroup.hauntedharvest"))
+                            .icon(() -> ModRegistry.GRIM_APPLE.get().getDefaultInstance()));
 
 
     public static void addItemsToTab(RegHelper.ItemToTabEvent event) {
-        after(event, Items.ENCHANTED_GOLDEN_APPLE, CreativeModeTabs.FOOD_AND_DRINKS,ModRegistry.GRIM_APPLE_NAME,
+        after(event, Items.ENCHANTED_GOLDEN_APPLE, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.GRIM_APPLE_NAME,
                 ModRegistry.ROTTEN_APPLE,
                 ModRegistry.GRIM_APPLE);
-        before(event,Items.WHEAT, CreativeModeTabs.INGREDIENTS,ModRegistry.CORN_NAME,
+        before(event, Items.WHEAT, CreativeModeTabs.INGREDIENTS, ModRegistry.CORN_NAME,
                 ModRegistry.COB_ITEM);
-        after(event,Items.BEETROOT_SEEDS, CreativeModeTabs.NATURAL_BLOCKS,ModRegistry.CORN_NAME,
+        after(event, Items.BEETROOT_SEEDS, CreativeModeTabs.NATURAL_BLOCKS, ModRegistry.CORN_NAME,
                 ModRegistry.KERNELS);
+
+        after(event, Items.POISONOUS_POTATO, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.POPCORN_NAME,
+                ModRegistry.POP_CORN);
+        after(event, Items.POISONOUS_POTATO, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CANDY_CORN_NAME,
+                ModRegistry.CANDY_CORN);
+        after(event, Items.POISONOUS_POTATO, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME,
+                ModRegistry.COOKED_COB);
+
+        after(event, i -> i.getItem() instanceof BlockItem bi && bi.getBlock().builtInRegistryHolder().is(BlockTags.CAMPFIRES),
+                CreativeModeTabs.FUNCTIONAL_BLOCKS, ModRegistry.PAPER_BAG_NAME,
+                ModRegistry.PAPER_BAG_ITEM);
+
 
     }
 
@@ -49,6 +66,7 @@ public class ModTabs {
     public static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
+            if(MOD_TAB != null)tab = MOD_TAB.get();
             event.addAfter(tab, targetPred, entries);
         }
     }
@@ -60,6 +78,7 @@ public class ModTabs {
     public static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
+            if(MOD_TAB != null)tab = MOD_TAB.get();
             event.addBefore(tab, targetPred, entries);
         }
     }
@@ -69,14 +88,6 @@ public class ModTabs {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
             event.add(tab, entries);
         }
-    }
-
-    public static boolean hasBlock(String name) {
-        if (CompatHandler.AUTUMNITY_INSTALLED) return true;
-        for (var id : PlatHelper.getInstalledMods()) {
-            if (BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(id, name)).isPresent()) return true;
-        }
-        return false;
     }
 
 }

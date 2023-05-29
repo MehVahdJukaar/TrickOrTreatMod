@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest;
 
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
@@ -9,6 +10,7 @@ import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.reg.ModCommands;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
+import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -19,6 +21,7 @@ import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -30,11 +33,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -127,19 +132,36 @@ public class HauntedHarvest {
     public static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         Direction direction = hit.getDirection();
-        var t = PumpkinType.getFromTorch(stack.getItem());
-        if(t != null){
+        PumpkinType t = PumpkinType.getFromTorch(stack.getItem());
+        if (t != null) {
             BlockPos pos = hit.getBlockPos();
             BlockState state = level.getBlockState(pos);
-            if(state.is(Blocks.PUMPKIN)) {
-                BlockState toPlace = t.withPropertiesOf(state);
+            if (state.is(ModTags.CARVED_PUMPKINS)) {
+
+                CompoundTag tag = null;
+                BlockState toPlace;
+                if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
+                    if (tile.isWaxed()) return InteractionResult.PASS;
+                    tag = tile.saveWithoutMetadata();
+                    toPlace = t.getPumpkin().withPropertiesOf(state);
+                } else {
+                    toPlace = t.getVanillaPumpkin().withPropertiesOf(state);
+                }
+                level.setBlockAndUpdate(pos, toPlace);
+                if (tag != null && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
+                    tile.load(tag);
+                }
+
                 SoundType soundType = toPlace.getSoundType();
                 level.playSound(player, pos, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 2.0f, soundType.getPitch() * 0.8f);
                 level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(player, toPlace));
                 if (!player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
-                level.setBlockAndUpdate(pos, toPlace);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.PASS;
         }

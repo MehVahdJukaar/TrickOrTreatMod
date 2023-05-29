@@ -16,6 +16,5 @@ public class CompatHandler {
     }
 
     public static void setup(){
-        if (AUTUMNITY_INSTALLED) AutumnityCompat.setup();
     }
 }

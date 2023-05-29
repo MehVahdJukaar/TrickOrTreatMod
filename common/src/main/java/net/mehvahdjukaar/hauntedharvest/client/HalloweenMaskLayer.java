@@ -38,11 +38,9 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
         this.headModel = new HalloweenMaskModel<>(context.bakeLayer(ModelLayers.VILLAGER));
     }
 
-    private final int skins = CommonConfigs.PAPER_BAG.get() ? 9 : 8;
-
     @Override
     protected ResourceLocation getTextureLocation(T entity) {
-        return TEXTURES[(int) Math.abs(entity.getUUID().getLeastSignificantBits() % skins)];
+        return TEXTURES[(int) Math.abs(entity.getUUID().getLeastSignificantBits() % (CommonConfigs.PAPER_BAG.get() ? 9 : 8))];
     }
 
     @Override

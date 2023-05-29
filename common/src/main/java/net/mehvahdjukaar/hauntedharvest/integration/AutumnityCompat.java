@@ -8,8 +8,4 @@ public class AutumnityCompat {
     public static void init(){
         throw new AssertionError();
     }
-
-    @ExpectPlatform
-    public static void setup() {
-    }
 }

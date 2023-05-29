@@ -212,7 +212,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     }
 
     public ModCarvedPumpkinBlock.CarveMode getCarveMode() {
-        if (this.getPumpkinType().isGlowing()) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
+        if (this.getPumpkinType().isJackOLantern()) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
         return CommonConfigs.PUMPKIN_CARVE_MODE.get();
     }
 

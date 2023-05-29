@@ -58,9 +58,9 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
         Item jack = ModRegistry.CARVED_PUMPKIN.get().asItem();
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
-            Block b = PumpkinType.getFromTorch(inv.getItem(i).getItem());
+            PumpkinType b = PumpkinType.getFromTorch(inv.getItem(i).getItem());
             if (b != null) {
-                jack = b.asItem();
+                jack = b.getPumpkin().asItem();
             }
         }
         for (int i = 0; i < inv.getContainerSize(); ++i) {
