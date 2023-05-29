@@ -6,10 +6,9 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
-import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
+import net.mehvahdjukaar.moonlight.fabric.MLFabricSetupCallbacks;
 import net.minecraft.world.level.ItemLike;
 
 public class HauntedHarvestFabric implements ModInitializer {
@@ -20,11 +19,11 @@ public class HauntedHarvestFabric implements ModInitializer {
 
         HauntedHarvest.commonInit();
 
-        FabricSetupCallbacks.COMMON_SETUP.add(HauntedHarvestFabric::commonSetup);
+        MLFabricSetupCallbacks.COMMON_SETUP.add(HauntedHarvestFabric::commonSetup);
 
 
-        if (PlatHelper.getEnv().isClient()) {
-            FabricSetupCallbacks.CLIENT_SETUP.add(HauntedHarvestFabric::clientSetup);
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            MLFabricSetupCallbacks.CLIENT_SETUP.add(HauntedHarvestFabric::clientSetup);
         }
 
         UseBlockCallback.EVENT.register(HauntedHarvest::onRightClickBlock);

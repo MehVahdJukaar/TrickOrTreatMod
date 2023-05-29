@@ -57,8 +57,8 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
         }).bounds(centerX - 45, y, 90, 20).build());
         this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 22, y, 3, 1, "https://www.patreon.com/user?u=53696377", "Support me on Patreon :D"));
         this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 44, y, 2, 2, "https://ko-fi.com/mehvahdjukaar", "Donate a Coffee"));
-        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 66, y, 1, 2, "https://www.curseforge.com/minecraft/mc-mods/supplementaries", "CurseForge Page"));
-        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 88, y, 0, 2, "https://github.com/MehVahdJukaar/Supplementaries/wiki", "Mod Wiki"));
+        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 66, y, 1, 2, "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest", "CurseForge Page"));
+        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 88, y, 0, 2, "https://github.com/MehVahdJukaar/TrickOrTreatMod/wiki", "Mod Wiki"));
         this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2, y, 1, 1, "https://discord.com/invite/qdKRTDf8Cv", "Mod Discord"));
         this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2 + 22, y, 0, 1, "https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s", "Youtube Channel"));
         this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2 + 44, y, 2, 1, "https://twitter.com/Supplementariez?s=09", "Twitter Page"));

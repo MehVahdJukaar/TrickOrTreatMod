@@ -8,9 +8,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class QuarkCompatImpl {
-    public static InteractionResult triggerSimpleHarvest(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand) {
-        return InteractionResult.PASS;
-    }
 
     public static void init() {
     }

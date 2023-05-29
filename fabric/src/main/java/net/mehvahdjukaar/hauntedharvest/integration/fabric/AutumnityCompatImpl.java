@@ -4,6 +4,4 @@ public class AutumnityCompatImpl {
     public static void init() {
     }
 
-    public static void setup() {
-    }
 }
