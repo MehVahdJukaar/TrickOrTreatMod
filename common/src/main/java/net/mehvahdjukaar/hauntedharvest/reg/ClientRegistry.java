@@ -3,14 +3,12 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
-import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinBlockLoader;
-import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinTileRenderer;
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
-import net.mehvahdjukaar.hauntedharvest.client.SplatteredEggRenderer;
+import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.minecraft.Util;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -23,6 +21,8 @@ import java.util.Map;
 import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
 
 public class ClientRegistry {
+
+    public static final ModelLayerLocation VILLAGER_HEAD = loc("bellows");
 
     public static final Material PUMPKIN_HIGHLIGHT = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/pumpkin_highlight"));
     public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, new ResourceLocation("block/pumpkin_side"));
@@ -55,6 +55,10 @@ public class ClientRegistry {
         }
     }
 
+    private static ModelLayerLocation loc(String bellows) {
+        return new ModelLayerLocation(HauntedHarvest.res(bellows), bellows);
+    }
+
     public static ResourceLocation getFrame(PumpkinType type) {
         return PUMPKIN_FRAMES.getOrDefault(type, PUMPKIN_FRAMES.get(PumpkinType.JACK));
     }
@@ -67,6 +71,7 @@ public class ClientRegistry {
         ClientPlatformHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
         ClientPlatformHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientPlatformHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
+        ClientPlatformHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
     }
 
     public static void setup() {
@@ -75,6 +80,11 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.CORN_TOP.get(), RenderType.cutout());
         PumpkinType.getTypes().forEach(t -> ClientPlatformHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
         ClientPlatformHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
+    }
+
+    @EventCalled
+    private static void registerModelLayers(ClientPlatformHelper.ModelLayerEvent event) {
+        event.register(VILLAGER_HEAD, HalloweenMaskLayer::createMesh);
     }
 
     @EventCalled

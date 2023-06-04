@@ -4,9 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -35,10 +39,11 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
 
     public HalloweenMaskLayer(RenderLayerParent<T, M> parent, EntityRendererProvider.Context context) {
         super(parent);
-        this.headModel = new HalloweenMaskModel<>(context.bakeLayer(ModelLayers.VILLAGER));
+        this.headModel = new HalloweenMaskModel<>(context.bakeLayer(ClientRegistry.VILLAGER_HEAD));
     }
 
     private final int skins = CommonConfigs.PAPER_BAG.get() ? 9 : 8;
+
 
     @Override
     protected ResourceLocation getTextureLocation(T entity) {
@@ -55,5 +60,11 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
             headModel.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
             headModel.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);
         }
+    }
+
+    //just a copy of villager model
+    public static LayerDefinition createMesh() {
+        var mesh = VillagerModel.createBodyModel();
+        return LayerDefinition.create(mesh, 64, 64);
     }
 }

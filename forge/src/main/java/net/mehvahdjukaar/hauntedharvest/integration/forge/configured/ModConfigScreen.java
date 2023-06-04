@@ -4,7 +4,6 @@ package net.mehvahdjukaar.hauntedharvest.integration.forge.configured;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.api.IModConfig;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
-import com.simibubi.create.foundation.block.ITE;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
