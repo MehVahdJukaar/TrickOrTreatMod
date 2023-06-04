@@ -1,5 +1,1 @@
-- updated to 1.19.4
-- you can use torched directly on carved pumpkins to turn them to light them up
-- abandoned farms can be located with supplementaries way signs
-- added abandoned farm map marker
-- abandoned farms can be located with supplementaries adventurer maps
+- fixed crash
