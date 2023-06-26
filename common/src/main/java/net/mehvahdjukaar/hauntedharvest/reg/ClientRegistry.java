@@ -3,18 +3,16 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
-import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinBlockLoader;
-import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinTileRenderer;
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
-import net.mehvahdjukaar.hauntedharvest.client.SplatteredEggRenderer;
+import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.minecraft.Util;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 
@@ -23,7 +21,8 @@ import java.util.Map;
 public class ClientRegistry {
 
     public static final ResourceLocation LOCATION_BLOCKS = new ResourceLocation("textures/atlas/blocks.png");
-    
+
+    public static final ModelResourceLocation VILLAGER_MASK = loc("villager_mask");
 
     public static final Material PUMPKIN_HIGHLIGHT = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/pumpkin_highlight"));
     public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, new ResourceLocation("block/pumpkin_side"));
@@ -35,7 +34,7 @@ public class ClientRegistry {
         for (var t : PumpkinType.getTypes()) {
             Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_shade"));
             Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_background"));
-            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, ClientRegistry.PUMPKIN_HIGHLIGHT});
+            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, ClientRegistry.VILLAGER_MASK});
         }
         return l;
     });
@@ -56,6 +55,10 @@ public class ClientRegistry {
         }
     }
 
+    private static ModelResourceLocation loc(String s) {
+        return new ModelResourceLocation(HauntedHarvest.res(s), s);
+    }
+
     public static ResourceLocation getFrame(PumpkinType type) {
         return PUMPKIN_FRAMES.getOrDefault(type, PUMPKIN_FRAMES.get(PumpkinType.JACK));
     }
@@ -67,6 +70,7 @@ public class ClientRegistry {
         ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
         ClientHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
+        ClientHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
     }
 
     public static void setup() {
@@ -75,6 +79,11 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.CORN_TOP.get(), RenderType.cutout());
         PumpkinType.getTypes().forEach(t -> ClientHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
         ClientHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
+    }
+
+    @EventCalled
+    private static void registerModelLayers(ClientPlatformHelper.ModelLayerEvent event) {
+        event.register(VILLAGER_HEAD, HalloweenMaskLayer::createMesh);
     }
 
     @EventCalled

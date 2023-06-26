@@ -210,7 +210,7 @@ public class ModRegistry {
         return block;
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory) {
+    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockRegHelper.registerActivity(res(name), () -> new Activity(name));Factory) {
         return regWithItem(name, blockFactory, new Item.Properties());
     }
 
