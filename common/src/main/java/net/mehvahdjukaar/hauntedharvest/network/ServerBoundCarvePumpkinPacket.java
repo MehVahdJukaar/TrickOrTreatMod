@@ -35,7 +35,7 @@ public class ServerBoundCarvePumpkinPacket implements Message {
     public void handle(ChannelHandler.Context context) {
 
         // server world
-        Level world = Objects.requireNonNull(context.getSender()).level;
+        Level world = Objects.requireNonNull(context.getSender()).level();
 
         BlockPos pos = this.pos;
         if (world.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile board) {

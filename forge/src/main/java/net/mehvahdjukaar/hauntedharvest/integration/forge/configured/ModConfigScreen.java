@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelect
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -67,15 +68,15 @@ public class ModConfigScreen extends CustomConfigScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks) {
         super.render(poseStack, mouseX, mouseY, partialTicks);
 
         var level = Minecraft.getInstance().level;
         if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
             int x = (int) (this.width * 0.93f);
-            this.itemRenderer.renderAndDecorateFakeItem(poseStack, Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
+            poseStack.renderFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
             if (ScreenUtil.isMouseWithin(x, 16, 16, 16, mouseX, mouseY)) {
-                this.renderTooltip(poseStack, this.font.split(Component.translatable("gui.hauntedharvest.autumn_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
+                poseStack.renderTooltip(this.font, this.font.split(Component.translatable("gui.hauntedharvest.autumn_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
             }
         }
     }

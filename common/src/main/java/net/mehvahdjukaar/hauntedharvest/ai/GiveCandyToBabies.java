@@ -21,6 +21,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,12 +107,13 @@ public class GiveCandyToBabies extends Behavior<Villager> {
     }
 
     public static void spookVillager(Villager target, LivingEntity cause) {
-        ((ServerLevel) target.level).sendParticles(ModRegistry.SPOOKED_PARTICLE.get(), target.getX(), target.getY() + 1.25, target.getZ(), 5,
+        Level level = target.level();
+        ((ServerLevel) level).sendParticles(ModRegistry.SPOOKED_PARTICLE.get(), target.getX(), target.getY() + 1.25, target.getZ(), 5,
                 target.getBbWidth() / 2f, target.getBbHeight() / 3f, target.getBbWidth() / 2f, 0.02);
 
 
         //hax
-        DamageSource dmg = target.level.damageSources().generic();
+        DamageSource dmg = level.damageSources().generic();
         target.setLastHurtByMob(cause);
         target.hurt(dmg, 0.1f);
         target.heal(0.1f);
@@ -130,7 +132,8 @@ public class GiveCandyToBabies extends Behavior<Villager> {
         double d3 = Math.sqrt(pX * pX + pZ * pZ);
 
         double d0 = self.getEyeY() - 0.3F;
-        ItemEntity itementity = new ItemEntity(self.level, self.getX(), d0, self.getZ(), stack);
+        Level level = self.level();
+        ItemEntity itementity = new ItemEntity(level, self.getX(), d0, self.getZ(), stack);
 
         double pVelocity = 0.179 + d3 * 0.022;
         double pY = d1 + d3 * 0.7D;
@@ -139,7 +142,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
 
         //this.level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
 
-        self.level.addFreshEntity(itementity);
+        level.addFreshEntity(itementity);
         return itementity;
 
     }

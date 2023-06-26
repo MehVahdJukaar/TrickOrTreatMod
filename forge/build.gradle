@@ -118,7 +118,7 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
-    modImplementation("curse.maven:serene-seasons-291874:4502525")
+    modCompileOnly("curse.maven:serene-seasons-291874:4502525")
     modImplementation("net.mehvahdjukaar:moonlight-forge:${project.moonlight_version}")
     //modImplementation("curse.maven:model-gap-fix-676136:4024855")
 

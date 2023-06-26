@@ -54,7 +54,7 @@ public class SplatteredEggEntity extends HangingEntity {
             BlockPos blockpos = hit.getBlockPos();
             Direction direction = hit.getDirection();
             BlockPos relative = blockpos.relative(direction);
-            Level level = egg.level;
+            Level level = egg.level();
             HangingEntity hangingentity = new SplatteredEggEntity(level, relative, direction);
 
             if (hangingentity.survives()) {
@@ -102,7 +102,7 @@ public class SplatteredEggEntity extends HangingEntity {
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
         this.recalculateBoundingBox();
-        this.altTexture = level.getRandom().nextInt(direction.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
+        this.altTexture = level().getRandom().nextInt(direction.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
     }
 
     /**
@@ -136,12 +136,13 @@ public class SplatteredEggEntity extends HangingEntity {
      */
     @Override
     public boolean survives() {
-        if (!this.level.noCollision(this)) {
+        Level level = this.level();
+        if (!level.noCollision(this)) {
             return false;
         } else {
-            BlockState blockstate = this.level.getBlockState(this.pos.relative(this.direction.getOpposite()));
-            return (blockstate.getMaterial().isSolid() || this.direction.getAxis().isHorizontal() && DiodeBlock.isDiode(blockstate)) &&
-                    this.level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
+            BlockState blockstate = level.getBlockState(this.pos.relative(this.direction.getOpposite()));
+            return (blockstate.isSolid() || this.direction.getAxis().isHorizontal() && DiodeBlock.isDiode(blockstate)) &&
+                    level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
         }
     }
 
@@ -203,7 +204,7 @@ public class SplatteredEggEntity extends HangingEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide && this.tickCount > 20 * 30) {
+        if (!this.level().isClientSide && this.tickCount > 20 * 30) {
             this.discard();
         }
     }

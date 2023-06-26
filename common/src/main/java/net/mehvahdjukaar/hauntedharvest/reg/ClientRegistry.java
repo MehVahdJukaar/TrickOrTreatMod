@@ -7,8 +7,9 @@ import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.Util;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.Material;
@@ -22,7 +23,7 @@ public class ClientRegistry {
 
     public static final ResourceLocation LOCATION_BLOCKS = new ResourceLocation("textures/atlas/blocks.png");
 
-    public static final ModelResourceLocation VILLAGER_MASK = loc("villager_mask");
+    public static final ModelLayerLocation VILLAGER_MASK = loc("villager_mask");
 
     public static final Material PUMPKIN_HIGHLIGHT = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/pumpkin_highlight"));
     public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, new ResourceLocation("block/pumpkin_side"));
@@ -34,7 +35,7 @@ public class ClientRegistry {
         for (var t : PumpkinType.getTypes()) {
             Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_shade"));
             Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_background"));
-            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, ClientRegistry.VILLAGER_MASK});
+            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background});
         }
         return l;
     });
@@ -55,8 +56,8 @@ public class ClientRegistry {
         }
     }
 
-    private static ModelResourceLocation loc(String s) {
-        return new ModelResourceLocation(HauntedHarvest.res(s), s);
+    private static ModelLayerLocation loc(String name) {
+        return new ModelLayerLocation(HauntedHarvest.res(name), name);
     }
 
     public static ResourceLocation getFrame(PumpkinType type) {
@@ -82,8 +83,8 @@ public class ClientRegistry {
     }
 
     @EventCalled
-    private static void registerModelLayers(ClientPlatformHelper.ModelLayerEvent event) {
-        event.register(VILLAGER_HEAD, HalloweenMaskLayer::createMesh);
+    private static void registerModelLayers(ClientHelper.ModelLayerEvent event) {
+        event.register(VILLAGER_MASK, HalloweenMaskLayer::createMesh);
     }
 
     @EventCalled

@@ -2,15 +2,11 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
-import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
@@ -25,7 +21,7 @@ public class ModTabs {
         RegHelper.addItemsToTabsRegistration(ModTabs::addItemsToTab);
     }
 
-    public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.CREATIVE_TAB.get() ? null :
+    public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(HauntedHarvest.res(HauntedHarvest.MOD_ID),
                     b -> b.title(Component.translatable("itemGroup.hauntedharvest"))
                             .icon(() -> ModRegistry.GRIM_APPLE.get().getDefaultInstance()));
@@ -55,35 +51,35 @@ public class ModTabs {
     }
 
 
-    public static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, CreativeModeTab tab, String key, Supplier<?>... items) {
+    public static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         after(event, i -> i.is(target), tab, key, items);
     }
 
-    public static void after(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
+    public static void after(RegHelper.ItemToTabEvent event, Item target, ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         after(event, i -> i.is(target), tab, key, items);
     }
 
-    public static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
+    public static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-            if(MOD_TAB != null)tab = MOD_TAB.get();
+            if (MOD_TAB != null) tab = MOD_TAB.getHolder().unwrapKey().get();
             event.addAfter(tab, targetPred, entries);
         }
     }
 
-    public static void before(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
+    public static void before(RegHelper.ItemToTabEvent event, Item target, ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         before(event, i -> i.is(target), tab, key, items);
     }
 
-    public static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
+    public static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
-            if(MOD_TAB != null)tab = MOD_TAB.get();
+            if (MOD_TAB != null) tab = MOD_TAB.getHolder().unwrapKey().get();
             event.addBefore(tab, targetPred, entries);
         }
     }
 
-    public static void add(RegHelper.ItemToTabEvent event, CreativeModeTab tab, String key, Supplier<?>... items) {
+    public static void add(RegHelper.ItemToTabEvent event, ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
             event.add(tab, entries);

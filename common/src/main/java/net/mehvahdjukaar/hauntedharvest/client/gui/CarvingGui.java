@@ -8,6 +8,7 @@ import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.network.ServerBoundCarvePumpkinPacket;
 import net.mehvahdjukaar.hauntedharvest.client.PumpkinTextureGenerator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.model.Material;
@@ -113,16 +114,16 @@ public class CarvingGui extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
+        this.renderBackground(graphics);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
         Material[][] materials = PumpkinTextureGenerator.computePixelMaterialMap(getPixelMatrix(), tile.getPumpkinType());
 
-        poseStack.pushPose();
+        graphics.pose().pushPose();
         //float ff = 93.75F/16f;
-        //poseStack.scale(ff,ff,ff);
+        //graphics.scale(ff,ff,ff);
         int ut = -1;
         int vt = -1;
         for (int xx = 0; xx < 16; xx++) {
@@ -132,14 +133,14 @@ public class CarvingGui extends Screen {
                     vt = yy;
                 }
                 this.buttons[xx][yy].setMaterial(materials[xx][yy]);
-                this.buttons[xx][yy].render(poseStack, mouseX, mouseY, partialTicks);
+                this.buttons[xx][yy].render(graphics, mouseX, mouseY, partialTicks);
             }
         }
-        if (ut != -1) this.buttons[ut][vt].renderTooltip(poseStack);
-        poseStack.popPose();
+        if (ut != -1) this.buttons[ut][vt].renderTooltip(graphics);
+        graphics.pose().popPose();
 
         Lighting.setupFor3DItems();
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }
 

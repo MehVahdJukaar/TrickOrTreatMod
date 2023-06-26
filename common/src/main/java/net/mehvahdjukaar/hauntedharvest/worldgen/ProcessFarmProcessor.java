@@ -33,7 +33,7 @@ public class ProcessFarmProcessor extends StructureProcessor {
 
 
     public ProcessFarmProcessor() {
-        this.copperLantern = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation("supplementaries:copper_lantern"))
+        this.copperLantern = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation("suppsquared:copper_lantern"))
                 .map(c -> c.defaultBlockState().setValue(LanternBlock.HANGING, true).
                         setValue(BlockStateProperties.LIT, false)).orElse(null);
         this.validBlocks = Set.of(Blocks.OAK_PLANKS, Blocks.OAK_STAIRS, Blocks.OAK_SLAB, Blocks.RED_TERRACOTTA, Blocks.STRIPPED_OAK_LOG, Blocks.OAK_LOG);
@@ -43,7 +43,7 @@ public class ProcessFarmProcessor extends StructureProcessor {
     public StructureTemplate.StructureBlockInfo processBlock(
             LevelReader level, BlockPos arg2, BlockPos pos, StructureTemplate.StructureBlockInfo blockInfo,
             StructureTemplate.StructureBlockInfo relativeBlockInfo, StructurePlaceSettings settings) {
-        BlockPos blockPos = relativeBlockInfo.pos;
+        BlockPos blockPos = relativeBlockInfo.pos();
         BlockState replace = null;
 
         replace = maybeReplaceLantern(relativeBlockInfo, settings, blockPos);
@@ -55,14 +55,14 @@ public class ProcessFarmProcessor extends StructureProcessor {
         if (replace == null) {
             replace = maybePlaceMoss(relativeBlockInfo, settings);
         }
-        return replace != null ? new StructureTemplate.StructureBlockInfo(blockPos, replace, relativeBlockInfo.nbt) : relativeBlockInfo;
+        return replace != null ? new StructureTemplate.StructureBlockInfo(blockPos, replace, relativeBlockInfo.nbt()) : relativeBlockInfo;
 
     }
 
     private BlockState maybePlaceMoss(StructureTemplate.StructureBlockInfo relativeBlockInfo, StructurePlaceSettings settings) {
         BlockState replace = null;
-        if (relativeBlockInfo.state.is(Blocks.COBBLESTONE)) {
-            RandomSource randomSource = settings.getRandom(relativeBlockInfo.pos);
+        if (relativeBlockInfo.state().is(Blocks.COBBLESTONE)) {
+            RandomSource randomSource = settings.getRandom(relativeBlockInfo.pos());
             if (randomSource.nextFloat() < 0.25) replace = Blocks.MOSSY_COBBLESTONE.defaultBlockState();
         }
         return replace;
@@ -71,8 +71,8 @@ public class ProcessFarmProcessor extends StructureProcessor {
     private BlockState maybeReplaceLantern(StructureTemplate.StructureBlockInfo relativeBlockInfo, StructurePlaceSettings settings,
                                            BlockPos blockPos) {
         BlockState replace = null;
-        if (relativeBlockInfo.state.is(Blocks.LANTERN)) {
-            RandomSource randomSource = settings.getRandom(relativeBlockInfo.pos);
+        if (relativeBlockInfo.state().is(Blocks.LANTERN)) {
+            RandomSource randomSource = settings.getRandom(relativeBlockInfo.pos());
             if (blockPos.closerThan(lastPos, 10)) {
                 if (lastPlaced) {
                     lastPlaced = false;
@@ -97,8 +97,8 @@ public class ProcessFarmProcessor extends StructureProcessor {
     private BlockState maybePlaceCobweb(StructureTemplate.StructureBlockInfo relativeBlockInfo, StructurePlaceSettings settings) {
 
         BlockState replace = null;
-        if (validBlocks.contains(relativeBlockInfo.state.getBlock())) {
-            RandomSource randomSource = settings.getRandom(relativeBlockInfo.pos);
+        if (validBlocks.contains(relativeBlockInfo.state().getBlock())) {
+            RandomSource randomSource = settings.getRandom(relativeBlockInfo.pos());
             if (randomSource.nextFloat() < 0.07) replace = Blocks.COBWEB.defaultBlockState();
         }
         return replace;

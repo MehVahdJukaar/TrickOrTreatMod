@@ -6,6 +6,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,7 @@ public class PumpkinBlurGuiOverlay extends Gui implements IGuiOverlay {
 
 
     @Override
-    public void render(ForgeGui gui, PoseStack mStack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, GuiGraphics mStack, float partialTicks, int width, int height) {
 
         ItemStack itemstack = this.minecraft.player.getInventory().getArmor(3);
         if (this.minecraft.options.getCameraType().isFirstPerson() && !itemstack.isEmpty()) {

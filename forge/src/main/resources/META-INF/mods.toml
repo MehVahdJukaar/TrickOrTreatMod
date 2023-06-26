@@ -37,7 +37,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/haunted-harvest/is
 
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.4,1.20)"
+    versionRange="[1.20,1.21)"
     ordering="NONE"
     side="BOTH"
 
@@ -45,6 +45,6 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/haunted-harvest/is
 
     modId="moonlight"
     mandatory=true
-    versionRange="[1.19.4-2.4.10,]"
+    versionRange="[1.20-2.5.10,]"
     ordering="NONE"
     side="BOTH"

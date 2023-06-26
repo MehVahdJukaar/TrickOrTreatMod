@@ -44,7 +44,7 @@ public abstract class SnowGolemHeadLayerMixin {
                                 false,
                                 matrixStack,
                                 buffer,
-                                snowGolem.level,
+                                snowGolem.level(),
                                 packedLight,
                                 LivingEntityRenderer.getOverlayCoords(snowGolem, 0.0F),
                                 snowGolem.getId()

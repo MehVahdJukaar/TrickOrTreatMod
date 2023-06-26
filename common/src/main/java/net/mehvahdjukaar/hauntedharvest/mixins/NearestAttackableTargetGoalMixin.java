@@ -19,9 +19,8 @@ public abstract class NearestAttackableTargetGoalMixin {
     @Inject(method = "findTarget", at = @At("RETURN"))
     public void findTarget(CallbackInfo ci){
         if(this.target instanceof AbstractVillager villager && villager.isBaby()){
-            Level level = target.level;
             //makes babies immune but not during raid
-            if(level instanceof ServerLevel serer){
+            if(target.level() instanceof ServerLevel serer){
                 this.target = null;
                 //Raid raid = serer.getRaidAt(target.getOnPos());
                // if(raid == null || !raid.isActive()) this.target = null;

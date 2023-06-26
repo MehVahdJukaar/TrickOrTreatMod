@@ -125,7 +125,7 @@ public class PlacePumpkin extends Behavior<Villager> {
     public static boolean isValidPlacementSpot(ServerLevel serverLevel, BlockPos pos) {
         if (serverLevel.canSeeSky(pos) && (double) serverLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY() >= 64) {
             BlockState state = serverLevel.getBlockState(pos);
-            if (state.getMaterial().isReplaceable() && state.getFluidState().isEmpty()) {
+            if (state.canBeReplaced() && state.getFluidState().isEmpty()) {
 
                 BlockState below = serverLevel.getBlockState(pos.below());
                 return below.is(ModTags.PUMPKIN_SUPPORT);

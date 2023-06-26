@@ -48,7 +48,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
 
     @Override
     public void render(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        if (pLivingEntity.isBaby() && HauntedHarvest.isTrickOrTreatTime(pLivingEntity.level)) {
+        if (pLivingEntity.isBaby() && HauntedHarvest.isTrickOrTreatTime(pLivingEntity.level())) {
             headModel.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
             this.getParentModel().copyPropertiesTo(headModel);
             headModel.getHead().copyFrom(this.getParentModel().getHead());

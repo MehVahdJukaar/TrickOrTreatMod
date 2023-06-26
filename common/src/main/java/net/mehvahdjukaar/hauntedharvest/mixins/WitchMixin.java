@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class WitchMixin extends Raider {
 
 
-    protected WitchMixin(EntityType<? extends Raider> p_37839_, Level p_37840_) {
-        super(p_37839_, p_37840_);
+    protected WitchMixin(EntityType<? extends Raider> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Inject(method = "registerGoals", at = @At("RETURN"))
-    public void findTarget(CallbackInfo ci){
-        if(HauntedHarvest.isHalloweenSeason(this.level)) {
+    public void addHalloweenGoal(CallbackInfo ci){
+        if(HauntedHarvest.isHalloweenSeason(this.level())) {
             this.goalSelector.addGoal(2, new GiveCandyWitchGoal(this));
         }
     }

@@ -65,7 +65,7 @@ public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
             case Z -> blockX = Mth.floor(entity.getX());
             case Y -> blockY = Mth.floor(entity.getY());
         }
-        int l1 = LevelRenderer.getLightColor(entity.level, new BlockPos(blockX, blockY, blockZ));
+        int l1 = LevelRenderer.getLightColor(entity.level(), new BlockPos(blockX, blockY, blockZ));
         if (dir == Direction.DOWN) {
             this.vertex(matrix4f, matrix3f, consumer, p, -0.5f, 0, 1, n, 0, -1, 0, l1);
             this.vertex(matrix4f, matrix3f, consumer, n, -0.5f, 1, 1, n, 0, -1, 0, l1);

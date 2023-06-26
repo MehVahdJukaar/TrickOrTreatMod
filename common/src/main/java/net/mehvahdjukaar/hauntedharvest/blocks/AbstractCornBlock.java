@@ -95,7 +95,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
                 return aboveState.getBlock() instanceof AbstractCornBlock cb && cb.isValidBonemealTarget(level, above, aboveState, false);
             } else {
                 //place top
-                return this.getTopBlock() == null || aboveState.getMaterial().isReplaceable();
+                return this.getTopBlock() == null || aboveState.canBeReplaced();
             }
         }
     }

@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -67,19 +68,20 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
-        var level = Minecraft.getInstance().level;
+        Minecraft mc = Minecraft.getInstance();
+        var level = mc.level;
         if (level != null) {
             boolean h = HauntedHarvest.isHalloweenSeason(level);
             int x = (int) (this.width * 0.93f);
-            RenderUtil.renderGuiItemRelative(poseStack, Items.JACK_O_LANTERN.getDefaultInstance(), x, 16, this.itemRenderer,
+            RenderUtil.renderGuiItemRelative(graphics.pose(), Items.JACK_O_LANTERN.getDefaultInstance(), x, 16, mc.getItemRenderer(),
                     (p, s) -> {
                     }, h ? LightTexture.FULL_BRIGHT : 0, OverlayTexture.NO_OVERLAY);
             if (ScreenUtil.isMouseWithin(x, 16, 16, 16, mouseX, mouseY)) {
                 String c = h ? "gui.hauntedharvest.autumn_season_on" : "gui.hauntedharvest.autumn_season_off";
-                this.renderTooltip(poseStack, this.font.split(Component.translatable(c).withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
+                graphics.renderTooltip(this.font, this.font.split(Component.translatable(c).withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
             }
         }
     }

@@ -75,7 +75,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Override
     public void setEntityOnCooldown(Entity e, int cooldownSec) {
-        adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level.random.nextInt(20)));
+        adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level().random.nextInt(20)));
     }
 
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
@@ -91,8 +91,8 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         super.onItemPickup(itemEntity);
         if (HalloweenVillagerAI.isTrickOrTreater(this) && HalloweenVillagerAI.isCandyOrApple(itemEntity.getItem())) {
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            if (!this.level.isClientSide) {
-                this.level.broadcastEntityEvent(this, (byte) 14);
+            if (!this.level().isClientSide) {
+                this.level().broadcastEntityEvent(this, (byte) 14);
             }
         }
     }
@@ -102,7 +102,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     public void startConverting() {
         if (!this.isConverting()) {
             this.conversionTime = 60 * 20;
-            this.level.broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
+            this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 2));
         }
     }
@@ -117,7 +117,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         //TODO: figure out why it's not read after getting saved
         if (this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
             GlobalPos globalpos = this.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
-            if (globalpos.dimension() == this.level.dimension()) {
+            if (globalpos.dimension() == this.level().dimension()) {
                 tag.put("Pumpkin", NbtUtils.writeBlockPos(globalpos.pos()));
             }
         }
@@ -129,7 +129,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
         if (compoundNBT.contains("Pumpkin")) {
             try {
-                this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level.dimension(),
+                this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level().dimension(),
                         NbtUtils.readBlockPos(compoundNBT.getCompound("Pumpkin"))));
             } catch (Exception ignored) {
             }
@@ -177,7 +177,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         }
 
         if (!this.isSilent()) {
-            this.level.levelEvent(null, 1027, this.blockPosition(), 0);
+            this.level().levelEvent(null, 1027, this.blockPosition(), 0);
         }
     }
 
@@ -187,7 +187,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         if (pId == EntityEvent.ZOMBIE_CONVERTING) {
             this.conversionTime = 60 * 20;
             if (!this.isSilent()) {
-                this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
+                this.level().playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
             ci.cancel();
         }
@@ -202,7 +202,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
     public void tick(CallbackInfo ci) {
-        if (!this.level.isClientSide && this.isAlive() && !this.isNoAi()) {
+        if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
             if (this.isConverting()) {
                 --this.conversionTime;
 
@@ -218,11 +218,12 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (itemstack.is(Items.MILK_BUCKET) && this.isConverting()) {
             this.conversionTime = -1;
-            itemstack.finishUsingItem(this.level, this);
-            this.eat(this.level, itemstack);
+            Level level = this.level();
+            itemstack.finishUsingItem(level, this);
+            this.eat(level, itemstack);
             pPlayer.setItemInHand(pHand, new ItemStack(Items.BUCKET));
             cir.cancel();
-            cir.setReturnValue(InteractionResult.sidedSuccess(pPlayer.level.isClientSide));
+            cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
         }
     }
 

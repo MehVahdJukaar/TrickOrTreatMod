@@ -7,9 +7,9 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
+import net.mehvahdjukaar.moonlight.api.entity.VillagerAIHooks;
 import net.mehvahdjukaar.moonlight.api.events.IVillagerBrainEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
-import net.mehvahdjukaar.moonlight.api.util.VillagerAIManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,16 +33,16 @@ public class HalloweenVillagerAI {
 
         MoonlightEventsHelper.addListener(HalloweenVillagerAI::onVillagerBrainInitialize, IVillagerBrainEvent.class);
         //memories
-        VillagerAIManager.registerMemory(MemoryModuleType.ATTACK_TARGET);
-        VillagerAIManager.registerMemory(ModRegistry.PUMPKIN_POS.get());
-        VillagerAIManager.registerMemory(ModRegistry.NEAREST_PUMPKIN.get());
+        VillagerAIHooks.registerMemory(MemoryModuleType.ATTACK_TARGET);
+        VillagerAIHooks.registerMemory(ModRegistry.PUMPKIN_POS.get());
+        VillagerAIHooks.registerMemory(ModRegistry.NEAREST_PUMPKIN.get());
     }
 
 
     public static void onVillagerBrainInitialize(IVillagerBrainEvent event) {
         Villager villager = event.getVillager();
         //hopefully level isnt null
-        if (HauntedHarvest.isHalloweenSeason(villager.level)) {
+        if (HauntedHarvest.isHalloweenSeason(villager.level())) {
 
             event.addSensor(ModRegistry.PUMPKIN_POI_SENSOR.get());
 

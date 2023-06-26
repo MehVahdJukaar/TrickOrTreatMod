@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import java.util.EnumSet;
@@ -33,7 +34,7 @@ public class GiveCandyWitchGoal extends Goal {
      */
     @Override
     public boolean canUse() {
-        if (!HauntedHarvest.isTrickOrTreatTime(this.witch.level)) return false;
+        if (!HauntedHarvest.isTrickOrTreatTime(this.witch.level())) return false;
         if (this.randomInterval > 0 && this.witch.getRandom().nextInt(this.randomInterval) != 0) {
             return false;
         } else {
@@ -47,7 +48,7 @@ public class GiveCandyWitchGoal extends Goal {
     }
 
     protected void findTarget() {
-        this.target = this.witch.level.getEntitiesOfClass(
+        this.target = this.witch.level().getEntitiesOfClass(
                         Villager.class, this.getTargetSearchArea(4), this::isValidTarget)
                 .stream().findAny().orElse(null);
     }
@@ -65,7 +66,7 @@ public class GiveCandyWitchGoal extends Goal {
 
         super.start();
 
-        this.timeToGiveCandy = 20 + this.witch.level.random.nextInt(30);
+        this.timeToGiveCandy = 20 + this.witch.level().random.nextInt(30);
         this.tickSinceStarted = 0;
         this.hasGivenCandy = false;
     }
@@ -94,17 +95,18 @@ public class GiveCandyWitchGoal extends Goal {
         //this.mob.lookAt(this.target, 45, 80);
         if (this.target != null && this.tickSinceStarted > this.timeToGiveCandy) {
 
-            int r = this.witch.level.getRandom().nextInt(12);
+            Level level = this.witch.level();
+            int r = level.getRandom().nextInt(12);
 
             if (r == 0) {
                 ItemStack stack = new ItemStack(ModRegistry.GRIM_APPLE.get());
                 GiveCandyToBabies.throwCandy(this.witch, target, stack);
-                this.witch.level.broadcastEntityEvent(this.witch, (byte) 15);
+                level.broadcastEntityEvent(this.witch, (byte) 15);
             }
             //scare villager
             else if (r < 5) {
                 GiveCandyToBabies.spookVillager(target, this.witch);
-                this.witch.level.broadcastEntityEvent(this.witch, (byte) 15);
+                level.broadcastEntityEvent(this.witch, (byte) 15);
             } else {
                 ItemStack stack = new ItemStack(ModRegistry.ROTTEN_APPLE.get());
                 GiveCandyToBabies.throwCandy(this.witch, target, stack);

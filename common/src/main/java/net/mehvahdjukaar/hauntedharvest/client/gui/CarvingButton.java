@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.hauntedharvest.client.gui;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -18,7 +16,7 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvents;
 
 
-public class CarvingButton extends GuiComponent implements Renderable, GuiEventListener, NarratableEntry {
+public class CarvingButton implements Renderable, GuiEventListener, NarratableEntry {
     public final int u;
     public final int v;
     public final int x;
@@ -55,22 +53,22 @@ public class CarvingButton extends GuiComponent implements Renderable, GuiEventL
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         //boolean wasHovered = this.isHovered();
         renderButton(matrixStack);
     }
 
-    private void renderButton(PoseStack matrixStack) {
+    private void renderButton(GuiGraphics graphics) {
         TextureAtlasSprite sprite = material.sprite();
-        RenderUtil.blitSprite(matrixStack, x, y, SIZE, SIZE, u, v, 1, 1, sprite);
+        RenderUtil.blitSpriteSection(graphics, x, y, SIZE, SIZE, u, v, 1, 1, sprite);
     }
 
-    public void renderTooltip(PoseStack matrixStack) {
+    public void renderTooltip(GuiGraphics graphics) {
         TextureAtlasSprite sprite = ClientRegistry.CARVING_OUTLINE.sprite();
-        RenderUtil.blitSprite(matrixStack, x - 1, y - 1, SIZE + 2, SIZE + 2, 0, 0, 1, 1, sprite);
+        RenderUtil.blitSpriteSection(graphics, x - 1, y - 1, SIZE + 2, SIZE + 2, 0, 0, 1, 1, sprite);
 
-        this.renderButton(matrixStack);
+        this.renderButton(graphics);
     }
 
     //toggle

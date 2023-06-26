@@ -82,13 +82,13 @@ public class AskCandy extends Behavior<Villager> {
     private void keepVillageAwake(LivingEntity target) {
         //hacky
         if (target instanceof Villager v) {
-            target.getBrain().setMemory(MemoryModuleType.LAST_WOKEN, target.level.getGameTime() - 1);
+            target.getBrain().setMemory(MemoryModuleType.LAST_WOKEN, target.level().getGameTime() - 1);
             if (target.isSleeping()) {
                 target.stopSleeping();
                 //frick your bed. for some reason all this isn't enough, and they keep going in and out constantly
                 target.getBrain().eraseMemory(MemoryModuleType.NEAREST_BED);
 
-                target.level.broadcastEntityEvent(target, (byte) 26);
+                target.level().broadcastEntityEvent(target, (byte) 26);
                 target.getBrain().setActiveActivityIfPossible(Activity.REST);
             }
         }

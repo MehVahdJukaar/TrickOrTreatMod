@@ -16,7 +16,7 @@ public class QuarkCompatImpl {
     public static void onSimpleHarvest(SimpleHarvestEvent event) {
         Block b = event.blockState.getBlock();
         if (b instanceof AbstractCornBlock c) {
-            if (!c.isPlantFullyGrown(event.blockState, event.pos, event.player.level)) {
+            if (!c.isPlantFullyGrown(event.blockState, event.pos, event.player.level())) {
                 event.setCanceled(true);
             } else event.setTargetPos(event.pos.below(c.getHeight()));
         }

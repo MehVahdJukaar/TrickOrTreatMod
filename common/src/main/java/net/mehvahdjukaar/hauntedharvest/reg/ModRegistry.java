@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -49,8 +50,8 @@ public class ModRegistry {
     public static void init() {
     }
 
-    public static final Supplier<Activity> EAT_CANDY = regActivity("eat_candy");
-    public static final Supplier<Activity> TRICK_OR_TREAT = regActivity("trick_or_treat");
+    public static final Supplier<Activity> EAT_CANDY = RegHelper.registerActivity(res("eat_candy"));
+    public static final Supplier<Activity> TRICK_OR_TREAT = RegHelper.registerActivity(res("trick_or_treat"));
 
     //worldgen
 
@@ -164,7 +165,8 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> CANDY_BAG = regBlock("candy_bag", () -> new CandyBagBlock(
-            BlockBehaviour.Properties.copy(PAPER_BAG.get())));
+            BlockBehaviour.Properties.copy(PAPER_BAG.get())
+                    .pushReaction(PushReaction.DESTROY)));
 
     public static final Supplier<BlockEntityType<CandyBagTile>> CANDY_BAG_TILE = regTile(
             "candy_bag", () -> PlatHelper.newBlockEntityType(
@@ -210,16 +212,8 @@ public class ModRegistry {
         return block;
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockRegHelper.registerActivity(res(name), () -> new Activity(name));Factory) {
-        return regWithItem(name, blockFactory, new Item.Properties());
-    }
-
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
         return RegHelper.registerItem(res(name), () -> new BlockItem(blockSup.get(), properties));
-    }
-
-    private static Supplier<Activity> regActivity(String name) {
-        return RegHelper.registerActivity(res(name), () -> new Activity(name));
     }
 
 }
