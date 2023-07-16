@@ -6,10 +6,8 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,22 +21,15 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class CarvedPumpkinBakedModel implements CustomBakedModel {
 
-    private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelTransform;
-
     private final BakedModel back;
-    private final BlockModel owner;
 
-    public CarvedPumpkinBakedModel(BlockModel owner, BakedModel baked, Function<Material, TextureAtlasSprite> spriteGetter,
-                                   ModelState modelTransform) {
-        this.back = baked;
-        this.spriteGetter = spriteGetter;
+    public CarvedPumpkinBakedModel(BakedModel back, ModelState modelTransform) {
+        this.back = back;
         this.modelTransform = modelTransform;
-        this.owner = owner;
     }
 
     @Override
@@ -114,11 +105,10 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
                     current = b;
                 }
                 //draws prev quad
-                int tint = -1;
-                TextureAtlasSprite sprite = spriteGetter.apply(prevColor);
+                TextureAtlasSprite sprite = prevColor.sprite();
 
                 quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 0,
-                        1 / 16f, length / 16f, sprite, tint, rotation, false, direction));
+                        1 / 16f, length / 16f, sprite, rotation));
                 startY = y;
                 if (current != null) {
                     prevColor = current;
@@ -131,55 +121,34 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
 
 
     public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
-                                            TextureAtlasSprite sprite, int color, Transformation transform,
-                                            boolean litUp, Direction dd) {
-        var contents = sprite.contents();;
-        float tu = (1 - (1 + contents.width() * width));
-        float tv = (1 - (1 + contents.height() * height));
-        float u0 = (1 - x) * 16;
-        float v0 = (1 - y) * 16;
+                                            TextureAtlasSprite sprite, Transformation transform) {
 
-        //this just wraps around forge baked quad builder
-        BakedQuadBuilder builder = BakedQuadBuilder.create();
+        float u0 = 1 - x;
+        float v0 = 1 - y;
+        float u1 = 1 - (x + width);
+        float v1 = 1 - (y + height);
 
-        builder.setDirection(dd);
-        Vector3f normal = new Vector3f(dd.getStepX(), dd.getStepY(), dd.getStepZ());
+        BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform);
+        builder.setAutoDirection();
 
-        builder.setSprite(sprite);
-
-        putVertex(builder, normal, x + width, y + height, z,
-                u0 + tu, v0 + tv, sprite, color, transform, litUp);
-        putVertex(builder, normal, x + width, y, z,
-                u0 + tu, v0, sprite, color, transform, litUp);
-        putVertex(builder, normal, x, y, z,
-                u0, v0, sprite, color, transform, litUp);
-        putVertex(builder, normal, x, y + height, z,
-                u0, v0 + tv, sprite, color, transform, litUp);
-
+        putVertex(builder, x + width, y + height, z, u1, v1);
+        putVertex(builder, x + width, y, z, u1, v0);
+        putVertex(builder, x, y, z, u0, v0);
+        putVertex(builder, x, y + height, z, u0, v1);
 
         return builder.build();
     }
 
 
-    private static void putVertex(BakedQuadBuilder builder, Vector3f normal,
-                                  float x, float y, float z, float u, float v,
-                                  TextureAtlasSprite sprite, int color,
-                                  Transformation transformation, boolean emissive) {
+    private static void putVertex(BakedQuadBuilder builder, float x, float y, float z, float u, float v) {
 
-        Vector3f posV = RotHlpr.rotateVertexOnCenterBy(x, y, z, transformation.getMatrix());
+        Vector3f posV = new Vector3f(x, y, z);
         //I hate this. Forge seems to have some rounding errors with numbers close to 0 that arent 0 resulting in incorrect shading
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
-
-        builder.pos(posV);
-
-        builder.color(color);
-
-        builder.uv(sprite.getU(u), sprite.getV(v));
-
-        builder.normal(normal.x(), normal.y(), normal.z());
-
-        if (emissive) builder.lightEmission(15);
-
+        builder.vertex(posV.x, posV.y, posV.z);
+        builder.color(-1);
+        builder.uv(u, v);
+        builder.normal(0, 0, -1);
         builder.endVertex();
     }
 

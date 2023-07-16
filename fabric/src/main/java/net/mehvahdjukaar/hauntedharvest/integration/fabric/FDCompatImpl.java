@@ -17,10 +17,10 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 
 import java.util.function.Supplier;
 
@@ -33,6 +33,9 @@ public class FDCompatImpl {
 
     public static void addItemToTabsEvent(RegHelper.ItemToTabEvent event) {
         ModTabs.after(event, Items.BREAD, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, CORNBREAD);
+        ModTabs.after(event, Items.BEETROOT_SOUP, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, SUCCOTASH);
+        ModTabs.add(event, CreativeModeTabs.BUILDING_BLOCKS, ModRegistry.CORN_NAME, CORN_CRATE);
+
     }
 
     public static final FoodProperties SUCCOTASH_FOOD = new FoodProperties.Builder()
@@ -43,9 +46,9 @@ public class FDCompatImpl {
 
     public static final Supplier<Block> CORN_CRATE = regWithItem(
             "corn_crate", () ->
-                    new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    new Block(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD)
                             .strength(2.0F, 3.0F)
-                            .sound(SoundType.WOOD)));
+                            .sound(SoundType.WOOD)), new Item.Properties());
 
     public static final Supplier<Item> CORNBREAD = regItem(
             "cornbread", () -> new ConsumableItem(new Item.Properties()

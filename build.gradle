@@ -126,6 +126,9 @@ allprojects {
             url "https://maven.firstdarkdev.xyz/snapshots"
         }
 
+        maven { url 'https://jitpack.io' }
+
+
     }
 
     tasks.withType(JavaCompile) {

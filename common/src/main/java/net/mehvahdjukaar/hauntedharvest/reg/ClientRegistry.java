@@ -5,9 +5,11 @@ import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
+import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.block_models.BlackboardBakedModel;
 import net.minecraft.Util;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.HeartParticle;
@@ -35,7 +37,7 @@ public class ClientRegistry {
         for (var t : PumpkinType.getTypes()) {
             Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_shade"));
             Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_background"));
-            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background});
+            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, PUMPKIN_HIGHLIGHT});
         }
         return l;
     });
@@ -109,7 +111,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
-        event.register(HauntedHarvest.res("carved_pumpkin"), new CarvedPumpkinBlockLoader());
+        event.register(HauntedHarvest.res("carved_pumpkin"),  new NestedModelLoader("model", CarvedPumpkinBakedModel::new));
     }
 
     @EventCalled

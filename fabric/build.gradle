@@ -29,14 +29,14 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
-    modImplementation "com.terraformersmc:modmenu:4.0.6", {
+    modCompileOnly "com.terraformersmc:modmenu:4.0.6", {
         exclude module: "fabric-api"
     }
 
-    modImplementation ("curse.maven:fabric-seasons-413523:4533722")
+    modCompileOnly ("curse.maven:fabric-seasons-413523:4533722")
     modImplementation ("net.mehvahdjukaar:moonlight-fabric:${project.moonlight_version}")
     //modCompileOnly ("net.mehvahdjukaar:supplementaries-fabric:${project.supplementaries_version}")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:4111426")

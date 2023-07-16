@@ -6,6 +6,9 @@
     {
       "id": "hauntedharvest:corn_crate",
       "required": false
-    }
+    },
+    "hauntedharvest:corn_base",
+    "hauntedharvest:corn_middle",
+    "hauntedharvest:corn_top"
   ]
 }

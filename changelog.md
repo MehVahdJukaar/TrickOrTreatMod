@@ -1,1 +1,1 @@
-- fixed crash
+fixed overlay rendering

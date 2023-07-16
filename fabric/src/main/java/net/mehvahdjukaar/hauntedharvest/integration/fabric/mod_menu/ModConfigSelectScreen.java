@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.hauntedharvest.integration.fabric.mod_menu;
 
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
-import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigListScreen;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 public class ModConfigSelectScreen extends FabricConfigListScreen {
 
     public ModConfigSelectScreen(Screen parent) {
-        super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
+        super(HauntedHarvest.MOD_ID, ModRegistry.GRIM_APPLE.get().getDefaultInstance(),
                 Component.literal(ChatFormatting.GOLD + "Haunted Harvest Configs"),
                 new ResourceLocation("textures/block/cracked_stone_bricks.png"),
                 parent, CommonConfigs.SPEC);

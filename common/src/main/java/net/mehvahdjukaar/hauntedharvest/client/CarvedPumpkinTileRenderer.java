@@ -88,7 +88,7 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
 
                         matrixStackIn.translate(x, 1 - y - p, 0.001);
                         addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1,
-                                1, 1, 1, 1, lu, lv, 0, 0, 1, ClientRegistry.CARVING_OUTLINE.sprite());
+                                1, 1, 1, 1, lu, lv, 0, 0, 1);
                         matrixStackIn.popPose();
 
                         matrixStackIn.popPose();
@@ -98,6 +98,7 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
         }
     }
 
+    @Deprecated(forRemoval = true)
     public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                    float b, float a, int lu, int lv, float nx, float ny, float nz) {
         addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
@@ -105,35 +106,17 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
         addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
         addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
-    public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
-                                   float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
 
-        u0 = getRelativeU(sprite, u0);
-        u1 = getRelativeU(sprite, u1);
-        v0 = getRelativeV(sprite, v0);
-        v1 = getRelativeV(sprite, v1);
-
-        addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
-    }
-
+    @Deprecated(forRemoval = true)
     public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv)
-                .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
+        builder.vertex(matrixStackIn.last().pose(), x, y, z);
+        builder.color(r, g, b, a);
+        builder.uv(u, v);
+        builder.overlayCoords(OverlayTexture.NO_OVERLAY);
+        builder.uv2(lu, lv);
+        builder.normal(matrixStackIn.last().normal(), nx, ny, nz);
+        builder.endVertex();
     }
-
-    public static float getRelativeU(TextureAtlasSprite sprite, float u) {
-        float f = sprite.getU1() - sprite.getU0();
-        return sprite.getU0() + f * u;
-    }
-
-    public static float getRelativeV(TextureAtlasSprite sprite, float v) {
-        float f = sprite.getV1() - sprite.getV0();
-        return sprite.getV0() + f * v;
-    }
-
 
 }
