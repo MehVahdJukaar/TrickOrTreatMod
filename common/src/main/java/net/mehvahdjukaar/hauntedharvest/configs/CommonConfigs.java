@@ -39,11 +39,11 @@ public class CommonConfigs {
 
 
         builder.push("halloween_season");
-        START_MONTH = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")
+        START_MONTH = builder.comment("Month from which villagers will start placing pumpkins & trick or treating")
                 .define("start_month", 10, 1, 12);
         START_DAY = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")
                 .define("start_day", 20, 1, 31);
-        END_MONTH = builder.comment("Day from which villagers will start removing placed pumpkins")
+        END_MONTH = builder.comment("Month from which villagers will start removing placed pumpkins")
                 .define("end_month", 11, 1, 12);
         END_DAY = builder.comment("Day from which villagers will start removing placed pumpkins")
                 .define("end_day", 10, 1, 31);
