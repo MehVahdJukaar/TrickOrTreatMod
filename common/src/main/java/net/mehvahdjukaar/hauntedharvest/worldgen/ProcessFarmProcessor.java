@@ -32,9 +32,9 @@ public class ProcessFarmProcessor extends StructureProcessor {
 
 
     public ProcessFarmProcessor() {
-        this.copperLantern = Registry.BLOCK.getOptional(new ResourceLocation("supplementaries:copper_lantern"))
-                .map(c -> c.defaultBlockState().setValue(LanternBlock.HANGING, true).
-                        setValue(BlockStateProperties.LIT, false)).orElse(null);
+        this.copperLantern = null;// Registry.BLOCK.getOptional(new ResourceLocation("supplementaries:copper_lantern"))
+                //.map(c -> c.defaultBlockState().setValue(LanternBlock.HANGING, true).
+                  //      setValue(BlockStateProperties.LIT, false)).orElse(null);
         this.validBlocks = Set.of(Blocks.OAK_PLANKS, Blocks.OAK_STAIRS, Blocks.OAK_SLAB, Blocks.RED_TERRACOTTA, Blocks.STRIPPED_OAK_LOG, Blocks.OAK_LOG);
     }
 
