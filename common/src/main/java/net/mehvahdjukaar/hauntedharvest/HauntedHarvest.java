@@ -7,14 +7,11 @@ import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
-import net.mehvahdjukaar.hauntedharvest.reg.ModCommands;
-import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
-import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
+import net.mehvahdjukaar.hauntedharvest.reg.*;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.util.AnimalFoodHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -67,6 +64,11 @@ public class HauntedHarvest {
         ModRegistry.init();
         ModTabs.init();
         CompatHandler.init();
+        if(PlatHelper.getPhysicalSide().isClient()){
+            ClientRegistry.init();
+            ClientHelper.addClientSetup(ClientRegistry::setup);
+        }
+        PlatHelper.addCommonSetup(HauntedHarvest::commonSetup);
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
         PlatHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
@@ -85,8 +87,8 @@ public class HauntedHarvest {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
 
-        AnimalFoodHelper.addChickenFood(ModRegistry.KERNELS.get());
-        AnimalFoodHelper.addParrotFood(ModRegistry.KERNELS.get());
+        RegHelper.registerChickenFood(ModRegistry.KERNELS.get());
+        RegHelper.registerParrotFood(ModRegistry.KERNELS.get());
 
         DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
             @Override

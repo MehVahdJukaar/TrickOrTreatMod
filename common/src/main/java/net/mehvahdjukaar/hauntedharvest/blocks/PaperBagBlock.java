@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -55,7 +56,7 @@ public class PaperBagBlock extends Block implements Equipable {
 
     @Override
     public EquipmentSlot getEquipmentSlot() {
-        return null;
+        return EquipmentSlot.HEAD;
     }
 
     @Override
@@ -63,5 +64,4 @@ public class PaperBagBlock extends Block implements Equipable {
         return Equipable.super.getEquipSound();
     }
 
-    //TODO: equipable shulkr shell
 }

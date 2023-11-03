@@ -39,21 +39,9 @@ public class HauntedHarvestForge {
 
     public HauntedHarvestForge() {
 
-
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(HauntedHarvestForge::init);
-
         HauntedHarvest.commonInit();
 
-        if (PlatHelper.getPhysicalSide().isClient()) {
-            ClientRegistry.init();
-        }
-
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    public static void init(final FMLCommonSetupEvent event) {
-        event.enqueueWork(HauntedHarvest::commonSetup);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

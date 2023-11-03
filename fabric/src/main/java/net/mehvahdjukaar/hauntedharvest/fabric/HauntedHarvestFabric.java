@@ -19,36 +19,10 @@ public class HauntedHarvestFabric implements ModInitializer {
 
         HauntedHarvest.commonInit();
 
-        MLFabricSetupCallbacks.COMMON_SETUP.add(HauntedHarvestFabric::commonSetup);
-
-
-        if (PlatHelper.getPhysicalSide().isClient()) {
-            MLFabricSetupCallbacks.CLIENT_SETUP.add(HauntedHarvestFabric::clientSetup);
-        }
-
         UseBlockCallback.EVENT.register(HauntedHarvest::onRightClickBlock);
 
         CommonLifecycleEvents.TAGS_LOADED.register((a, b) -> HauntedHarvest.onTagLoad());
     }
 
-    private static void clientSetup() {
-        ClientRegistry.init();
-
-        ClientRegistry.setup();
-
-        for (PumpkinType type : PumpkinType.getTypes()) {
-            registerISTER(type.getPumpkin().asItem());
-        }
-
-    }
-
-    private static void commonSetup() {
-        HauntedHarvest.commonSetup();
-    }
-
-
-    private static void registerISTER(ItemLike itemLike) {
-        ((ICustomItemRendererProvider) itemLike.asItem()).registerFabricRenderer();
-    }
 
 }
