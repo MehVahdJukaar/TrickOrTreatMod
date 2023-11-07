@@ -1,1 +1,1 @@
-- Added better exception handling to prevent the mod from erroneously being blamed when mixins wearent applied due to failed mod loading caused by missing dependencies
+updated dependencies

@@ -140,12 +140,10 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         float v0 = (1 - y) * 16;
 
         //this just wraps around forge baked quad builder
-        BakedQuadBuilder builder = BakedQuadBuilder.create();
+        BakedQuadBuilder builder = BakedQuadBuilder.create(sprite);
 
         builder.setDirection(dd);
         Vector3f normal = new Vector3f(dd.getStepX(), dd.getStepY(), dd.getStepZ());
-
-        builder.setSprite(sprite);
 
         putVertex(builder, normal, x + width, y + height, z,
                 u0 + tu, v0 + tv, sprite, color, transform, litUp);
@@ -170,11 +168,11 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         //I hate this. Forge seems to have some rounding errors with numbers close to 0 that arent 0 resulting in incorrect shading
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
 
-        builder.pos(posV);
+        builder.vertex(posV.x(), posV.y(), posV.z());
 
         builder.color(color);
 
-        builder.uv(sprite.getU(u), sprite.getV(v));
+        builder.uv(u/16,v/16);
 
         builder.normal(normal.x(), normal.y(), normal.z());
 
