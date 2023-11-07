@@ -64,7 +64,7 @@ public class HauntedHarvest {
         ModRegistry.init();
         ModTabs.init();
         CompatHandler.init();
-        if(PlatHelper.getPhysicalSide().isClient()){
+        if (PlatHelper.getPhysicalSide().isClient()) {
             ClientRegistry.init();
             ClientHelper.addClientSetup(ClientRegistry::setup);
         }
@@ -186,6 +186,11 @@ public class HauntedHarvest {
                     level.gameEvent(player, GameEvent.SHEAR, pos);
                     level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
                             .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
+
+                    if (!player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te
+                            && te.getCarveMode().canOpenGui()) {
+                        te.sendOpenGuiPacket(level, pos, player);
+                    }
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
