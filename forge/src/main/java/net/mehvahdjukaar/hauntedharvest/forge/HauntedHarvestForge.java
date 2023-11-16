@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
@@ -51,6 +52,16 @@ public class HauntedHarvestForge {
             if (ret != InteractionResult.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(ret);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if( event.phase == TickEvent.Phase.END){
+            ServerLevel overworld = event.getServer().overworld();
+            if(overworld.getGameTime() % 10000 == 0){
+                HauntedHarvest.getSeasonManager().refresh();
             }
         }
     }
