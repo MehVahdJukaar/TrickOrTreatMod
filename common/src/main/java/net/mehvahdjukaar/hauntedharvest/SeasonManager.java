@@ -67,11 +67,37 @@ public class SeasonManager {
         int ii = (todayCalendar.getTime().before(start) && inv) ? 1 : 0;
         todayCalendar.set(ii, todayCalendar.get(Calendar.MONTH), todayCalendar.get(Calendar.DATE));
 
-
+        Date today = todayCalendar.getTime();
         //if seasonal use pumpkin placement time window
-        return todayCalendar.getTime().after(start) && todayCalendar.getTime().before(end);
+        return after(today, start) && before(today, end);
     }
 
+    public static boolean before(Date obj, Date that) {
+        int objYear = obj.getYear();
+        int thatYear = that.getYear();
+        int objMonth = obj.getMonth();
+        int thatMonth = that.getMonth();
+        int objDay = obj.getDate();
+        int thatDay = that.getDate();
+
+        if (objYear < thatYear) {
+            return true;
+        } else if (objYear > thatYear) {
+            return false;
+        } else {
+            if (objMonth < thatMonth) {
+                return true;
+            } else if (objMonth > thatMonth) {
+                return false;
+            } else {
+                return objDay < thatDay;
+            }
+        }
+    }
+
+    public static boolean after(Date obj, Date that) {
+        return !before(obj, that) && !obj.equals(that);
+    }
     public boolean isHalloween(Level level) {
         if (this.useSeasonMod) return SeasonModCompat.isAutumn(level);
         return isHalloweenRealTime;
