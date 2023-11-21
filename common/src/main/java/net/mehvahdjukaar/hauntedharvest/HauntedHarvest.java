@@ -83,6 +83,8 @@ public class HauntedHarvest {
         CompatHandler.setup();
         HalloweenVillagerAI.setup();
 
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.ROTTEN_APPLE.get().asItem(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.GRIM_APPLE.get().asItem(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.CARVED_PUMPKIN.get().asItem(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
