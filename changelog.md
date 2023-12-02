@@ -1,1 +1,1 @@
-made rotten apples compostable
+fixed farm loot table

@@ -83,7 +83,7 @@ public class CarvePumpkin extends Behavior<Villager> {
 
                 pLevel.playSound(null, targetPos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                CustomCarvingsManager.placeRandomPumpkin(targetPos.above(), pLevel,
+                CustomCarvingsManager.placeRandomPumpkin(targetPos, pLevel,
                         pOwner.getDirection().getOpposite(),
                         true, 0.1f, 0, 3);
 

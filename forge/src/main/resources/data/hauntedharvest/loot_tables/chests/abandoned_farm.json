@@ -46,6 +46,15 @@
         {
           "condition": "minecraft:random_chance",
           "chance": 0.79
+        },
+        {
+          "condition": "moonlight:iconditions",
+          "values": [
+            {
+              "type": "hauntedharvest:flag",
+              "flag": "grim_apple"
+            }
+          ]
         }
       ]
     },
@@ -59,14 +68,14 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 4,
+          "weight": 7,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 4.0,
-                "max": 8.0
+                "min": 5.0,
+                "max": 17.0
               },
               "add": false
             }
@@ -88,6 +97,17 @@
             }
           ],
           "name": "hauntedharvest:kernels"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "moonlight:iconditions",
+          "values": [
+            {
+              "type": "hauntedharvest:flag",
+              "flag": "corn"
+            }
+          ]
         }
       ]
     },
@@ -178,22 +198,6 @@
             }
           ],
           "name": "#forge:crops/flax"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 15,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 3.0
-              },
-              "add": false
-            }
-          ],
-          "name": "hauntedharvest:corn"
         }
       ]
     }
