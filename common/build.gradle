@@ -18,6 +18,7 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
     //modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
     modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
+    modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-420")
 
 
     modCompileOnly("curse.maven:jei-238222:4405345")

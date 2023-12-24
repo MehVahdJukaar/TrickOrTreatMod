@@ -121,13 +121,9 @@ dependencies {
     modCompileOnly("curse.maven:serene-seasons-291874:4502525")
     modImplementation("net.mehvahdjukaar:moonlight-forge:${project.moonlight_version}")
     modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
-    //modImplementation("curse.maven:model-gap-fix-676136:4024855")
 
-    //modImplementation("curse.maven:supplementaries-squared-838411:4602032")
-    //modImplementation("curse.maven:supplementaries-412082:4627388")
-    modCompileOnly("curse.maven:autoreglib-250363:3857246")
-    modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modCompileOnly("vazkii.quark:Quark:3.4-391")
+    modImplementation("org.violetmoon.quark:Quark-4.0-alpha-420")
+
     modCompileOnly("com.teamabnormals:autumnity:1.19.2-4.0.0")
     modCompileOnly("com.teamabnormals:blueprint:1.19.2-6.1.0")
 

@@ -4,7 +4,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import vazkii.quark.api.event.SimpleHarvestEvent;
+import org.violetmoon.quark.api.event.SimpleHarvestEvent;
 
 public class QuarkCompatImpl {
     

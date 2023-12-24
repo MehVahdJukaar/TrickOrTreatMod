@@ -1,1 +1,1 @@
-fixed farm loot table
+updated quark compat
