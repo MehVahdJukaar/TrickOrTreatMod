@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/flower_pot_cross",
+	"textures": {
+		"plant": "hauntedharvest:block/corn_pot"
+	}
+}

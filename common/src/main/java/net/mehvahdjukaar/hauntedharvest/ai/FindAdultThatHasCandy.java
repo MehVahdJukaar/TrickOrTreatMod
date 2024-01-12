@@ -39,7 +39,7 @@ public class FindAdultThatHasCandy extends Behavior<LivingEntity> {
 
     private boolean isTargetValid(LivingEntity self, LivingEntity target) {
         if ((target.getType() == EntityType.VILLAGER && !target.isBaby()) || target.getType() == EntityType.WITCH) {
-            return self instanceof IHalloweenVillager e && !e.isEntityOnCooldown(target);
+            return self instanceof IHalloweenVillager e && !e.hauntedharvest$isEntityOnCooldown(target);
         }
         return false;
     }

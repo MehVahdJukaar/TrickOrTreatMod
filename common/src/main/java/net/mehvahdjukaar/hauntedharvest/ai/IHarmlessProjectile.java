@@ -2,7 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 public interface IHarmlessProjectile {
 
-    void setHarmless(boolean harmless);
+    void hauntedharvest$setHarmless(boolean harmless);
 
-    boolean isHarmless();
+    boolean hauntedharvest$isHarmless();
 }

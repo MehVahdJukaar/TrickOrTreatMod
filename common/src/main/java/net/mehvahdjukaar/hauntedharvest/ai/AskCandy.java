@@ -113,7 +113,7 @@ public class AskCandy extends Behavior<Villager> {
                 if(pLevel.random.nextInt(10) < 7) {
                     brain.setMemory(MemoryModuleType.ATTACK_TARGET, currentVillager);
                     if (pEntity instanceof IHalloweenVillager c) {
-                        c.setEntityOnCooldown(currentVillager);
+                        c.hauntedharvest$setEntityOnCooldown(currentVillager);
                     }
                 }
             }

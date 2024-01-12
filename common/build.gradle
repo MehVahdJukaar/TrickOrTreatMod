@@ -20,6 +20,9 @@ dependencies {
     modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
     modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-420")
 
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+    implementation("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
     modCompileOnly("curse.maven:jei-238222:4405345")
     modCompileOnly("curse.maven:roughly-enough-items-310111:4401136")

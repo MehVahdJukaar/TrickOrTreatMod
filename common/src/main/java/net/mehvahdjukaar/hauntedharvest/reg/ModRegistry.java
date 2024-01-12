@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.blocks.*;
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
@@ -11,6 +12,7 @@ import net.mehvahdjukaar.hauntedharvest.worldgen.AbandonedFarmStructure;
 import net.mehvahdjukaar.hauntedharvest.worldgen.FarmFieldFeature;
 import net.mehvahdjukaar.hauntedharvest.worldgen.ProcessFarmProcessor;
 import net.mehvahdjukaar.hauntedharvest.worldgen.SeedBasedFeaturePoolElement;
+import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.GlobalPos;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.BlockItem;
@@ -29,6 +32,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,6 +43,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementTy
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -48,6 +53,13 @@ import static net.mehvahdjukaar.hauntedharvest.HauntedHarvest.res;
 public class ModRegistry {
 
     public static void init() {
+        RegHelper.registerWanderingTraderTrades(0, ModRegistry::addTrades);
+    }
+
+    private static void addTrades(List<VillagerTrades.ItemListing> itemListings) {
+        if (CommonConfigs.CORN_ENABLED.get()) {
+            itemListings.add(new ModItemListing(2, ModRegistry.KERNELS.get().getDefaultInstance(), 12, 1));
+        }
     }
 
     public static final Supplier<Activity> EAT_CANDY = RegHelper.registerActivity(res("eat_candy"));
@@ -133,6 +145,10 @@ public class ModRegistry {
     public static final Supplier<Block> CORN_TOP = regBlock("corn_top", () -> new CornTopBlock(
             BlockBehaviour.Properties.copy(CORN_BASE.get()))
     );
+
+    //pot
+    public static final Supplier<Block> CORN_POT = regBlock("potted_corn", () -> PlatHelper.newFlowerPot(
+            () -> (FlowerPotBlock) Blocks.FLOWER_POT, CORN_BASE, BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)));
 
     public static final String CORN_NAME = "corn";
     public static final Supplier<Item> COB_ITEM = regItem(CORN_NAME, () -> new Item(

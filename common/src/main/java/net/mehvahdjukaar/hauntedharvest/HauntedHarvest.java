@@ -12,6 +12,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -107,13 +108,14 @@ public class HauntedHarvest {
         return seasonManager;
     }
 
+    /**
+     * Fill a paper bag with popcorn - "Put the corn in the bag and no one gets hurt"
+     */
     //TODO: add witches to villages using structure modifiers
     //TODO: give candy to players
     //TODO: fix when inventory is full
     //TODO: click on pumpkin with torch
     //custom carve sounds
-
-
     public static boolean isPlayerOnCooldown(LivingEntity self) {
         return false;
     }
@@ -174,21 +176,24 @@ public class HauntedHarvest {
             BlockState state = level.getBlockState(pos);
             if (state.is(Blocks.PUMPKIN)) {
                 level.playSound(player, pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                if (!level.isClientSide) {
-                    ItemEntity itemEntity = new ItemEntity(level,
-                            pos.getX() + 0.5, pos.getY() + 1.15f, pos.getZ() + 0.5,
-                            new ItemStack(Items.PUMPKIN_SEEDS, 4));
 
-                    itemEntity.setDeltaMovement(level.random.nextDouble() * 0.02, 0.05 + level.random.nextDouble() * 0.02, level.random.nextDouble() * 0.02);
-                    level.addFreshEntity(itemEntity);
+                ItemEntity itemEntity = new ItemEntity(level,
+                        pos.getX() + 0.5, pos.getY() + 1.15f, pos.getZ() + 0.5,
+                        new ItemStack(Items.PUMPKIN_SEEDS, 4));
 
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
-                    stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
+                itemEntity.setDeltaMovement(level.random.nextDouble() * 0.02, 0.05 + level.random.nextDouble() * 0.02, level.random.nextDouble() * 0.02);
+                level.addFreshEntity(itemEntity);
+
+                stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
+                level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
+                        .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                     level.gameEvent(player, GameEvent.SHEAR, pos);
-                    level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
-                            .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
 
+                    Utils.awardAdvancement(serverPlayer, HauntedHarvest.res("husbandry/carve_custom_pumpkin"));
                     if (!player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te
                             && te.getCarveMode().canOpenGui()) {
                         te.sendOpenGuiPacket(level, pos, player);

@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -27,6 +28,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 public class SplatteredEggEntity extends HangingEntity {
 
@@ -102,7 +105,8 @@ public class SplatteredEggEntity extends HangingEntity {
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
         this.recalculateBoundingBox();
-        this.altTexture = level().getRandom().nextInt(direction.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
+        RandomSource ran = RandomSource.create(pos.asLong());
+        this.altTexture = ran.nextInt(direction.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
     }
 
     /**

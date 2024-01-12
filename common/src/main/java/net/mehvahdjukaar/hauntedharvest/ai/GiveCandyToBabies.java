@@ -5,7 +5,6 @@ import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -49,7 +48,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
 
     public static boolean isValidTrickOrTreater(LivingEntity self, LivingEntity villagerTarget) {
         if (!HalloweenVillagerAI.isTrickOrTreater(villagerTarget)) return false;
-        if (self.distanceToSqr(villagerTarget) <= 4 * 3 && !(villagerTarget instanceof IHalloweenVillager e && e.isEntityOnCooldown(self))) {
+        if (self.distanceToSqr(villagerTarget) <= 4 * 3 && !(villagerTarget instanceof IHalloweenVillager e && e.hauntedharvest$isEntityOnCooldown(self))) {
             Entity lookTarget = villagerTarget.getBrain().getMemory(MemoryModuleType.INTERACTION_TARGET).orElse(null);
             return lookTarget == self;
         }
@@ -100,7 +99,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
 
             this.hasGivenCandy = true;
             if (target instanceof IHalloweenVillager e) {
-                e.setEntityOnCooldown(pOwner);
+                e.hauntedharvest$setEntityOnCooldown(pOwner);
             }
         }
         this.tickSinceStarted++;

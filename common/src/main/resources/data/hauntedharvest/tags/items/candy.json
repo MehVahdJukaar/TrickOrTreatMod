@@ -6,6 +6,10 @@
       "required": false
     },
     {
+      "id": "snowyspirit:candy_cane",
+      "required": false
+    },
+    {
       "id": "#villagersoctober:candy",
       "required": false
     },

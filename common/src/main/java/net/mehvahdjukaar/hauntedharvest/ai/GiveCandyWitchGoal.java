@@ -114,7 +114,7 @@ public class GiveCandyWitchGoal extends Goal {
 
             this.hasGivenCandy = true;
             if (target instanceof IHalloweenVillager e) {
-                e.setEntityOnCooldown(this.witch, 140);
+                e.hauntedharvest$setEntityOnCooldown(this.witch, 140);
             }
         }
         this.tickSinceStarted++;

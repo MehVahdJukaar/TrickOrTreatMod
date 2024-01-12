@@ -148,6 +148,10 @@
     {
       "id": "snowyspirit:candy_cane",
       "required": false
+    },
+    {
+      "id": "snowyspirit:gingerbread_cookie",
+      "required": false
     }
   ]
 }

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
@@ -41,7 +40,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     //adults they have already asked candies
     @Unique
-    private final Map<UUID, Integer> adultCandyCooldown = new ConcurrentHashMap<>();
+    private final Map<UUID, Integer> hauntedharvest$adultCandyCooldown = new ConcurrentHashMap<>();
 
     protected VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
@@ -52,30 +51,30 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = ("customServerAiStep"), at = @At("RETURN"))
     protected void customServerAiStep(CallbackInfo ci) {
-        for (var e : adultCandyCooldown.entrySet()) {
+        for (var e : hauntedharvest$adultCandyCooldown.entrySet()) {
             UUID id = e.getKey();
             Integer i = e.getValue();
             if (i <= 0) {
-                adultCandyCooldown.remove(id);
+                hauntedharvest$adultCandyCooldown.remove(id);
             } else {
-                adultCandyCooldown.put(id, i - 1);
+                hauntedharvest$adultCandyCooldown.put(id, i - 1);
             }
         }
     }
 
     @Override
-    public boolean isEntityOnCooldown(Entity e) {
-        return adultCandyCooldown.containsKey(e.getUUID());
+    public boolean hauntedharvest$isEntityOnCooldown(Entity e) {
+        return hauntedharvest$adultCandyCooldown.containsKey(e.getUUID());
     }
 
     @Override
-    public void setEntityOnCooldown(Entity e) {
-        this.setEntityOnCooldown(e, 50);
+    public void hauntedharvest$setEntityOnCooldown(Entity e) {
+        this.hauntedharvest$setEntityOnCooldown(e, 50);
     }
 
     @Override
-    public void setEntityOnCooldown(Entity e, int cooldownSec) {
-        adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level().random.nextInt(20)));
+    public void hauntedharvest$setEntityOnCooldown(Entity e, int cooldownSec) {
+        hauntedharvest$adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level().random.nextInt(20)));
     }
 
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
@@ -99,19 +98,20 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     //called server side. needs syncing with entity event
     @Override
-    public void startConverting() {
-        if (!this.isConverting()) {
-            this.conversionTime = 60 * 20;
+    public void hauntedharvest$startConverting() {
+        if (!this.hauntedharvest$isConverting()) {
+            this.hauntedharvest$conversionTime = 60 * 20;
             this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 2));
         }
     }
 
-    private int conversionTime = -1;
+    @Unique
+    private int hauntedharvest$conversionTime = -1;
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
-        tag.putInt("ConversionTime", this.conversionTime);
+        tag.putInt("ConversionTime", this.hauntedharvest$conversionTime);
 
         //can't get thingie brain memory saving to work
         //TODO: figure out why it's not read after getting saved
@@ -125,7 +125,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
-        this.conversionTime = compoundNBT.getInt("ConversionTime");
+        this.hauntedharvest$conversionTime = compoundNBT.getInt("ConversionTime");
 
         if (compoundNBT.contains("Pumpkin")) {
             try {
@@ -138,10 +138,11 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     }
 
     @Override
-    public boolean isConverting() {
-        return this.conversionTime > 0;
+    public boolean hauntedharvest$isConverting() {
+        return this.hauntedharvest$conversionTime > 0;
     }
 
+    @Unique
     private void doWitchConversion() {
 
         float yBodyRot = this.yBodyRot;
@@ -185,7 +186,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"), cancellable = true)
     public void handleEntityEvent(byte pId, CallbackInfo ci) {
         if (pId == EntityEvent.ZOMBIE_CONVERTING) {
-            this.conversionTime = 60 * 20;
+            this.hauntedharvest$conversionTime = 60 * 20;
             if (!this.isSilent()) {
                 this.level().playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
@@ -203,10 +204,10 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = "tick", at = @At(value = "HEAD"))
     public void tick(CallbackInfo ci) {
         if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
-            if (this.isConverting()) {
-                --this.conversionTime;
+            if (this.hauntedharvest$isConverting()) {
+                --this.hauntedharvest$conversionTime;
 
-                if (this.conversionTime == 0) {
+                if (this.hauntedharvest$conversionTime == 0) {
                     this.doWitchConversion();
                 }
             }
@@ -216,8 +217,8 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (itemstack.is(Items.MILK_BUCKET) && this.isConverting()) {
-            this.conversionTime = -1;
+        if (itemstack.is(Items.MILK_BUCKET) && this.hauntedharvest$isConverting()) {
+            this.hauntedharvest$conversionTime = -1;
             Level level = this.level();
             itemstack.finishUsingItem(level, this);
             this.eat(level, itemstack);

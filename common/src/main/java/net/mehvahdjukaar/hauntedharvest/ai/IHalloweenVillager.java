@@ -3,13 +3,13 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 import net.minecraft.world.entity.Entity;
 
 public interface IHalloweenVillager {
-    boolean isEntityOnCooldown(Entity e);
+    boolean hauntedharvest$isEntityOnCooldown(Entity e);
 
-    void setEntityOnCooldown(Entity e);
+    void hauntedharvest$setEntityOnCooldown(Entity e);
 
-    void setEntityOnCooldown(Entity e, int cooldownSec);
+    void hauntedharvest$setEntityOnCooldown(Entity e, int cooldownSec);
 
-    void startConverting();
+    void hauntedharvest$startConverting();
 
-    boolean isConverting();
+    boolean hauntedharvest$isConverting();
 }

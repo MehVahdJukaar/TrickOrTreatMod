@@ -199,7 +199,8 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        CarvingGui.open(this);
+        //TODO: replace with  face dir
+        CarvingGui.open(this, player.getDirection().getOpposite());
     }
 
 

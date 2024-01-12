@@ -8,7 +8,6 @@ import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.npc.Villager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,6 +34,6 @@ public abstract class VillagerRendererMixin extends MobRenderer<Villager, Villag
 
     @Override
     public boolean isShaking(Villager villager) {
-        return super.isShaking(villager) || (villager instanceof IHalloweenVillager v && v.isConverting());
+        return super.isShaking(villager) || (villager instanceof IHalloweenVillager v && v.hauntedharvest$isConverting());
     }
 }

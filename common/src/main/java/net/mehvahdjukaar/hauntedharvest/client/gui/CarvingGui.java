@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,14 +26,16 @@ public class CarvingGui extends Screen {
     private final ModCarvedPumpkinBlockTile tile;
 
     private final CarvingButton[][] buttons = new CarvingButton[16][16];
+    private Direction clickedFace  = null;
 
-    private CarvingGui(ModCarvedPumpkinBlockTile teBoard) {
+    private CarvingGui(ModCarvedPumpkinBlockTile teBoard, Direction dir) {
         super(EDIT);
         this.tile = teBoard;
+        this.clickedFace = dir;
     }
 
-    public static void open(ModCarvedPumpkinBlockTile sign) {
-        Minecraft.getInstance().setScreen(new CarvingGui(sign));
+    public static void open(ModCarvedPumpkinBlockTile sign, Direction dir) {
+        Minecraft.getInstance().setScreen(new CarvingGui(sign, dir));
     }
 
     @Override
@@ -52,7 +55,7 @@ public class CarvingGui extends Screen {
         // send new image to the server
         boolean[][] pixels = getPixelMatrix();
         getPixelMatrix();
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundCarvePumpkinPacket(this.tile.getBlockPos(), pixels));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundCarvePumpkinPacket(this.tile.getBlockPos(), pixels, clickedFace));
     }
 
     private boolean[][] getPixelMatrix() {

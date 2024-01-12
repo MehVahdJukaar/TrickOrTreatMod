@@ -69,7 +69,7 @@ public class ThrowEggs extends Behavior<Villager> {
 
             //this is always server side
             ThrownEgg egg = new ThrownEgg(pLevel, pOwner);
-            if (egg instanceof IHarmlessProjectile e) e.setHarmless(true);
+            if (egg instanceof IHarmlessProjectile e) e.hauntedharvest$setHarmless(true);
             double d0 = target.getY() - 0.5;
             double d1 = target.getX() - pOwner.getX();
             double d2 = d0 - egg.getY();

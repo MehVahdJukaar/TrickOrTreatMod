@@ -118,11 +118,15 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
+
     modCompileOnly("curse.maven:serene-seasons-291874:4502525")
     modImplementation("net.mehvahdjukaar:moonlight-forge:${project.moonlight_version}")
-    modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
+    modCompileOnly("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
 
-    modImplementation("org.violetmoon.quark:Quark-4.0-alpha-420")
+    modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-420")
 
     modCompileOnly("com.teamabnormals:autumnity:1.19.2-4.0.0")
     modCompileOnly("com.teamabnormals:blueprint:1.19.2-6.1.0")

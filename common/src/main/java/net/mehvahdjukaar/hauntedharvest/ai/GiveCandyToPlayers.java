@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GiveCandyToPlayers extends Behavior<Villager> {
@@ -94,7 +93,7 @@ public class GiveCandyToPlayers extends Behavior<Villager> {
 
             this.hasGivenCandy = true;
             if (target instanceof IHalloweenVillager e) {
-                e.setEntityOnCooldown(pOwner);
+                e.hauntedharvest$setEntityOnCooldown(pOwner);
             }
         }
         this.tickSinceStarted++;
