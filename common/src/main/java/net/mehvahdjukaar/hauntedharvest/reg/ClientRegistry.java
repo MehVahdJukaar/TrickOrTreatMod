@@ -82,6 +82,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.CORN_TOP.get(), RenderType.cutout());
         PumpkinType.getTypes().forEach(t -> ClientHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
         ClientHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.CORN_POT.get(), RenderType.cutout());
     }
 
     @EventCalled

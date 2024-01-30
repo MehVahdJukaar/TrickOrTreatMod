@@ -1,1 +1,1 @@
-updated quark compat
+updated quark dep

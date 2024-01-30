@@ -7,7 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.violetmoon.quark.api.event.SimpleHarvestEvent;
 
 public class QuarkCompatImpl {
-    
+
     public static void init() {
         MinecraftForge.EVENT_BUS.register(QuarkCompatImpl.class);
     }
@@ -16,7 +16,7 @@ public class QuarkCompatImpl {
     public static void onSimpleHarvest(SimpleHarvestEvent event) {
         Block b = event.blockState.getBlock();
         if (b instanceof AbstractCornBlock c) {
-            if (!c.isPlantFullyGrown(event.blockState, event.pos, event.player.level())) {
+            if (!c.isPlantFullyGrown(event.blockState, event.pos, event.level)) {
                 event.setCanceled(true);
             } else event.setTargetPos(event.pos.below(c.getHeight()));
         }
