@@ -3,7 +3,6 @@ package net.mehvahdjukaar.hauntedharvest.mixins.forge;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.hauntedharvest.forge.ICustomPumpkinHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.SnowGolemHeadLayer;
@@ -34,7 +33,7 @@ public abstract class SnowGolemHeadLayerMixin {
                                      SnowGolem snowGolem, float limbSwing, float limbSwingAmount,
                                      float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
         if (snowGolem instanceof ICustomPumpkinHolder cp) {
-            ItemStack stack = cp.getCustomPumpkin();
+            ItemStack stack = cp.hauntedharvest$getCustomPumpkin();
             if (!stack.isEmpty()) {
                 this.itemRenderer
                         .renderStatic(

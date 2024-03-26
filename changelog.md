@@ -1,1 +1,1 @@
-updated quark dep
+snow golems will keep their custom pumpkins on save

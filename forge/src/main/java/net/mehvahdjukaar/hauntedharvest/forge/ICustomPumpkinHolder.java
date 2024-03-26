@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack;
 
 public interface ICustomPumpkinHolder {
 
-    ItemStack getCustomPumpkin();
+    ItemStack hauntedharvest$getCustomPumpkin();
 
-    void setCustomPumpkin(ItemStack stack);
+    void hauntedharvest$setCustomPumpkin(ItemStack stack);
 }

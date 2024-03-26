@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.mixins.forge;
 
 import net.mehvahdjukaar.hauntedharvest.forge.ICustomPumpkinHolder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Mixin(SnowGolem.class)
 public abstract class SnowGolemMixin extends Entity implements ICustomPumpkinHolder {
+
     @Shadow
     public abstract void setPumpkin(boolean pumpkinEquipped);
 
@@ -38,31 +40,42 @@ public abstract class SnowGolemMixin extends Entity implements ICustomPumpkinHol
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    protected void defineSynchedData(CallbackInfo ci) {
+    protected void hauntedharvest$addCustomPumpkinData(CallbackInfo ci) {
         this.entityData.define(CUSTOM_PUMPKIN, ItemStack.EMPTY);
     }
 
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    protected void hauntedharvest$saveCustomPumpkinData(CompoundTag tag, CallbackInfo ci) {
+        ItemStack itemStack = this.hauntedharvest$getCustomPumpkin();
+        if(!itemStack.isEmpty()) tag.put("CustomPumpkin", itemStack.serializeNBT());
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    protected void hauntedharvest$loadCustomPumpkinData(CompoundTag tag, CallbackInfo ci) {
+        if(tag.contains("CustomPumpkin")) this.hauntedharvest$setCustomPumpkin(ItemStack.of(tag.getCompound("CustomPumpkin")));
+    }
+
     @Override
-    public ItemStack getCustomPumpkin() {
+    public ItemStack hauntedharvest$getCustomPumpkin() {
         return this.entityData.get(CUSTOM_PUMPKIN);
     }
 
     @Override
-    public void setCustomPumpkin(ItemStack stack) {
+    public void hauntedharvest$setCustomPumpkin(ItemStack stack) {
         this.entityData.set(CUSTOM_PUMPKIN, stack);
     }
 
     @Inject(method = "setPumpkin", at = @At("TAIL"))
-    protected void setPumpkin(boolean pumpkinEquipped, CallbackInfo ci) {
-        if (!pumpkinEquipped) this.setCustomPumpkin(ItemStack.EMPTY);
+    protected void hauntedharvest$setPumpkin(boolean pumpkinEquipped, CallbackInfo ci) {
+        if (!pumpkinEquipped) this.hauntedharvest$setCustomPumpkin(ItemStack.EMPTY);
     }
 
     @Inject(method = "onSheared", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/entity/animal/SnowGolem;setPumpkin(Z)V",
             shift = At.Shift.BEFORE), cancellable = true)
-    protected void shear(@Nullable Player player, @NotNull ItemStack item, Level level, BlockPos pos, int fortune,
-                         CallbackInfoReturnable<Collection<ItemStack>> cir) {
-        var s = getCustomPumpkin();
+    protected void hauntedharvest$shearCustomPumpkin(@Nullable Player player, @NotNull ItemStack item, Level level, BlockPos pos, int fortune,
+                                                     CallbackInfoReturnable<Collection<ItemStack>> cir) {
+        var s = this.hauntedharvest$getCustomPumpkin();
         if (!s.isEmpty()) {
             cir.setReturnValue(List.of(s.copy()));
             this.setPumpkin(false);

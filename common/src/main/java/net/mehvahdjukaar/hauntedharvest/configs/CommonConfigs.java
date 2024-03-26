@@ -62,7 +62,7 @@ public class CommonConfigs {
                 .define("end_day", 31, 1, 31);
         builder.pop();
 
-        builder.push("trick_or_treating_time").comment("Nota that all these configs will not take effect until the game is reloaded");
+        builder.push("trick_or_treating_time").comment("Note that all these configs will not take effect until the game is reloaded");
         START_TIME = builder.comment("Time of day at which baby villagers will start trick-or-treating")
                 .define("start_time", 12000, 0, 24000);
         END_TIME = builder.comment("Time of day at which baby villagers will stop trick-or-treating. Note that this will only properly work if it's at night since baby villagers can only trick or treat during their sleep schedule which is from 12000 to 0")
