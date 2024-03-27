@@ -19,7 +19,7 @@ dependencies {
     //modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
     modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
     modCompileOnly("org.violetmoon.quark:Quark-4.0-beta-431.3254")
-
+    modImplementation("curse.maven:farmers-delight-398521:5051242")
     annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
     implementation("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'

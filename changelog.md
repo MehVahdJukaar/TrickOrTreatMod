@@ -1,1 +1,1 @@
-snow golems will keep their custom pumpkins on save
+updated to work with farmers delight refabricated
