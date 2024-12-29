@@ -1,30 +1,33 @@
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common(enabled_platforms.split(","))
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/hauntedharvest.accesswidener")
+    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 
 dependencies {
+
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
+    if (isMyPc) {
+        modImplementation("net.mehvahdjukaar:moonlight:${moonlight_version}")
+    } else {
+        modImplementation("curse.maven:selene-499980:5882410")
+    }
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.6"))
+    modCompileOnly("curse.maven:jei-238222:5846878")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:5731643")
+    modCompileOnly("curse.maven:emi-580555:5872513")
 
-    //implementation fileTree(dir: 'mods', include: '*.jar')
+    modCompileOnly("curse.maven:farmers-delight-398521:5772720")
 
-    modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
-    //modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
     modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
     modCompileOnly("org.violetmoon.quark:Quark-4.0-beta-431.3254")
     modImplementation("curse.maven:farmers-delight-398521:5051242")
 
-    modCompileOnly("curse.maven:jei-238222:4405345")
-    modCompileOnly("curse.maven:roughly-enough-items-310111:4401136")
 }
 
 publishing {
@@ -38,4 +41,12 @@ publishing {
     repositories {
         // Add repositories to publish to here.
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+
+    it.options.compilerArgs << "-Xmaxerrs" << "4000"
+
 }

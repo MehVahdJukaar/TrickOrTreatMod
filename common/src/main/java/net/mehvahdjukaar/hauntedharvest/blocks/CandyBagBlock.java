@@ -173,7 +173,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
     public Item getContent(BlockState state) {
         var c = state.getValue(CONTENT);
         if (c.drop != null) {
-            var i = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(c.drop));
+            var i = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(c.drop));
             if (i.isPresent()) return i.get();
         }
         return null;

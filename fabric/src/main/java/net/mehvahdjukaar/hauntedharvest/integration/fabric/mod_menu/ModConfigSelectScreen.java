@@ -17,7 +17,7 @@ public class ModConfigSelectScreen extends FabricConfigListScreen {
     public ModConfigSelectScreen(Screen parent) {
         super(HauntedHarvest.MOD_ID, ModRegistry.GRIM_APPLE.get().getDefaultInstance(),
                 Component.literal(ChatFormatting.GOLD + "Haunted Harvest Configs"),
-                new ResourceLocation("textures/block/cracked_stone_bricks.png"),
+                ResourceLocation.parse("textures/block/cracked_stone_bricks.png"),
                 parent, CommonConfigs.SPEC);
     }
 

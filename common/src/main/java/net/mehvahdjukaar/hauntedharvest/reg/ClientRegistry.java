@@ -28,12 +28,12 @@ import java.util.Map;
 
 public class ClientRegistry {
 
-    public static final ResourceLocation LOCATION_BLOCKS = new ResourceLocation("textures/atlas/blocks.png");
+    public static final ResourceLocation LOCATION_BLOCKS = ResourceLocation.parse("textures/atlas/blocks.png");
 
     public static final ModelLayerLocation VILLAGER_MASK = loc("villager_mask");
 
     public static final Material PUMPKIN_HIGHLIGHT = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/pumpkin_highlight"));
-    public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, new ResourceLocation("block/pumpkin_side"));
+    public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, ResourceLocation.parse("block/pumpkin_side"));
     public static final Material CARVING_OUTLINE = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/carving_grid"));
 
     public static final ResourceLocation PAPER_BAG_OVERLAY =HauntedHarvest.res("textures/misc/paper_bag_overlay.png");

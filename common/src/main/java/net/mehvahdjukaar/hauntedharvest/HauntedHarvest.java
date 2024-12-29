@@ -53,7 +53,7 @@ public class HauntedHarvest {
     public static final String MOD_ID = "hauntedharvest";
 
     public static ResourceLocation res(String name) {
-        return new ResourceLocation(MOD_ID, name);
+        return ResourceLocation.parse(MOD_ID, name);
     }
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);

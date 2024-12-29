@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.mehvahdjukaar.hauntedharvest.mixins.neoforge",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "SnowGolemHeadLayerMixin"
+  ],
+  "mixins": [
+    "CompatTurkeyEggEntityMixin",
+    "SelfCarvedPumpkinItemMixin",
+    "SelfPaperBagItemMixin",
+    "SnowGolemMixin"
+  ],
+  "plugin": "net.mehvahdjukaar.hauntedharvest.mixins.MixinPlugin",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

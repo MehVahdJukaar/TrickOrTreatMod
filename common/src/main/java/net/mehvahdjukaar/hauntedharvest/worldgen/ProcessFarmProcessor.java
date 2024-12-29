@@ -33,7 +33,7 @@ public class ProcessFarmProcessor extends StructureProcessor {
 
 
     public ProcessFarmProcessor() {
-        this.copperLantern = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation("suppsquared:copper_lantern"))
+        this.copperLantern = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse("suppsquared:copper_lantern"))
                 .map(c -> c.defaultBlockState().setValue(LanternBlock.HANGING, true).
                         setValue(BlockStateProperties.LIT, false)).orElse(null);
         this.validBlocks = Set.of(Blocks.OAK_PLANKS, Blocks.OAK_STAIRS, Blocks.OAK_SLAB, Blocks.RED_TERRACOTTA, Blocks.STRIPPED_OAK_LOG, Blocks.OAK_LOG);
