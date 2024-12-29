@@ -1,22 +1,18 @@
 package net.mehvahdjukaar.hauntedharvest.network;
 
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 
 public class NetworkHandler {
 
-    public static final ChannelHandler CHANNEL = ChannelHandler.createChannel(HauntedHarvest.res("network"));
 
+    public static void init() {
+        NetworkHelper.addNetworkRegistration(NetworkHandler::registerMessages, 0);
+    }
 
-    public static void registerMessages() {
+    private static void registerMessages(NetworkHelper.RegisterMessagesEvent event) {
 
-        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
-                ServerBoundCarvePumpkinPacket.class, ServerBoundCarvePumpkinPacket::new);
-
-        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
-                ClientBoundCopyCarvingCommand.class, ClientBoundCopyCarvingCommand::new);
-
+        event.registerServerBound(ServerBoundCarvePumpkinPacket.TYPE);
+        event.registerClientBound(ClientBoundCopyCarvingCommand.TYPE);
     }
 
 }

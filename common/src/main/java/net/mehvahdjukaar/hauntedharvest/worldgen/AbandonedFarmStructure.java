@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ import java.util.function.Function;
 
 public final class AbandonedFarmStructure extends Structure {
 
-    public static final Codec<AbandonedFarmStructure> CODEC = RecordCodecBuilder.<AbandonedFarmStructure>mapCodec((instance) -> instance.group(
+    public static final MapCodec<AbandonedFarmStructure> CODEC = RecordCodecBuilder.<AbandonedFarmStructure>mapCodec((instance) -> instance.group(
             settingsCodec(instance),
             StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter((j) -> j.startPool),
             ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter((j) -> j.startJigsawName),
@@ -30,7 +31,7 @@ public final class AbandonedFarmStructure extends Structure {
             Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(j -> j.projectStartToHeightmap),
             Codec.INT.fieldOf("min_y").forGetter(structure -> structure.minY),
             Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY)
-    ).apply(instance, AbandonedFarmStructure::new)).flatXmap(verifyRange(), verifyRange()).codec();
+    ).apply(instance, AbandonedFarmStructure::new)).flatXmap(verifyRange(), verifyRange());
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
     private final int maxDepth;
@@ -74,7 +75,7 @@ public final class AbandonedFarmStructure extends Structure {
 
     public static class Type implements StructureType<AbandonedFarmStructure> {
         @Override
-        public Codec<AbandonedFarmStructure> codec() {
+        public MapCodec<AbandonedFarmStructure> codec() {
             return CODEC;
         }
     }

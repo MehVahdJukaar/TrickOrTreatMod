@@ -1,0 +1,19 @@
+{
+  "fabric:load_conditions": [
+    {
+      "flag": "corn",
+      "condition": "hauntedharvest:flag"
+    }
+  ],
+  "type": "simple",
+  "max_trades": 12,
+  "offer": {
+    "id": "minecraft:emerald",
+    "Count": 1
+  },
+  "price": {
+    "id": "hauntedharvest:kernels",
+    "Count": 20
+  },
+  "level": 0
+}

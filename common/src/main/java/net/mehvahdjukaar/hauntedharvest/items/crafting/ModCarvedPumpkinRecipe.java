@@ -3,24 +3,20 @@ package net.mehvahdjukaar.hauntedharvest.items.crafting;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 
 public class ModCarvedPumpkinRecipe extends CustomRecipe {
-    public ModCarvedPumpkinRecipe(ResourceLocation idIn, CraftingBookCategory category) {
-        super(idIn, category);
+    public ModCarvedPumpkinRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     private boolean isFilled(ItemStack stack) {
@@ -29,12 +25,11 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
-
+    public boolean matches(CraftingInput inv, Level level) {
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
             if (item == ModRegistry.CARVED_PUMPKIN.get().asItem() && itemstack == null) {
@@ -54,16 +49,16 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
         Item jack = ModRegistry.CARVED_PUMPKIN.get().asItem();
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             PumpkinType b = PumpkinType.getFromTorch(inv.getItem(i).getItem());
             if (b != null) {
                 jack = b.getPumpkin().asItem();
             }
         }
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (isFilled(stack)) {
                 ItemStack s = new ItemStack(jack);
@@ -76,9 +71,9 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
             if (PumpkinType.getFromTorch(item) != null) {

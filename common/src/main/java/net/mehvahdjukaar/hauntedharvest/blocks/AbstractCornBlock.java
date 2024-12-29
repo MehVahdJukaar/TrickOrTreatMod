@@ -35,7 +35,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
         if (!PlatHelper.isAreaLoaded(level, pos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (level.getRawBrightness(pos, 0) >= 9 && level.random.nextFloat() < 0.6) {
-            if (this.isValidBonemealTarget(level, pos, state, level.isClientSide)) {
+            if (this.isValidBonemealTarget(level, pos, state)) {
 
                 float f = getGrowthSpeed(this, level, pos);
                 if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (30.0F / f) + 1) == 0)) {
@@ -82,7 +82,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         int age = this.getAge(state);
         int maxAge = this.getMaxAge();
         if (age + 1 < maxAge) { //isn't max age or about to grow second stage
@@ -92,7 +92,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
             BlockPos above = pos.above();
             BlockState aboveState = level.getBlockState(above);
             if (age == maxAge) { //needs to grow
-                return aboveState.getBlock() instanceof AbstractCornBlock cb && cb.isValidBonemealTarget(level, above, aboveState, false);
+                return aboveState.getBlock() instanceof AbstractCornBlock cb && cb.isValidBonemealTarget(level, above, aboveState);
             } else {
                 //place top
                 return this.getTopBlock() == null || aboveState.canBeReplaced();

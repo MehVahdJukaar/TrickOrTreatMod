@@ -68,7 +68,7 @@ public class FDCompat {
 
     public static final Supplier<Block> CORN_CRATE = regWithItem(
             "corn_crate", () ->
-                    new Block(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
+                    new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
                             .strength(2.0F, 3.0F)
                             .sound(SoundType.WOOD)), new Item.Properties());
 

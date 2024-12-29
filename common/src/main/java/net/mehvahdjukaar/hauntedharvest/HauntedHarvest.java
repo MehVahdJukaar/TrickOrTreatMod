@@ -16,8 +16,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
@@ -53,7 +53,7 @@ public class HauntedHarvest {
     public static final String MOD_ID = "hauntedharvest";
 
     public static ResourceLocation res(String name) {
-        return ResourceLocation.parse(MOD_ID, name);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
     }
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
@@ -65,6 +65,7 @@ public class HauntedHarvest {
         ModCommands.init();
         ModRegistry.init();
         ModTabs.init();
+        NetworkHandler.init();
         CompatHandler.init();
         HalloweenVillagerAI.init();
         if (PlatHelper.getPhysicalSide().isClient()) {
@@ -76,13 +77,12 @@ public class HauntedHarvest {
         PlatHelper.addCommonSetup(HauntedHarvest::commonSetup);
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
-        PlatHelper.addServerReloadListener(CustomCarvingsManager.RELOAD_INSTANCE, res("pumpkin_carvings"));
+        PlatHelper.addServerReloadListener(CustomCarvingsManager::new, res("pumpkin_carvings"));
         //TODO: pillager outposts pumpkins
     }
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
-        NetworkHandler.registerMessages();
 
         PumpkinType.setup();
         CompatHandler.setup();

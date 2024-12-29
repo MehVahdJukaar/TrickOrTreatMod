@@ -7,15 +7,17 @@ import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.items.PaperBagItem;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.items.crafting.ModCarvedPumpkinRecipe;
 import net.mehvahdjukaar.hauntedharvest.worldgen.AbandonedFarmStructure;
 import net.mehvahdjukaar.hauntedharvest.worldgen.FarmFieldFeature;
 import net.mehvahdjukaar.hauntedharvest.worldgen.ProcessFarmProcessor;
 import net.mehvahdjukaar.hauntedharvest.worldgen.SeedBasedFeaturePoolElement;
-import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -53,14 +55,8 @@ import static net.mehvahdjukaar.hauntedharvest.HauntedHarvest.res;
 public class ModRegistry {
 
     public static void init() {
-        RegHelper.registerWanderingTraderTrades(0, ModRegistry::addTrades);
     }
 
-    private static void addTrades(List<VillagerTrades.ItemListing> itemListings) {
-        if (CommonConfigs.CORN_ENABLED.get()) {
-            itemListings.add(new ModItemListing(2, ModRegistry.KERNELS.get().getDefaultInstance(), 12, 1));
-        }
-    }
 
     public static final Supplier<Activity> EAT_CANDY = RegHelper.registerActivity(res("eat_candy"));
     public static final Supplier<Activity> TRICK_OR_TREAT = RegHelper.registerActivity(res("trick_or_treat"));
@@ -112,6 +108,15 @@ public class ModRegistry {
     public static final Supplier<SimpleParticleType> SPOOKED_PARTICLE = RegHelper.registerParticle(
             res("spooked"));
 
+    //data comp
+
+    public static final Supplier<DataComponentType<PumpkinCarvingData>> PUMPKIN_CARVING = RegHelper.registerDataComponent(
+            res("pumpkin_carving"), ()-> DataComponentType.<PumpkinCarvingData>builder()
+                     .networkSynchronized(PumpkinCarvingData.STREAM_CODEC)
+                     .persistent(PumpkinCarvingData.CODEC)
+                     .cacheEncoding()
+                     .build());
+
     //items
 
     public static final String SPLATTERED_EGG_NAME = "splattered_egg";
@@ -131,7 +136,7 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> CORN_BASE = regBlock("corn_base", () -> new CornBaseBlock(
-            BlockBehaviour.Properties.copy(Blocks.WHEAT)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.NONE)
                     .instabreak()
@@ -139,16 +144,16 @@ public class ModRegistry {
     );
 
     public static final Supplier<Block> CORN_MIDDLE = regBlock("corn_middle", () -> new CornMiddleBlock(
-            BlockBehaviour.Properties.copy(CORN_BASE.get()))
+            BlockBehaviour.Properties.ofFullCopy(CORN_BASE.get()))
     );
 
     public static final Supplier<Block> CORN_TOP = regBlock("corn_top", () -> new CornTopBlock(
-            BlockBehaviour.Properties.copy(CORN_BASE.get()))
+            BlockBehaviour.Properties.ofFullCopy(CORN_BASE.get()))
     );
 
     //pot
     public static final Supplier<Block> CORN_POT = regBlock("potted_corn", () -> PlatHelper.newFlowerPot(
-            () -> (FlowerPotBlock) Blocks.FLOWER_POT, CORN_BASE, BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)));
+            () -> (FlowerPotBlock) Blocks.FLOWER_POT, CORN_BASE, BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT)));
 
     public static final String CORN_NAME = "corn";
     public static final Supplier<Item> COB_ITEM = regItem(CORN_NAME, () -> new Item(
@@ -173,7 +178,7 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> PAPER_BAG = regBlock("paper_bag", () -> new PaperBagBlock(
-            BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).strength(0.5f, 0.5f)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(0.5f, 0.5f)));
 
     public static final String PAPER_BAG_NAME = "paper_bag";
     public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME, () -> new PaperBagItem(
@@ -181,7 +186,7 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> CANDY_BAG = regBlock("candy_bag", () -> new CandyBagBlock(
-            BlockBehaviour.Properties.copy(PAPER_BAG.get())
+            BlockBehaviour.Properties.ofFullCopy(PAPER_BAG.get())
                     .pushReaction(PushReaction.DESTROY)));
 
     public static final Supplier<BlockEntityType<CandyBagTile>> CANDY_BAG_TILE = regTile(
@@ -191,11 +196,11 @@ public class ModRegistry {
 
     public static final String CARVED_PUMPKIN_NAME = "carved_pumpkin";
     public static final Supplier<ModCarvedPumpkinBlock> CARVED_PUMPKIN = regPumpkin(CARVED_PUMPKIN_NAME,
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN), PumpkinType.NORMAL));
+            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN), PumpkinType.NORMAL));
 
 
     public static final Supplier<ModCarvedPumpkinBlock> JACK_O_LANTERN = regPumpkin("jack_o_lantern",
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.copy(Blocks.CARVED_PUMPKIN)
+            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
                     .lightLevel(s -> 15), PumpkinType.JACK));
 
 

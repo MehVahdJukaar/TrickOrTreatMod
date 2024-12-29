@@ -7,14 +7,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.grower.AzaleaTreeGrower;
-import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class PumpkinType {
@@ -23,9 +20,9 @@ public class PumpkinType {
     private static final Map<Item, PumpkinType> TORCH_MAP = new Object2ObjectOpenHashMap<>();
 
     public static final PumpkinType NORMAL = register(new PumpkinType("carved_pumpkin",
-            () -> null, ModRegistry.CARVED_PUMPKIN, ()-> Blocks.CARVED_PUMPKIN));
+            () -> null, ModRegistry.CARVED_PUMPKIN, () -> Blocks.CARVED_PUMPKIN));
     public static final PumpkinType JACK = register(new PumpkinType("jack_o_lantern",
-            () -> Items.TORCH, ModRegistry.JACK_O_LANTERN, ()-> Blocks.JACK_O_LANTERN));
+            () -> Items.TORCH, ModRegistry.JACK_O_LANTERN, () -> Blocks.JACK_O_LANTERN));
 
     private final String name;
     private final Supplier<? extends Item> torch;
@@ -49,7 +46,7 @@ public class PumpkinType {
         return pumpkin.get();
     }
 
-    public Block getVanillaPumpkin(){
+    public Block getVanillaPumpkin() {
         return vanillaPumpkin.get();
     }
 
@@ -83,8 +80,8 @@ public class PumpkinType {
         return TYPES.values();
     }
 
-    public static void setup(){
-        for(var pumpkinType : TYPES.values()) {
+    public static void setup() {
+        for (var pumpkinType : TYPES.values()) {
             TORCH_MAP.put(pumpkinType.getTorch(), pumpkinType);
         }
     }

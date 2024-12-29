@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.worldgen;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -23,7 +24,7 @@ import java.util.Set;
 
 public class ProcessFarmProcessor extends StructureProcessor {
     private static final ProcessFarmProcessor INSTANCE = new ProcessFarmProcessor();
-    public static final Codec<ProcessFarmProcessor> CODEC = Codec.unit(INSTANCE);
+    public static final MapCodec<ProcessFarmProcessor> CODEC = MapCodec.unit(INSTANCE);
     @Nullable
     private final BlockState copperLantern;
     private final Set<Block> validBlocks;

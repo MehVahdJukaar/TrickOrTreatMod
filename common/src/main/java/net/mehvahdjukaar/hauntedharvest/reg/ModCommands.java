@@ -10,6 +10,7 @@ import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.network.ClientBoundCopyCarvingCommand;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -49,7 +50,7 @@ public class ModCommands {
                     CompoundTag t = item.getTag();
                     if (t != null && t.contains("BlockEntityTag")) {
                         t = t.getCompound("BlockEntityTag");
-                        NetworkHandler.CHANNEL.sendToClientPlayer( p, new ClientBoundCopyCarvingCommand(t.get("Pixels")
+                        NetworkHelper.sendToClientPlayer( p, new ClientBoundCopyCarvingCommand(t.get("Pixels")
                                 .getAsString().replaceAll("[;L]", "")));
                         context.getSource().sendSuccess(()->Component.literal("Copied content to clipboard"), false);
                         return 0;

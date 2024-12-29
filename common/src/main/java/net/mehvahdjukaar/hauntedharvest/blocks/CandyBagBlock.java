@@ -19,6 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -106,8 +108,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         int fill = state.getValue(FILL_LEVEL);
         ItemStack item;
         if (level.getBlockEntity(pos) instanceof CandyBagTile tile) {
@@ -116,11 +117,10 @@ public class CandyBagBlock extends Block implements EntityBlock {
         } else {
             item = new ItemStack(getContent(state), fill);
         }
-        if (item == null) return InteractionResult.PASS;
+        if (item == null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION ;
 
 
         int delta = 0;
-        ItemStack held = player.getItemInHand(hand);
         if (player.isShiftKeyDown() && held.isEmpty()) {
             ItemStack extracted = item.copy().split(1);
             if (!extracted.isEmpty()) {
@@ -160,9 +160,9 @@ public class CandyBagBlock extends Block implements EntityBlock {
             } else {
                 level.setBlockAndUpdate(pos, state.setValue(FILL_LEVEL, newFill));
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private static void playSound(Level level, BlockPos pos) {
@@ -261,7 +261,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return ModRegistry.PAPER_BAG.get().asItem().getDefaultInstance();
     }
 

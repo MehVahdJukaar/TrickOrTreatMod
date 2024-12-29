@@ -61,6 +61,7 @@ public class CornMiddleBlock extends AbstractCornBlock {
         return MAX_AGE;
     }
 
+    /*
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
         InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
@@ -74,7 +75,7 @@ public class CornMiddleBlock extends AbstractCornBlock {
             }
         }
         return old;
-    }
+    }*/
 
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {

@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
@@ -22,8 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProtected,
-        IScreenProvider, IExtraModelDataProvider {
+public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenProvider, IExtraModelDataProvider {
 
     public static final ModelDataKey<Key> CARVING = new ModelDataKey<>(Key.class);
 
@@ -74,11 +74,11 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.loadOwner(compound);
-        this.waxed = compound.contains("Waxed") && compound.getBoolean("Waxed");
-        acceptPixels(compound.getLongArray("Pixels"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.loadOwner(tag);
+        this.waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
+        acceptPixels(tag.getLongArray("Pixels"));
     }
 
     public void acceptPixels(long[] p) {
@@ -89,10 +89,10 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IOwnerProt
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        this.savePixels(compound);
-        this.saveOwner(compound);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        this.savePixels(tag);
+        this.saveOwner(tag);
     }
 
     public CompoundTag savePixels(CompoundTag compound) {

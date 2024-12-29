@@ -26,8 +26,8 @@ public class HalloweenMaskModel<T extends Villager> extends EntityModel<T> imple
     }
 
     @Override
-    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-        mask.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, int color) {
+        mask.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, color);
     }
 
 }

@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.hauntedharvest.entity;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
@@ -70,9 +72,8 @@ public class SplatteredEggEntity extends HangingEntity {
         }
     }
 
-    //vanilla client factory
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
         return new ClientboundAddEntityPacket(this, this.direction.get3DDataValue(), this.getPos());
     }
 
@@ -80,11 +81,6 @@ public class SplatteredEggEntity extends HangingEntity {
     public void recreateFromPacket(ClientboundAddEntityPacket p_149626_) {
         super.recreateFromPacket(p_149626_);
         this.setDirection(Direction.from3DDataValue(p_149626_.getData()));
-    }
-
-    @Override
-    protected float getEyeHeight(Pose pPose, EntityDimensions pSize) {
-        return 0.0F;
     }
 
     /**
@@ -150,19 +146,10 @@ public class SplatteredEggEntity extends HangingEntity {
         }
     }
 
-    @Override
-    public float getPickRadius() {
-        return 0.0F;
-    }
 
-    @Override
-    public int getWidth() {
-        return 14;
-    }
-
-    @Override
-    public int getHeight() {
-        return 14;
+    @ForgeOverride
+    public @Nullable ItemStack getPickedResult(HitResult target) {
+        return Items.EGG.getDefaultInstance();
     }
 
     @Override
@@ -194,6 +181,7 @@ public class SplatteredEggEntity extends HangingEntity {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
+    @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setDirection(Direction.from3DDataValue(pCompound.getByte("Facing")));

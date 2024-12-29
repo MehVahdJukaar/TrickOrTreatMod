@@ -6,8 +6,8 @@ import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
 import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
-import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,13 +18,13 @@ public class CommonConfigs {
     public static void init() {
     }
 
-    public static final ConfigSpec SPEC;
+    public static final ModConfigHolder SPEC;
     private static final Map<String, Supplier<Boolean>> FEATURES;
 
 
     static {
         FEATURES = new HashMap<>();
-        ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON);
+        ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON_SYNCED);
 
 
         builder.push("pumpkin_carving");
@@ -108,10 +108,8 @@ public class CommonConfigs {
 
         builder.onChange(() -> HauntedHarvest.getSeasonManager().refresh());
 
-        builder.setSynced();
-
-        SPEC = builder.buildAndRegister();
-        SPEC.loadFromFile();        //load early
+        SPEC = builder.build();
+        SPEC.forceLoad();        //load early
 
 
     }

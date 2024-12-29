@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.worldgen;//
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.*;
@@ -22,13 +23,14 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.List;
 
 public class SeedBasedFeaturePoolElement extends StructurePoolElement {
-    public static final Codec<SeedBasedFeaturePoolElement> CODEC = RecordCodecBuilder.create(i -> i.group(
+    public static final MapCodec<SeedBasedFeaturePoolElement> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                     SimpleWeightedRandomList.wrappedCodec(PlacedFeature.CODEC).fieldOf("features").forGetter(e -> e.features),
                     projectionCodec())
             .apply(i, SeedBasedFeaturePoolElement::new)
@@ -46,10 +48,10 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
     private SimpleWeightedRandomList<Holder<PlacedFeature>> removeDisabledHack(SimpleWeightedRandomList<Holder<PlacedFeature>> original) {
         var newList = new SimpleWeightedRandomList.Builder<Holder<PlacedFeature>>();
         for (var v : original.unwrap()) {
-            if (v.getData().value().feature().value().config() instanceof FarmFieldFeature.Config c) {
+            if (v.data().value().feature().value().config() instanceof FarmFieldFeature.Config c) {
                 if (!c.crop().isEnabled()) continue;
             }
-            newList.add(v.getData(), v.getWeight().asInt());
+            newList.add(v.data(), v.getWeight().asInt());
         }
         return newList.build();
     }
@@ -92,19 +94,10 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
     }
 
     @Override
-    public boolean place(
-            StructureTemplateManager structureTemplateManager,
-            WorldGenLevel level,
-            StructureManager structureManager,
-            ChunkGenerator generator,
-            BlockPos blockPos,
-            BlockPos centerPos,
-            Rotation rotation,
-            BoundingBox box,
-            RandomSource random,
-            boolean bl
-    ) {
-        return (this.features.getRandom(RandomSource.create(centerPos.asLong())).get().getData().value())
+    public boolean place(StructureTemplateManager structureTemplateManager, WorldGenLevel level, StructureManager structureManager,
+                         ChunkGenerator generator, BlockPos blockPos, BlockPos centerPos, Rotation rotation,
+                         BoundingBox boundingBox, RandomSource random, LiquidSettings liquidSettings, boolean bl) {
+        return (this.features.getRandom(RandomSource.create(centerPos.asLong())).get().data().value())
                 .place(level, generator, random, blockPos);
     }
 

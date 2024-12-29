@@ -15,6 +15,7 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -36,9 +37,9 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
     private static final List<long[]> FACES = new ArrayList<>();
     private static final List<long[]> FANTASY = new ArrayList<>();
 
-    protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-
-    public static final CustomCarvingsManager RELOAD_INSTANCE = new CustomCarvingsManager();
+    public CustomCarvingsManager(HolderLookup.Provider provider) {
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(), "pumpkin_carvings");
+    }
 
     public static void placeRandomPumpkin(BlockPos pos, LevelAccessor level, Direction direction,
                                           boolean onlyFaces, float vanillaChance, float lanternChance, int flag) {
@@ -102,17 +103,12 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
         }
     }
 
-    private CustomCarvingsManager() {
-        super(GSON, "pumpkin_carvings");
-    }
-
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
         FACES.clear();
         FANTASY.clear();
         jsons.forEach((key, json) -> {
-            var v = CustomCarving.CODEC.parse(JsonOps.INSTANCE, json);
-            var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse pumpkin carving: {}", e));
+            var data = CustomCarving.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
             if (data.isFace) FACES.add(Longs.toArray(data.pixels));
             else FANTASY.add(Longs.toArray(data.pixels));
         });

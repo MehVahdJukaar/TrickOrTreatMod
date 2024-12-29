@@ -7,6 +7,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.network.ServerBoundCarvePumpkinPacket;
 import net.mehvahdjukaar.hauntedharvest.client.PumpkinTextureGenerator;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -55,7 +56,7 @@ public class CarvingGui extends Screen {
         // send new image to the server
         boolean[][] pixels = getPixelMatrix();
         getPixelMatrix();
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundCarvePumpkinPacket(this.tile.getBlockPos(), pixels, clickedFace));
+        NetworkHelper.sendToServer(new ServerBoundCarvePumpkinPacket(this.tile.getBlockPos(), pixels, clickedFace));
     }
 
     private boolean[][] getPixelMatrix() {

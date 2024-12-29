@@ -110,13 +110,12 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
     @Deprecated(forRemoval = true)
     public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        builder.vertex(matrixStackIn.last().pose(), x, y, z);
-        builder.color(r, g, b, a);
-        builder.uv(u, v);
-        builder.overlayCoords(OverlayTexture.NO_OVERLAY);
-        builder.uv2(lu, lv);
-        builder.normal(matrixStackIn.last().normal(), nx, ny, nz);
-        builder.endVertex();
+        builder.addVertex(matrixStackIn.last().pose(), x, y, z);
+        builder.setColor(r, g, b, a);
+        builder.setUv(u, v);
+        builder.setOverlay(OverlayTexture.NO_OVERLAY);
+        builder.setUv2(lu, lv);
+        builder.setNormal(matrixStackIn.last(), nx, ny, nz);
     }
 
 }

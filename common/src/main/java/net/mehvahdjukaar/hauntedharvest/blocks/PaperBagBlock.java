@@ -2,9 +2,11 @@ package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownEgg;
@@ -42,16 +44,13 @@ public class PaperBagBlock extends Block implements Equipable {
         return this.mayPlaceOn(level.getBlockState(blockPos), level, blockPos);
     }
 
-
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 
-        ItemStack stack = player.getItemInHand(hand);
         if (CandyBagBlock.tryFilling(player, level, pos, stack)) {
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -59,9 +58,5 @@ public class PaperBagBlock extends Block implements Equipable {
         return EquipmentSlot.HEAD;
     }
 
-    @Override
-    public SoundEvent getEquipSound() {
-        return Equipable.super.getEquipSound();
-    }
 
 }
