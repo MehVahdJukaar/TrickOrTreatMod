@@ -19,11 +19,6 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
         super(category);
     }
 
-    private boolean isFilled(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        return tag != null && tag.contains("Pixels");
-    }
-
     @Override
     public boolean matches(CraftingInput inv, Level level) {
         ItemStack itemstack = null;
@@ -33,7 +28,7 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
             if (item == ModRegistry.CARVED_PUMPKIN.get().asItem() && itemstack == null) {
-                if (isFilled(stack)) {
+                if (stack.has(ModRegistry.PUMPKIN_CARVING.get())) {
                     itemstack = stack;
                 }
             } else if (PumpkinType.getFromTorch(item) != null || stack.is(ModTags.CARVABLE_PUMPKINS)) {
@@ -60,10 +55,10 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
         }
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (isFilled(stack)) {
+            if (stack.has(ModRegistry.PUMPKIN_CARVING.get())) {
                 ItemStack s = new ItemStack(jack);
                 s.setCount(1);
-                s.setTag(stack.getTag().copy());
+                s.set(ModRegistry.PUMPKIN_CARVING.get(), stack.get(ModRegistry.PUMPKIN_CARVING.get()));
                 return s;
             }
         }
@@ -82,7 +77,7 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
         }
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);
-            if (isFilled(itemstack)) {
+            if (itemstack.has(ModRegistry.PUMPKIN_CARVING.get())) {
                 ItemStack copy = itemstack.copy();
                 copy.setCount(1);
                 stacks.set(i, copy);

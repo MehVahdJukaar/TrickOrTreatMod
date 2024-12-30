@@ -5,13 +5,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinTileRenderer;
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.mehvahdjukaar.hauntedharvest.client.HalloweenMaskLayer;
 import net.mehvahdjukaar.hauntedharvest.client.SplatteredEggRenderer;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBakedModel;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.Util;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 
@@ -50,10 +52,11 @@ public class ClientRegistry {
         return l;
     });
 
-    private static final Map<PumpkinType, ResourceLocation> PUMPKIN_FRAMES = Util.make(() -> {
-        var l = new Object2ObjectOpenHashMap<PumpkinType, ResourceLocation>();
+    private static final Map<PumpkinType, ModelResourceLocation> PUMPKIN_FRAMES = Util.make(() -> {
+        var l = new Object2ObjectOpenHashMap<PumpkinType, ModelResourceLocation>();
         for (var t : PumpkinType.getTypes()) {
-            l.put(t, HauntedHarvest.res("block/" + t.getName() + "_frame"));
+            l.put(t, RenderUtil.getStandaloneModelLocation(
+                    HauntedHarvest.res("block/" + t.getName() + "_frame")));
         }
         return l;
     });
@@ -70,7 +73,7 @@ public class ClientRegistry {
         return new ModelLayerLocation(HauntedHarvest.res(name), name);
     }
 
-    public static ResourceLocation getFrame(PumpkinType type) {
+    public static ModelResourceLocation getPumpkinFrame(PumpkinType type) {
         return PUMPKIN_FRAMES.getOrDefault(type, PUMPKIN_FRAMES.get(PumpkinType.JACK));
     }
 
@@ -113,7 +116,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
-        event.register(CarvingManager.Key.class, CarvingTooltipComponent::new);
+        event.register(PumpkinCarvingData.class, CarvingTooltipComponent::new);
     }
 
     @EventCalled

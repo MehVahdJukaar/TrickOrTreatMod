@@ -4,10 +4,10 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinItemRenderer;
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
@@ -34,11 +34,8 @@ public class ModCarvedPumpkinItem extends BlockItem implements ICustomItemRender
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
-        if (cmp != null && cmp.contains("Pixels")) {
-            return Optional.of(CarvingManager.Key.of(cmp.getLongArray("Pixels"), this.type));
-        }
-        return Optional.empty();
+        PumpkinCarvingData data = pStack.get(ModRegistry.PUMPKIN_CARVING.get());
+        return Optional.ofNullable(data);
     }
 
     @Override

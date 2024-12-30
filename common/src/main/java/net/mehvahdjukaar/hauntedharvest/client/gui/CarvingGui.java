@@ -120,7 +120,6 @@ public class CarvingGui extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(graphics);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
         Material[][] materials = PumpkinTextureGenerator.computePixelMaterialMap(getPixelMatrix(), tile.getPumpkinType());

@@ -152,14 +152,14 @@ public class HauntedHarvest {
                 BlockState toPlace;
                 if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
                     if (tile.isWaxed()) return InteractionResult.PASS;
-                    tag = tile.saveWithoutMetadata();
+                    tag = tile.saveWithoutMetadata(level.registryAccess());
                     toPlace = t.getPumpkin().withPropertiesOf(state);
                 } else {
                     toPlace = t.getVanillaPumpkin().withPropertiesOf(state);
                 }
                 level.setBlockAndUpdate(pos, toPlace);
                 if (tag != null && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
-                    tile.load(tag);
+                    tile.loadWithComponents(tag, level.registryAccess());
                 }
 
                 SoundType soundType = toPlace.getSoundType();
@@ -188,7 +188,7 @@ public class HauntedHarvest {
                 itemEntity.setDeltaMovement(level.random.nextDouble() * 0.02, 0.05 + level.random.nextDouble() * 0.02, level.random.nextDouble() * 0.02);
                 level.addFreshEntity(itemEntity);
 
-                stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
+                stack.hurtAndBreak(1, player, hand);
                 level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
                         .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
 

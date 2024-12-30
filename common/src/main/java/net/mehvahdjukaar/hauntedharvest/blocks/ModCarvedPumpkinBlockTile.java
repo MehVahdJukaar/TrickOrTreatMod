@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
-import net.mehvahdjukaar.hauntedharvest.client.CarvingManager.Key;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingGui;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
@@ -25,14 +25,14 @@ import java.util.UUID;
 
 public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelDataKey<Key> CARVING = new ModelDataKey<>(Key.class);
+    public static final ModelDataKey<PumpkinCarvingData> CARVING = new ModelDataKey<>(PumpkinCarvingData.class);
 
     private UUID owner = null;
     private boolean waxed = false;
     private boolean[][] pixels = new boolean[16][16];
 
     //client side
-    private Key textureKey = null;
+    private PumpkinCarvingData textureKey = null;
 
     public ModCarvedPumpkinBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.MOD_CARVED_PUMPKIN_TILE.get(), pos, state);
@@ -50,7 +50,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
                 .build();
     }
 
-    public Key getTextureKey() {
+    public PumpkinCarvingData getTextureKey() {
         if (textureKey == null) refreshTextureKey();
         return textureKey;
     }

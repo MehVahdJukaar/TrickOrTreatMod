@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.client.gui;
 
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -11,7 +12,7 @@ public class CarvingTooltipComponent implements ClientTooltipComponent {
     private static final int SIZE = 80;
     private final ResourceLocation texture;
 
-    public CarvingTooltipComponent(CarvingManager.Key key) {
+    public CarvingTooltipComponent(PumpkinCarvingData key) {
         this.texture = CarvingManager.getInstance(key).getTextureLocation();
     }
 

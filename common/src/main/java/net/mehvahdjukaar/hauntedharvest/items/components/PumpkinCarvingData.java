@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.items.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,8 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
             Codec.LONG_STREAM.fieldOf("values")
                     .xmap(LongStream::toArray, Arrays::stream)
                     .forGetter(v -> v.values),
-            Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
+            Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed),
+            PumpkinType.CODEC.fieldOf("type").forGetter(v -> v.type)
     ).apply(instance, PumpkinCarvingData::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, long[]> LONG_ARRAY = new StreamCodec<>() {
@@ -51,25 +53,28 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     public static final StreamCodec<RegistryFriendlyByteBuf, PumpkinCarvingData> STREAM_CODEC = StreamCodec.composite(
             LONG_ARRAY, data -> data.values,
             ByteBufCodecs.BOOL, data -> data.waxed,
+            PumpkinType.STREAM_CODEC, data -> data.type,
             PumpkinCarvingData::new
     );
 
-    public static final PumpkinCarvingData DEFAULT = new PumpkinCarvingData(new long[4], false);
+    public static final PumpkinCarvingData DEFAULT = new PumpkinCarvingData(new long[4], false, PumpkinType.NORMAL);
 
     private final long[] values;
     private final boolean waxed;
+    private final PumpkinType type;
 
-    PumpkinCarvingData(long[] packed, boolean waxed) {
+    PumpkinCarvingData(long[] packed, boolean waxed, PumpkinType type) {
         this.values = packed;
         this.waxed = waxed;
+        this.type = type;
     }
 
-    public static PumpkinCarvingData pack(boolean[][] pixels, boolean waxed) {
-        return new PumpkinCarvingData(packPixels(pixels), waxed);
+    public static PumpkinCarvingData pack(boolean[][] pixels, boolean waxed, PumpkinType type) {
+        return new PumpkinCarvingData(packPixels(pixels), waxed, type);
     }
 
-    public static PumpkinCarvingData of(long[] packPixels, boolean waxed) {
-        return new PumpkinCarvingData(packPixels, waxed);
+    public static PumpkinCarvingData of(long[] packPixels, boolean waxed, PumpkinType type) {
+        return new PumpkinCarvingData(packPixels, waxed, type);
     }
 
     @Override

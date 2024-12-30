@@ -5,6 +5,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.mehvahdjukaar.hauntedharvest.client.PumpkinTextureGenerator;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -74,7 +75,7 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
                                          ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, side, rand));
         if (data != ExtraModelData.EMPTY && state != null && side == state.getValue(ModCarvedPumpkinBlock.FACING)) {
-            CarvingManager.Key key = data.get(ModCarvedPumpkinBlockTile.CARVING);
+            PumpkinCarvingData key = data.get(ModCarvedPumpkinBlockTile.CARVING);
             if (key != null) {
                 var carving = CarvingManager.getInstance(key);
                 quads.addAll(carving.getOrCreateModel(side, this::generateQuads));
@@ -84,7 +85,7 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    private List<BakedQuad> generateQuads(CarvingManager.Carving carving, Direction direction) {
+    private List<BakedQuad> generateQuads(CarvingManager.CarvingVisuals carving, Direction direction) {
         var px = carving.getPixels();
         var type = carving.getType();
         Material[][] pixels = PumpkinTextureGenerator.computePixelMaterialMap(px, type);
@@ -147,11 +148,10 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         Vector3f posV = new Vector3f(x, y, z);
         //I hate this. Forge seems to have some rounding errors with numbers close to 0 that arent 0 resulting in incorrect shading
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
-        builder.vertex(posV.x, posV.y, posV.z);
-        builder.color(-1);
-        builder.uv(u, v);
-        builder.normal(0, 0, -1);
-        builder.endVertex();
+        builder.addVertex(posV.x, posV.y, posV.z);
+        builder.setColor(-1);
+        builder.setUv(u, v);
+        builder.setNormal(0, 0, -1);
     }
 
 

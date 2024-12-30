@@ -3,7 +3,6 @@ package net.mehvahdjukaar.hauntedharvest.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
@@ -20,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static net.mehvahdjukaar.hauntedharvest.client.CarvingManager.Carving.WIDTH;
+import static net.mehvahdjukaar.hauntedharvest.client.CarvingManager.CarvingVisuals.WIDTH;
 
 public class PumpkinTextureGenerator {
 
 
-    public static void drawCarving(DynamicTexture texture, CarvingManager.Carving carving) {
+    public static void drawCarving(DynamicTexture texture, CarvingManager.CarvingVisuals carving) {
         boolean[][] pixels = carving.getPixels();
         Material[][] materials = PumpkinTextureGenerator.computePixelMaterialMap(pixels, carving.getType());
 
@@ -132,7 +131,7 @@ public class PumpkinTextureGenerator {
     private static DynamicTexture dummy = null;
     private static ResourceLocation dummyLocation = null;
 
-    public static void drawBlur(FrameBufferBackedDynamicTexture t, CarvingManager.Carving carving) {
+    public static void drawBlur(FrameBufferBackedDynamicTexture t, CarvingManager.CarvingVisuals carving) {
         var pixels = carving.getPixels();
         if (dummyLocation == null) {
             dummy = new DynamicTexture(18, 18, false);
@@ -167,10 +166,10 @@ public class PumpkinTextureGenerator {
 
             BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            bufferBuilder.vertex(matrix, 0.0f, 16, 0).uv(u0, u0).endVertex();
-            bufferBuilder.vertex(matrix, 16, 16, 0).uv(u1, u0).endVertex();
-            bufferBuilder.vertex(matrix, 16, 0.0f, 0).uv(u1, u1).endVertex();
-            bufferBuilder.vertex(matrix, 0.0f, 0.0f, 0).uv(u0, u1).endVertex();
+            bufferBuilder.addVertex(matrix, 0.0f, 16, 0).setUv(u0, u0);
+            bufferBuilder.addVertex(matrix, 16, 16, 0).setUv(u1, u0);
+            bufferBuilder.addVertex(matrix, 16, 0.0f, 0).setUv(u1, u1);
+            bufferBuilder.addVertex(matrix, 0.0f, 0.0f, 0).setUv(u0, u1);
             BufferUploader.drawWithShader(bufferBuilder.end());
         });
 

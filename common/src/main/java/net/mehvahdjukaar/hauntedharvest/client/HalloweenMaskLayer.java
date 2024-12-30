@@ -54,7 +54,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
             headModel.getHead().copyFrom(this.getParentModel().getHead());
             VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(pLivingEntity)));
             headModel.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-            headModel.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);
+            headModel.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY,-1);
         }
     }
 

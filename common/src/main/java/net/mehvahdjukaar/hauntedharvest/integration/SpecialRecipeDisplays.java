@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.hauntedharvest.integration;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -24,17 +27,15 @@ public class SpecialRecipeDisplays {
         String group = "hauntedharvest.jei.carved_pumpkin";
 
         ItemStack output = new ItemStack(net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.CARVED_PUMPKIN.get());
-        CompoundTag com = new CompoundTag();
 
         var pixels = new long[]{2238290114314764288L, 3458817360039263256L, 4330272718253469696L, 16785168L};
-        com.putLongArray("Pixels", pixels);
-        output.addTagElement("BlockEntityTag", com);
+        output.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(pixels, false, PumpkinType.NORMAL));
 
         Ingredient emptyBoard = Ingredient.of(net.mehvahdjukaar.hauntedharvest.reg.ModTags.CARVABLE_PUMPKINS);
         Ingredient fullBoard = Ingredient.of(output);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, fullBoard, emptyBoard);
         ResourceLocation id = HauntedHarvest.res("jei_carved_pumpkin");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -47,12 +48,11 @@ public class SpecialRecipeDisplays {
         ItemStack output = new ItemStack(net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.JACK_O_LANTERN.get());
         CompoundTag com = new CompoundTag();
         var pixels = new long[]{4499109221882658816L, 2017679119407127804L, 4537409593239146464L, 26388795002096L};
-        com.putLongArray("Pixels", pixels);
-        output.addTagElement("BlockEntityTag", com);
+        output.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(pixels, false, PumpkinType.NORMAL));
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.TORCH), Ingredient.of(net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.CARVED_PUMPKIN.get()));
         ResourceLocation id = HauntedHarvest.res("jei_jack_o_lantern");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
         recipes.add(recipe);
 
         return recipes;

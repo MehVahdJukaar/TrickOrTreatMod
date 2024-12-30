@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
@@ -105,30 +106,9 @@ public class SplatteredEggEntity extends HangingEntity {
         this.altTexture = ran.nextInt(direction.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
     }
 
-    /**
-     * Updates the entity bounding box based on current facing
-     */
     @Override
-    protected void recalculateBoundingBox() {
-        if (this.direction != null) {
-            double d1 = this.pos.getX() + 0.5D - this.direction.getStepX() * 0.46875D;
-            double d2 = this.pos.getY() + 0.5D - this.direction.getStepY() * 0.46875D;
-            double d3 = this.pos.getZ() + 0.5D - this.direction.getStepZ() * 0.46875D;
-            this.setPosRaw(d1, d2, d3);
-            double d4 = this.getWidth();
-            double d5 = this.getHeight();
-            double d6 = this.getWidth();
-            switch (this.direction.getAxis()) {
-                case X -> d4 = 1.0D;
-                case Y -> d5 = 1.0D;
-                case Z -> d6 = 1.0D;
-            }
-
-            d4 = d4 / 32.0D;
-            d5 = d5 / 32.0D;
-            d6 = d6 / 32.0D;
-            this.setBoundingBox(new AABB(d1 - d4, d2 - d5, d3 - d6, d1 + d4, d2 + d5, d3 + d6));
-        }
+    protected AABB calculateBoundingBox(BlockPos blockPos, Direction direction) {
+        return null;
     }
 
     /**
@@ -191,6 +171,11 @@ public class SplatteredEggEntity extends HangingEntity {
     @Override
     public ItemStack getPickResult() {
         return new ItemStack(Items.EGG);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override

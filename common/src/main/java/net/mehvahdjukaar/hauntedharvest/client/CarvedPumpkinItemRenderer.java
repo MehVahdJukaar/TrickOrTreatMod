@@ -5,15 +5,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -30,30 +34,26 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer {
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-        CompoundTag com = stack.getTagElement("BlockEntityTag");
-        long[] packed = new long[4];
-        if (com != null) {
-            var p = com.getLongArray("Pixels");
-            if (p != null) packed = p;
-        }
+        PumpkinCarvingData carvingData = stack.get(ModRegistry.PUMPKIN_CARVING.get());
+        var visuals = CarvingManager.getInstance(carvingData);
+
         ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock) ((BlockItem) stack.getItem()).getBlock();
         BlockState state = block.defaultBlockState();
         PumpkinType type = block.getType(state);
-        ResourceLocation frame = ClientRegistry.getFrame(type);
+        ModelResourceLocation frame = ClientRegistry.getPumpkinFrame(type);
 
-        var model = ClientHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(), frame);
+        BakedModel model = ClientHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(), frame);
         blockRenderer.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),
                 state, model, 1, 1, 1, combinedLightIn, combinedOverlayIn);
 
-        var carving = CarvingManager.getInstance(CarvingManager.Key.of(packed, type));
-        VertexConsumer builder = bufferIn.getBuffer(carving.getRenderType());
+        VertexConsumer builder = bufferIn.getBuffer(visuals.getRenderType());
 
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
 
         matrixStackIn.mulPose(RotHlpr.Y180);
         matrixStackIn.translate(-1, 0, 0);
-        CarvedPumpkinTileRenderer.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+        VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);
 
         matrixStackIn.popPose();
     }

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.minecraft.client.Minecraft;
@@ -19,9 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.Nullable;
-import oshi.annotation.concurrent.Immutable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -46,71 +45,31 @@ public class CarvingManager implements PreparableReloadListener {
                 }, executor2);
     }
 
-    private static final LoadingCache<Key, Carving> TEXTURE_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<PumpkinCarvingData, CarvingVisuals> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
-                Carving value = (Carving) i.getValue();
+                CarvingVisuals value = (CarvingVisuals) i.getValue();
                 if (value != null) {
                     RenderSystem.recordRenderCall(value::close);
                 }
             })
             .build(new CacheLoader<>() {
                 @Override
-                public Carving load(Key key) {
+                public CarvingVisuals load(PumpkinCarvingData key) {
                     return null;
                 }
             });
 
-    public static Carving getInstance(Key key) {
-        Carving textureInstance = TEXTURE_CACHE.getIfPresent(key);
+    public static CarvingVisuals getInstance(PumpkinCarvingData key) {
+        CarvingVisuals textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new Carving(ModCarvedPumpkinBlockTile.unpackPixels(key.values), key.type);
+            textureInstance = new CarvingVisuals(ModCarvedPumpkinBlockTile.unpackPixels(key.values), key.type);
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    @Immutable
-    public static class Key implements TooltipComponent {
-        private final long[] values;
-        private final PumpkinType type;
-
-        Key(long[] packed, PumpkinType type) {
-            this.values = packed;
-            this.type = type;
-        }
-
-        public static Key of(long[] packPixels, PumpkinType glowing) {
-            return new Key(packPixels, glowing);
-        }
-
-        public static Key of(long[] packPixels) {
-            return new Key(packPixels, PumpkinType.NORMAL);
-        }
-
-        @Override
-        public boolean equals(Object another) {
-            if (another == this) {
-                return true;
-            }
-            if (another == null) {
-                return false;
-            }
-            if (another.getClass() != this.getClass()) {
-                return false;
-            }
-            Key key = (Key) another;
-            return Arrays.equals(this.values, key.values) && type == key.type;
-        }
-
-        @Override
-        public int hashCode() {
-            return Arrays.hashCode(this.values);
-        }
-    }
-
-
-    public static class Carving implements AutoCloseable {
+    public static class CarvingVisuals implements AutoCloseable {
         public static final int WIDTH = 16;
 
         //models for each direction
@@ -125,7 +84,7 @@ public class CarvingManager implements PreparableReloadListener {
         @Nullable
         private ResourceLocation textureLocation;
 
-        private Carving(boolean[][] pixels, PumpkinType type) {
+        private CarvingVisuals(boolean[][] pixels, PumpkinType type) {
             this.pixels = pixels;
             this.type = type;
         }
@@ -148,7 +107,7 @@ public class CarvingManager implements PreparableReloadListener {
             this.renderType = RenderType.entitySolid(textureLocation);
         }
 
-        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<Carving, Direction, List<BakedQuad>> modelFactory) {
+        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<CarvingVisuals, Direction, List<BakedQuad>> modelFactory) {
             return this.quadsCache.computeIfAbsent(dir, d -> modelFactory.apply(this, d));
         }
 
@@ -183,7 +142,7 @@ public class CarvingManager implements PreparableReloadListener {
 
 
     @Nullable
-    public static ResourceLocation getCachedBlurTexture(Carving carving) {
+    public static ResourceLocation getCachedBlurTexture(CarvingVisuals carving) {
         if (pumpkinBlur == null) {
             RenderedTexturesManager.requestTexture(
                     HauntedHarvest.res("pumpkinblur"), 512,
@@ -209,7 +168,7 @@ public class CarvingManager implements PreparableReloadListener {
     }
 
     //no need to register a bunch of these just having one since theres only one player
-    private static Carving currentCarvingBlur = null;
+    private static CarvingVisuals currentCarvingBlur = null;
     private static FrameBufferBackedDynamicTexture pumpkinBlur = null;
 
 

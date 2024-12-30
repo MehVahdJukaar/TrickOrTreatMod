@@ -130,7 +130,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         if (compoundNBT.contains("Pumpkin")) {
             try {
                 this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level().dimension(),
-                        NbtUtils.readBlockPos(compoundNBT.getCompound("Pumpkin"))));
+                        NbtUtils.readBlockPos(compoundNBT, "Pumpkin").get()));
             } catch (Exception ignored) {
             }
         }
