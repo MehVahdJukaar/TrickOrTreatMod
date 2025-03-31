@@ -17,6 +17,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -66,7 +68,10 @@ public final class AbandonedFarmStructure extends Structure {
         int y = generator.getFirstOccupiedHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);
         if (y > maxY || y < minY) return Optional.empty();
         return JigsawPlacement.addPieces(context, this.startPool, this.startJigsawName, this.maxDepth,
-                blockPos, false, this.projectStartToHeightmap, 20);
+                blockPos, false, this.projectStartToHeightmap, 20,
+                PoolAliasLookup.EMPTY,
+                JigsawStructure.DEFAULT_DIMENSION_PADDING,
+                JigsawStructure.DEFAULT_LIQUID_SETTINGS);
     }
 
     public StructureType<?> type() {

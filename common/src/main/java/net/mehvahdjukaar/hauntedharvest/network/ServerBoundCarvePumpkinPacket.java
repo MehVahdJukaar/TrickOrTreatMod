@@ -21,7 +21,7 @@ public class ServerBoundCarvePumpkinPacket implements Message {
 
 
     private final BlockPos pos;
-    private final long[] pixels;
+    private final boolean[][] pixels;
     private final Direction dir;
 
     public ServerBoundCarvePumpkinPacket(RegistryFriendlyByteBuf buf) {
@@ -32,7 +32,7 @@ public class ServerBoundCarvePumpkinPacket implements Message {
 
     public ServerBoundCarvePumpkinPacket(BlockPos pos, boolean[][] pixels, Direction dir) {
         this.pos = pos;
-        this.pixels = ModCarvedPumpkinBlockTile.packPixels(pixels);
+        this.pixels = pixels;
         this.dir = dir;
     }
 
@@ -55,7 +55,7 @@ public class ServerBoundCarvePumpkinPacket implements Message {
                 level.setBlockAndUpdate(pos, pumpkin.getBlockState().setValue(ModCarvedPumpkinBlock.FACING, dir));
             }
             level.playSound(null, this.pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1, 1.2f);
-            pumpkin.setPixels(ModCarvedPumpkinBlockTile.unpackPixels(this.pixels));
+            pumpkin.setPixels(this.pixels);
             //updates client
             //set changed also sends a block update
             pumpkin.setChanged();

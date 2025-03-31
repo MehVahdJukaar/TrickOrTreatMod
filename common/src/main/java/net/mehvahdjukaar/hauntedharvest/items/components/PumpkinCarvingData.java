@@ -20,17 +20,20 @@ import java.util.stream.LongStream;
 
 public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
 
-    private static final Component WAXED_TOOLTIP = Component.translatable("message.supplementaries.blackboard").withStyle(ChatFormatting.GRAY);
+    private static final Component WAXED_TOOLTIP = Component.translatable("message.hauntedharvest.waxed").withStyle(ChatFormatting.GRAY);
+    private static final int SIZE = 16;
+
+    public static final Codec<boolean[][]> PIXEL_CODEC = Codec.LONG_STREAM.xmap(LongStream::toArray, Arrays::stream)
+            .xmap(PumpkinCarvingData::unpackPixels, PumpkinCarvingData::packPixels);
 
     public static final Codec<PumpkinCarvingData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.LONG_STREAM.fieldOf("values")
-                    .xmap(LongStream::toArray, Arrays::stream)
-                    .forGetter(v -> v.values),
-            Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed),
-            PumpkinType.CODEC.fieldOf("type").forGetter(v -> v.type)
+            PIXEL_CODEC.fieldOf("values").forGetter(v -> v.pixels),
+            PumpkinType.CODEC.fieldOf("type").forGetter(v -> v.type),
+            Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
     ).apply(instance, PumpkinCarvingData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, long[]> LONG_ARRAY = new StreamCodec<>() {
+
+    private static final StreamCodec<RegistryFriendlyByteBuf, long[]> LONG_ARRAY = new StreamCodec<>() {
         @Override
         public long[] decode(RegistryFriendlyByteBuf buffer) {
             int size = buffer.readByte();
@@ -50,43 +53,47 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         }
     };
 
+    private static final StreamCodec<RegistryFriendlyByteBuf, boolean[][]> PIXELS_CODEC = LONG_ARRAY
+            .map(PumpkinCarvingData::unpackPixels, PumpkinCarvingData::packPixels);
+
     public static final StreamCodec<RegistryFriendlyByteBuf, PumpkinCarvingData> STREAM_CODEC = StreamCodec.composite(
-            LONG_ARRAY, data -> data.values,
-            ByteBufCodecs.BOOL, data -> data.waxed,
+            PIXELS_CODEC, data -> data.pixels,
             PumpkinType.STREAM_CODEC, data -> data.type,
+            ByteBufCodecs.BOOL, data -> data.waxed,
             PumpkinCarvingData::new
     );
 
-    public static final PumpkinCarvingData DEFAULT = new PumpkinCarvingData(new long[4], false, PumpkinType.NORMAL);
-
-    private final long[] values;
+    private final boolean[][] pixels;
     private final boolean waxed;
     private final PumpkinType type;
 
-    PumpkinCarvingData(long[] packed, boolean waxed, PumpkinType type) {
-        this.values = packed;
-        this.waxed = waxed;
+    private final int cachedHashCode;
+
+    PumpkinCarvingData(boolean[][] pixels, PumpkinType type, boolean waxed) {
+        this.pixels = pixels;
         this.type = type;
+        this.waxed = waxed;
+        this.cachedHashCode = Objects.hash(Arrays.deepHashCode(pixels), type, waxed);
     }
 
-    public static PumpkinCarvingData pack(boolean[][] pixels, boolean waxed, PumpkinType type) {
-        return new PumpkinCarvingData(packPixels(pixels), waxed, type);
+    public static PumpkinCarvingData of(boolean[][] pixels, PumpkinType pumpkinType, boolean waxed) {
+        return new PumpkinCarvingData(new boolean[SIZE][SIZE], pumpkinType, waxed);
     }
 
-    public static PumpkinCarvingData of(long[] packPixels, boolean waxed, PumpkinType type) {
-        return new PumpkinCarvingData(packPixels, waxed, type);
+    public static PumpkinCarvingData empty(PumpkinType pumpkinType) {
+        return new PumpkinCarvingData(new boolean[SIZE][SIZE], pumpkinType, false);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PumpkinCarvingData that)) return false;
-        return waxed == that.waxed && Objects.deepEquals(values, that.values);
+        return type == that.type && waxed == that.waxed && Objects.deepEquals(pixels, that.pixels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.hashCode(values), waxed);
+        return cachedHashCode;
     }
 
     @Override
@@ -96,20 +103,64 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         }
     }
 
-    public boolean[][] unpackPixels() {
-        return unpackPixels(values);
+    public boolean isWaxed() {
+        return waxed;
     }
 
-    public boolean waxed() {
-        return waxed;
+    public PumpkinType getType() {
+        return type;
+    }
+
+    public boolean hasSamePixels(byte[][] pixels) {
+        return Arrays.deepEquals(this.pixels, pixels);
+    }
+
+    public boolean isEmpty() {
+        for (boolean[] row : pixels) {
+            for (boolean value : row) {
+                if (value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean getPixel(int xx, int yy) {
+        return pixels[xx][yy];
+    }
+
+    public boolean[][] getPixelsUnsafe() {
+        return pixels;
+    }
+
+    public PumpkinCarvingData makeCleared() {
+        return new PumpkinCarvingData(new boolean[SIZE][SIZE], this.type, this.waxed);
+    }
+
+    public PumpkinCarvingData withPixel(int x, int y, boolean b) {
+        boolean[][] newPixels = new boolean[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            System.arraycopy(pixels[i], 0, newPixels[i], 0, SIZE);
+        }
+        newPixels[x][y] = b;
+        return new PumpkinCarvingData(newPixels, this.type, this.waxed);
+    }
+
+    public PumpkinCarvingData withWaxed(boolean b) {
+        return new PumpkinCarvingData(pixels, this.type, b);
+    }
+
+    public PumpkinCarvingData withPixels(boolean[][] pixels) {
+        return new PumpkinCarvingData(pixels, this.type, this.waxed);
     }
 
     public static long[] packPixels(boolean[][] pixels) {
         long[] packed = new long[4];  // We need 4 long values, each holding 64 bits
 
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                int index = i * 16 + j;  // Calculate the overall index in the 256 bits
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                int index = i * SIZE + j;  // Calculate the overall index in the 256 bits
                 int longIndex = index / 64;  // Determine which long value this bit will go into
                 int bitIndex = index % 64;   // Determine which bit in the long value to set
 
@@ -123,11 +174,11 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     }
 
     public static boolean[][] unpackPixels(long[] packed) {
-        boolean[][] pixels = new boolean[16][16];
+        boolean[][] pixels = new boolean[SIZE][SIZE];
 
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                int index = i * 16 + j;  // Calculate the overall index in the 256 bits
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                int index = i * SIZE + j;  // Calculate the overall index in the 256 bits
                 int longIndex = index / 64;  // Determine which long value this bit comes from
                 int bitIndex = index % 64;   // Determine which bit in the long value to check
 
@@ -138,8 +189,25 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return pixels;
     }
 
+/*
+    public static boolean[][] unpackPixels(long[] packed) {
+        boolean[][] bytes = new boolean[SIZE][SIZE];
+        int k = 0;
+        for (long l : packed) {
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < SIZE; i++) {
+                    bytes[k][i] = toBoolean((short) ((l >> (i + j * SIZE)) & 1));
+                }
+                k++;
+            }
+        }
+        return bytes;
+    }*/
+
+
+
     public static long[] unpackPixelsFromStringWhiteOnly(String packed) {
-        long[] unpacked = new long[16];
+        long[] unpacked = new long[SIZE];
         var chars = packed.toCharArray();
         int j = 0;
         for (int i = 0; i + 3 < chars.length; i += 4) {
@@ -150,7 +218,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
             }
             char c2 = chars[i + 1];
             for (int k = 0; k < 4; k++) {
-                l = l | ((long) ((c2 >> k) & 1) << (16 + (4 * k)));
+                l = l | ((long) ((c2 >> k) & 1) << (SIZE + (4 * k)));
             }
             char c3 = chars[i + 2];
             for (int k = 0; k < 4; k++) {
@@ -176,7 +244,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
             }
             char c1 = 0;
             for (int k = 0; k < 4; k++) {
-                byte h = (byte) ((l >> (16 + (4 * k))) & 1);
+                byte h = (byte) ((l >> (SIZE + (4 * k))) & 1);
                 c1 = (char) (c1 | (h << k));
             }
             char c2 = 0;
@@ -194,7 +262,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return builder.toString();
     }
 
-    public boolean isEmpty() {
-        return false;
+    public PumpkinCarvingData withType(PumpkinType pumpkinType) {
+        return new PumpkinCarvingData(this.pixels, pumpkinType, this.waxed);
     }
 }

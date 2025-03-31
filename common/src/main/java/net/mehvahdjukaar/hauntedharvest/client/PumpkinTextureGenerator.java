@@ -42,16 +42,16 @@ public class PumpkinTextureGenerator {
      * Rest of the texture is simply using vanilla texture
      */
     public static Material[][] computePixelMaterialMap(boolean[][] pixels, PumpkinType pumpkinType) {
-        Type[][] colors = new Type[16][16];
+        PixelType[][] colors = new PixelType[16][16];
 
         forEachPixel(colors, (j, i) -> {
             if (!pixels[j][i]) {
-                colors[j][i] = Type.UNCARVED;
+                colors[j][i] = PixelType.UNCARVED;
             } else {
                 if (shouldShade(colors, j, i)) {
-                    colors[j][i] = Type.SHADE;
+                    colors[j][i] = PixelType.SHADE;
                 } else {
-                    colors[j][i] = Type.BACKGROUND;
+                    colors[j][i] = PixelType.BACKGROUND;
                 }
             }
         });
@@ -63,7 +63,7 @@ public class PumpkinTextureGenerator {
         return materials;
     }
 
-    private static void addExtraShade(Type[][] px) {
+    private static void addExtraShade(PixelType[][] px) {
         List<Pair<Integer, Integer>> shades = new ArrayList<>();
         forEachPixel(px, (j, i) -> {
             if (!isUnCarved(px, j, i)) {
@@ -84,31 +84,31 @@ public class PumpkinTextureGenerator {
                 }
             }
         });
-        shades.forEach(p -> px[p.getFirst()][p.getSecond()] = Type.SHADE);
+        shades.forEach(p -> px[p.getFirst()][p.getSecond()] = PixelType.SHADE);
     }
 
 
-    private static void addHighlight(Type[][] px, int j, int i) {
+    private static void addHighlight(PixelType[][] px, int j, int i) {
         if (isUnCarved(px, j, i)) {
             if (!isUnCarved(px, j - 1, i) || (!isUnCarved(px, j, i - 1))) {
-                px[j][i] = Type.HIGHLIGHT;
+                px[j][i] = PixelType.HIGHLIGHT;
             }
         }
     }
 
-    private static boolean shouldShade(Type[][] px, int j, int i) {
+    private static boolean shouldShade(PixelType[][] px, int j, int i) {
         return (isUnCarved(px, j - 1, i) || isUnCarved(px, j, i - 1));
     }
 
-    private static boolean isUnCarved(Type[][] px, int j, int i) {
+    private static boolean isUnCarved(PixelType[][] px, int j, int i) {
         if (j < 0 || i < 0 || j > 15 || i > 15) return true;
         var t = px[j][i];
-        return t == Type.UNCARVED || t == Type.HIGHLIGHT;
+        return t == PixelType.UNCARVED || t == PixelType.HIGHLIGHT;
     }
 
-    private static boolean isShaded(Type[][] px, int j, int i) {
+    private static boolean isShaded(PixelType[][] px, int j, int i) {
         if (j < 0 || i < 0 || j > 15 || i > 15) return true;
-        return px[j][i] == Type.SHADE;
+        return px[j][i] == PixelType.SHADE;
     }
 
     public static void forEachPixel(Object[][] px, BiConsumer<Integer, Integer> function) {
@@ -119,7 +119,7 @@ public class PumpkinTextureGenerator {
         }
     }
 
-    public enum Type {
+    private enum PixelType {
         UNCARVED,
         SHADE,
         BACKGROUND,
@@ -155,7 +155,7 @@ public class PumpkinTextureGenerator {
 
             RenderSystem.setShaderTexture(0, dummyLocation);
 
-            var matrix = s.last().pose();
+            var matrix = s.pose().last();
 
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
@@ -164,13 +164,12 @@ public class PumpkinTextureGenerator {
             RenderSystem.setShader(ClientRegistry::getBlur);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
 
-            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder.addVertex(matrix, 0.0f, 16, 0).setUv(u0, u0);
             bufferBuilder.addVertex(matrix, 16, 16, 0).setUv(u1, u0);
             bufferBuilder.addVertex(matrix, 16, 0.0f, 0).setUv(u1, u1);
             bufferBuilder.addVertex(matrix, 0.0f, 0.0f, 0).setUv(u0, u1);
-            BufferUploader.drawWithShader(bufferBuilder.end());
+            BufferUploader.drawWithShader(bufferBuilder.build());
         });
 
         t.setFilter(true, false);

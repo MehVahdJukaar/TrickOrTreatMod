@@ -40,7 +40,7 @@ public class RedstoneCarvedPumpkinBlock extends ModCarvedPumpkinBlock {
             if (flag != worldIn.hasNeighborSignal(pos)) {
                 worldIn.setBlock(pos, state.cycle(LIT), 2);
                 if(worldIn.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile){
-                    tile.refreshTextureKey();
+                    tile.refreshType();
                 }
             }
         }
@@ -51,7 +51,7 @@ public class RedstoneCarvedPumpkinBlock extends ModCarvedPumpkinBlock {
         if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
             worldIn.setBlock(pos, state.cycle(LIT), 2);
             if(worldIn.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile){
-                tile.refreshTextureKey();
+                tile.refreshType();
             }
         }
     }

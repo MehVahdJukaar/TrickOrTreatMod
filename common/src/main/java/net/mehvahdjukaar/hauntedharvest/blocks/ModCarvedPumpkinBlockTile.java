@@ -4,7 +4,7 @@ import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingGui;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
@@ -13,55 +13,43 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenProvider, IExtraModelDataProvider {
+public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenProvider, IExtraModelDataProvider, IWaxable {
 
     public static final ModelDataKey<PumpkinCarvingData> CARVING = new ModelDataKey<>(PumpkinCarvingData.class);
 
-    private UUID owner = null;
-    private boolean waxed = false;
-    private boolean[][] pixels = new boolean[16][16];
-
-    //client side
-    private PumpkinCarvingData textureKey = null;
+    private PumpkinCarvingData data;
 
     public ModCarvedPumpkinBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.MOD_CARVED_PUMPKIN_TILE.get(), pos, state);
         this.clear();
+
+        this.data = PumpkinCarvingData.empty(getPumpkinType());
     }
 
     public PumpkinType getPumpkinType() {
         BlockState state = this.getBlockState();
         return ((ModCarvedPumpkinBlock) state.getBlock()).getType(state);
     }
+
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(CARVING, getTextureKey())
+                .with(CARVING, data)
                 .build();
     }
 
-    public PumpkinCarvingData getTextureKey() {
-        if (textureKey == null) refreshTextureKey();
-        return textureKey;
-    }
-
-    public void refreshTextureKey() {
-        this.textureKey = Key.of(packPixels(this.pixels), this.getPumpkinType());
-    }
 
     @Override
     public void afterDataPacket(ExtraModelData oldData) {
-        refreshTextureKey();
+        refreshType();
         IExtraModelDataProvider.super.afterDataPacket(oldData);
     }
 
@@ -76,60 +64,15 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.loadOwner(tag);
-        this.waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
-        acceptPixels(tag.getLongArray("Pixels"));
-    }
-
-    public void acceptPixels(long[] p) {
-        this.pixels = new boolean[16][16];
-        if (p.length != 0) {
-            this.pixels = unpackPixels(p);
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        this.data = PumpkinCarvingData.CODEC.parse(ops, tag).getOrThrow();
+        //backwards compat
+        if (tag.contains("Pixels")) {
+            this.data = this.data.withPixels(legacyUnpackPixels(tag.getLongArray("Pixels")));
         }
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        this.savePixels(tag);
-        this.saveOwner(tag);
-    }
-
-    public CompoundTag savePixels(CompoundTag compound) {
-        if (this.waxed) compound.putBoolean("Waxed", true);
-        compound.putLongArray("Pixels", packPixels(pixels));
-        return compound;
-    }
-
-    public static long[] packPixels(boolean[][] pixels) {
-        long[] packed = new long[4];
-        long n = 0;
-        int ind = 0;
-        for (int a = 0; a < pixels.length; a++) {
-            int s = 0;
-            for (int i = 0; i < pixels.length; i++) {
-                s = (s | ((toShort(pixels[a][i]) & 1) << i));
-            }
-            n = n | (long) s << ((a % 4) * 16);
-            if ((a + 1) % 4 == 0) {
-                packed[ind] = n;
-                n = 0;
-                ind++;
-            }
-        }
-        return packed;
-    }
-
-    private static short toShort(boolean b) {
-        return (short) (b ? 1 : 0);
-    }
-
-    private static boolean toBoolean(short b) {
-        return b == 1;
-    }
-
-
-    public static boolean[][] unpackPixels(long[] packed) {
+    private static boolean[][] legacyUnpackPixels(long[] packed) {
         boolean[][] bytes = new boolean[16][16];
         int k = 0;
         for (long l : packed) {
@@ -143,33 +86,40 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         return bytes;
     }
 
+    private static boolean toBoolean(short b) {
+        return b == 1;
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        //TODO:make consistent with supp one
+        PumpkinCarvingData.CODEC.encodeStart(ops, this.data);
+    }
+
     public void clear() {
-        for (int x = 0; x < pixels.length; x++) {
-            for (int y = 0; y < pixels[x].length; y++) {
-                this.pixels[x][y] = false;
-            }
-        }
+        this.data = this.data.makeCleared();
     }
 
     public boolean isEmpty() {
-        for (boolean[] pixel : pixels) {
-            for (boolean b : pixel) {
-                if (b) return false;
-            }
-        }
-        return true;
+        return this.data.isEmpty();
+    }
+
+    public void clearPixels() {
+        this.data = this.data.makeCleared();
     }
 
     public void setPixel(int x, int y, boolean b) {
-        this.pixels[x][y] = b;
+        this.data = this.data.withPixel(x, y, b);
     }
 
     public boolean getPixel(int xx, int yy) {
-        return this.pixels[xx][yy];
+        return this.data.getPixel(xx, yy);
     }
 
     public void setPixels(boolean[][] pixels) {
-        this.pixels = pixels;
+        this.data = this.data.withPixels(pixels);
     }
 
     @Override
@@ -178,38 +128,28 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     public Direction getDirection() {
         return this.getBlockState().getValue(ModCarvedPumpkinBlock.FACING);
     }
 
-    @Nullable
+
     @Override
-    public UUID getOwner() {
-        return owner;
+    public void openScreen(Level level, BlockPos blockPos, Player player, Direction direction) {
+        CarvingGui.open(this, direction);
     }
 
     @Override
-    public void setOwner(UUID owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
-        //TODO: replace with  face dir
-        CarvingGui.open(this, player.getDirection().getOpposite());
-    }
-
-
     public void setWaxed(boolean b) {
-        this.waxed = b;
+        this.data = this.data.withWaxed(b);
     }
 
+    @Override
     public boolean isWaxed() {
-        return this.waxed;
+        return this.data.isWaxed();
     }
 
     public ModCarvedPumpkinBlock.CarveMode getCarveMode() {
@@ -217,15 +157,8 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         return CommonConfigs.PUMPKIN_CARVE_MODE.get();
     }
 
-    public ItemStack getItemWithNBT() {
-        ItemStack itemstack = new ItemStack(this.getBlockState().getBlock());
-        if (!this.isEmpty()) {
-            CompoundTag tag = this.savePixels(new CompoundTag());
-            if (!tag.isEmpty()) {
-                itemstack.addTagElement("BlockEntityTag", tag);
-            }
-        }
-        return itemstack;
+    //unfortunately the type is duplicated and needs refreshing
+    public void refreshType() {
+        this.data = this.data.withType(getPumpkinType());
     }
-
 }

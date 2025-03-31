@@ -6,6 +6,8 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -132,7 +134,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
             playSound(level, pos);
             delta += 1;
         } else {
-            if (item.isEdible() && player.canEat(false) && !player.isCreative()) {
+            if (item.has(DataComponents.FOOD) && player.canEat(false) && !player.isCreative()) {
                 //eat cookies
                 player.eat(level, item.copy());
                 delta = -1;

@@ -4,17 +4,15 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.network.ClientBoundCopyCarvingCommand;
-import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -47,12 +45,14 @@ public class ModCommands {
             if (e instanceof ServerPlayer p) {
                 var item = p.getItemInHand(InteractionHand.MAIN_HAND);
                 if (item.getItem() instanceof ModCarvedPumpkinItem) {
-                    CompoundTag t = item.getTag();
-                    if (t != null && t.contains("BlockEntityTag")) {
-                        t = t.getCompound("BlockEntityTag");
-                        NetworkHelper.sendToClientPlayer( p, new ClientBoundCopyCarvingCommand(t.get("Pixels")
-                                .getAsString().replaceAll("[;L]", "")));
-                        context.getSource().sendSuccess(()->Component.literal("Copied content to clipboard"), false);
+
+                    var carving = item.get(ModRegistry.PUMPKIN_CARVING.get());
+                    if (carving != null) {
+                        NetworkHelper.sendToClientPlayer(p, new ClientBoundCopyCarvingCommand(
+                                PumpkinCarvingData.packPixelsToStringWhiteOnly(
+                                        PumpkinCarvingData.packPixels(
+                                        carving.getPixelsUnsafe()))));
+                        context.getSource().sendSuccess(() -> Component.literal("Copied content to clipboard"), false);
                         return 0;
                     }
                 }

@@ -26,5 +26,6 @@
   "advancements.nether.splatter_eggs_in_nether.description": "Splatter an egg in the Nether",
   "advancements.nether.splatter_eggs_in_nether.title": "Deviled Eggs",
   "advancements.husbandry.carve_custom_pumpkin.description": "Shear the top of a pumpkin",
-  "advancements.husbandry.carve_custom_pumpkin.title": "A Little Off The Top"
+  "advancements.husbandry.carve_custom_pumpkin.title": "A Little Off The Top",
+  "message.hauntedharvest.waxed": "Waxed"
 }

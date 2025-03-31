@@ -63,7 +63,7 @@ public class CarvingManager implements PreparableReloadListener {
     public static CarvingVisuals getInstance(PumpkinCarvingData key) {
         CarvingVisuals textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new CarvingVisuals(ModCarvedPumpkinBlockTile.unpackPixels(key.values), key.type);
+            textureInstance = new CarvingVisuals(key.getPixelsUnsafe(), key.getType());
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;

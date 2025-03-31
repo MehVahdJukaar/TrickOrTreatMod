@@ -29,7 +29,8 @@ public class SpecialRecipeDisplays {
         ItemStack output = new ItemStack(net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.CARVED_PUMPKIN.get());
 
         var pixels = new long[]{2238290114314764288L, 3458817360039263256L, 4330272718253469696L, 16785168L};
-        output.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(pixels, false, PumpkinType.NORMAL));
+        output.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(
+                PumpkinCarvingData.unpackPixels(pixels), PumpkinType.NORMAL, false));
 
         Ingredient emptyBoard = Ingredient.of(net.mehvahdjukaar.hauntedharvest.reg.ModTags.CARVABLE_PUMPKINS);
         Ingredient fullBoard = Ingredient.of(output);
@@ -48,7 +49,8 @@ public class SpecialRecipeDisplays {
         ItemStack output = new ItemStack(net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.JACK_O_LANTERN.get());
         CompoundTag com = new CompoundTag();
         var pixels = new long[]{4499109221882658816L, 2017679119407127804L, 4537409593239146464L, 26388795002096L};
-        output.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(pixels, false, PumpkinType.NORMAL));
+        output.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(
+                PumpkinCarvingData.unpackPixels(pixels), PumpkinType.NORMAL, false));
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.TORCH), Ingredient.of(net.mehvahdjukaar.hauntedharvest.reg.ModRegistry.CARVED_PUMPKIN.get()));
         ResourceLocation id = HauntedHarvest.res("jei_jack_o_lantern");

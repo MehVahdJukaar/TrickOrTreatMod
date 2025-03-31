@@ -2,12 +2,16 @@ package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -19,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
@@ -29,6 +34,7 @@ import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +42,6 @@ import org.joml.Vector2i;
 
 import java.util.function.Predicate;
 
-//TODO: IOwner protected
 public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityBlock {
 
     private final PumpkinType type;
@@ -67,23 +72,17 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te &&
-                te.isAccessibleBy(player) && !te.isWaxed()) {
-            ItemStack stack = player.getItemInHand(handIn);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te && !te.isWaxed()) {
             Item i = stack.getItem();
-            if (i instanceof HoneycombItem) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                }
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
-                level.levelEvent(player, 3003, pos, 0);
-                te.setWaxed(true);
-                return InteractionResult.sidedSuccess(level.isClientSide);
+            ItemInteractionResult waxingRes = te.tryWaxingWithItem(level, pos, player, stack);
+
+            if (waxingRes.consumesAction()) {
+                level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
+                te.setChanged(); //this also sends block update in tile
             }
+            if (waxingRes != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return waxingRes;
             //torch is handled by event since it needs to cover vanilla ones aswell
 
             CarveMode mode = te.getCarveMode();
@@ -97,15 +96,15 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
 
                     te.setPixel(x, y, !te.getPixel(x, y));
                     te.setChanged();
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
                 if (!level.isClientSide && mode.canOpenGui()) {
                     te.sendOpenGuiPacket(level, pos, player);
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     public enum CarveMode {
@@ -127,9 +126,9 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te) {
-            return te.getItemWithNBT();
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+            return Utils.saveTileToItem(te);
         }
         return super.getCloneItemStack(level, pos, state);
     }
