@@ -5,7 +5,9 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -34,13 +36,20 @@ public class ModCarvedPumpkinItem extends BlockItem {
         return Optional.ofNullable(data);
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
         return type.isJackOLantern() ? null : EquipmentSlot.HEAD;
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isEnderMask(ItemStack stack, Player player, EnderMan enderMan) {
         return true;
     }
+
+
+    @ForgeOverride
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
+        return getEquipmentSlot(stack) == armorType;
+    }
+
 }

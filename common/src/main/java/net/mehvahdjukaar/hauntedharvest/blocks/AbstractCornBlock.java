@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
+import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.block.IBeeGrowable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
@@ -37,10 +38,10 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
         if (level.getRawBrightness(pos, 0) >= 9 && level.random.nextFloat() < 0.6) {
             if (this.isValidBonemealTarget(level, pos, state)) {
 
-                float f = getGrowthSpeed(this, level, pos);
-                if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (30.0F / f) + 1) == 0)) {
+                float f = HHPlatformStuff.getGrowthSpeed(state, level, pos);
+                if (ForgeHelper.fireOnCropsGrowPre(level, pos, state, random.nextInt((int) (30.0F / f) + 1) == 0)) {
                     this.growCropBy(level, pos, state, 1);
-                    ForgeHelper.onCropsGrowPost(level, pos, state);
+                    ForgeHelper.fireOnCropsGrowPost(level, pos, state);
                 }
             }
         }

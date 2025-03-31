@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
+import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -142,7 +143,10 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
 
             SnowGolem snowGolem = EntityType.SNOW_GOLEM.create(level);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
-                HHPlatformStuff.addPumpkinData(tile, snowGolem);
+                if (snowGolem instanceof ICustomPumpkinHolder customPumpkinHolder) {
+                    ItemStack stack =  Utils.saveTileToItem(tile);
+                    customPumpkinHolder.hauntedharvest$setCustomPumpkin(stack);
+                }
             }
 
             for (int i = 0; i < SNOW_GOLEM_FULL.getHeight(); ++i) {

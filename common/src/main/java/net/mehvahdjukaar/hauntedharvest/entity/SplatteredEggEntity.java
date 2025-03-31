@@ -15,10 +15,9 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,10 +28,9 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public class SplatteredEggEntity extends HangingEntity {
 
@@ -89,7 +87,6 @@ public class SplatteredEggEntity extends HangingEntity {
      */
     @Override
     protected void setDirection(Direction pFacingDirection) {
-        Validate.notNull(pFacingDirection);
         this.direction = pFacingDirection;
         if (pFacingDirection.getAxis().isHorizontal()) {
             this.setXRot(0.0F);
@@ -108,7 +105,13 @@ public class SplatteredEggEntity extends HangingEntity {
 
     @Override
     protected AABB calculateBoundingBox(BlockPos blockPos, Direction direction) {
-        return null;
+        float size = 14/16f;
+        Vec3 vec3 = Vec3.atCenterOf(blockPos).relative(direction, -0.46875F);
+        Direction.Axis axis = direction.getAxis();
+        double d = axis == Direction.Axis.X ? 0.0625 : size;
+        double e = axis == Direction.Axis.Y ? 0.0625 : size;
+        double g = axis == Direction.Axis.Z ? 0.0625 : size;
+        return AABB.ofSize(vec3, d, e, g);
     }
 
     /**

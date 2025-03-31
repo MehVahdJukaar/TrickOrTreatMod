@@ -62,6 +62,7 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements Item
         matrixStackIn.popPose();
     }
 
+    @Override
     public void renderHelmetOverlay(ItemStack stack, Player player, int width, int height, float partialTick) {
         BlurOverlay.renderPumpkin(stack, width, height);
     }

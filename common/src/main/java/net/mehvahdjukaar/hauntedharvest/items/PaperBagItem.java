@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.hauntedharvest.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -18,14 +20,18 @@ public class PaperBagItem extends BlockItem {
         super(block, properties);
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
         return EquipmentSlot.HEAD;
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isEnderMask(ItemStack stack, Player player, EnderMan enderMan) {
         return PAPER_BAG_ENDERMAN.get();
     }
 
+    @ForgeOverride
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
+        return getEquipmentSlot(stack) == armorType;
+    }
 }
