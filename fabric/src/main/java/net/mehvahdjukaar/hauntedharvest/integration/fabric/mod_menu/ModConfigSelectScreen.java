@@ -3,7 +3,7 @@ package net.mehvahdjukaar.hauntedharvest.integration.fabric.mod_menu;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
+import net.mehvahdjukaar.moonlight.api.client.gui.MediaButton;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigListScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -30,15 +30,30 @@ public class ModConfigSelectScreen extends FabricConfigListScreen {
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (buttonx) -> {
             this.minecraft.setScreen(this.parent);
         }).bounds(centerX - 45, y, 90, 20).build());
-        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 22, y, 3, 1, "https://www.patreon.com/user?u=53696377", "Support me on Patreon :D"));
-        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 44, y, 2, 2, "https://ko-fi.com/mehvahdjukaar", "Donate a Coffee"));
-        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 66, y, 1, 2, "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest", "CurseForge Page"));
-        this.addRenderableWidget(LinkButton.create(this, centerX - 45 - 88, y, 0, 2, "https://github.com/MehVahdJukaar/Supplementaries/TrickOrTreatMod", "Mod Wiki"));
-        this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2, y, 1, 1, "https://discord.com/invite/qdKRTDf8Cv", "Mod Discord"));
-        this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2 + 22, y, 0, 1, "https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s", "Youtube Channel"));
-        this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2 + 44, y, 2, 1, "https://twitter.com/Supplementariez?s=09", "Twitter Page"));
-        this.addRenderableWidget(LinkButton.create(this, centerX + 45 + 2 + 66, y, 3, 2, "https://www.akliz.net/supplementaries", "Need a server? Get one with Akliz"));
+        this.addRenderableWidget(MediaButton.patreon(this, centerX - 45 - 22, y,
+                "https://www.patreon.com/user?u=53696377"));
 
+        this.addRenderableWidget(MediaButton.koFi(this, centerX - 45 - 22 * 2, y,
+                "https://ko-fi.com/mehvahdjukaar"));
+
+        this.addRenderableWidget(MediaButton.curseForge(this, centerX - 45 - 22 * 3, y,
+                "https://www.curseforge.com/minecraft/mc-mods/haunted-harvest"));
+
+        this.addRenderableWidget(MediaButton.github(this, centerX - 45 - 22 * 4, y,
+                "https://github.com/MehVahdJukaar/TrickOrTreatMod/wiki"));
+
+
+        this.addRenderableWidget(MediaButton.discord(this, centerX + 45 + 2, y,
+                "https://discord.com/invite/qdKRTDf8Cv"));
+
+        this.addRenderableWidget(MediaButton.youtube(this, centerX + 45 + 2 + 22, y,
+                "https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s"));
+
+        this.addRenderableWidget(MediaButton.twitter(this, centerX + 45 + 2 + 22 * 2, y,
+                "https://twitter.com/Supplementariez?s=09"));
+
+        this.addRenderableWidget(MediaButton.akliz(this, centerX + 45 + 2 + 22 * 3, y,
+                "https://www.akliz.net/supplementaries"));
     }
 
 }

@@ -17,10 +17,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
-import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
-import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,8 +34,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -217,7 +211,7 @@ public class HauntedHarvest {
 
     @EventCalled
     public static void onClientEntityLoad(Entity entity, Level level) {
-        if(!entity.level().isClientSide)return;
+        if (!entity.level().isClientSide) return;
         if (entity instanceof ICustomPumpkinHolder q) {
             //ask server to send quiver data
             NetworkHelper.sendToServer(new SyncSnowGolemPumpkinPacket(entity, q));

@@ -111,7 +111,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return type;
     }
 
-    public boolean hasSamePixels(byte[][] pixels) {
+    public boolean hasSamePixels(boolean[][] pixels) {
         return Arrays.deepEquals(this.pixels, pixels);
     }
 

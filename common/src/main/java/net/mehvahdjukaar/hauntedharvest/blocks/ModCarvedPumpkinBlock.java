@@ -3,25 +3,19 @@ package net.mehvahdjukaar.hauntedharvest.blocks;
 import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoneycombItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -75,7 +69,6 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
                                               InteractionHand hand, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te && !te.isWaxed()) {
-            Item i = stack.getItem();
             ItemInteractionResult waxingRes = te.tryWaxingWithItem(level, pos, player, stack);
 
             if (waxingRes.consumesAction()) {
@@ -98,8 +91,10 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                     te.setChanged();
                     return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
-                if (!level.isClientSide && mode.canOpenGui()) {
-                    te.sendOpenGuiPacket(level, pos, player);
+                if (mode.canOpenGui()) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        te.tryOpeningEditGui(serverPlayer, pos, stack);
+                    }
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -117,6 +112,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
         public boolean canManualDraw() {
             return this != GUI && this != NONE;
         }
+
     }
 
     @Nullable

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.hauntedharvest.client.gui;
+package net.mehvahdjukaar.hauntedharvest.client.screens;
 
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;

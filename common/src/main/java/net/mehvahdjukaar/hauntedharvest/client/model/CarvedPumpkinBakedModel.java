@@ -10,7 +10,6 @@ import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -138,10 +137,10 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform, quad::set)) {
             builder.setAutoDirection();
 
-            putVertex(builder, x + width, y + height,z, u1, v1);
-            putVertex(builder, x + width, y,z, u1, v0);
-            putVertex(builder, x, y,z, u0, v0);
-            putVertex(builder, x, y + height,z, u0, v1);
+            putVertex(builder, x + width, y + height, z, u1, v1);
+            putVertex(builder, x + width, y, z, u1, v0);
+            putVertex(builder, x, y, z, u0, v0);
+            putVertex(builder, x, y + height, z, u0, v1);
 
             //if (emissive) builder.lightEmission(15);
         } catch (Exception e) {

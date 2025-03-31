@@ -11,9 +11,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.Objects;
 
@@ -77,18 +79,17 @@ public class ServerBoundCarvePumpkinPacket implements Message {
     @Override
     public void handle(Context context) {
         // server world
-        Level level = Objects.requireNonNull(context.getPlayer()).level();
+        if(context.getPlayer() instanceof ServerPlayer player) {
+            Level level = player.level();
 
-        BlockPos pos = this.pos;
-        if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile pumpkin) {
-            if (pumpkin.isEmpty()) {
-                level.setBlockAndUpdate(pos, pumpkin.getBlockState().setValue(ModCarvedPumpkinBlock.FACING, dir));
+            BlockPos pos = this.pos;
+            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile pumpkin) {
+                if (pumpkin.tryAcceptingClientPixels(player, this.pixels, this.dir)) {
+
+                    pumpkin.setChanged();
+                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
             }
-            level.playSound(null, this.pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1, 1.2f);
-            pumpkin.setPixels(this.pixels);
-            //updates client
-            //set changed also sends a block update
-            pumpkin.setChanged();
         }
     }
 

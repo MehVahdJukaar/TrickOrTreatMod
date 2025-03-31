@@ -5,8 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.client.*;
-import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBakedModel;
+import net.mehvahdjukaar.hauntedharvest.client.screens.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.ItemRenderExtension;
@@ -38,6 +38,8 @@ public class ClientRegistry {
     public static final Material CARVING_OUTLINE = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/carving_grid"));
 
     public static final ResourceLocation PAPER_BAG_OVERLAY = HauntedHarvest.res("textures/misc/paper_bag_overlay.png");
+
+    public static final ResourceLocation BLACKBOARD_OUTLINE_SPRITE = HauntedHarvest.res("outline");
 
     public static final CoreShaderContainer BLUR_SHARED = new CoreShaderContainer(GameRenderer::getPositionTexColorShader);
 
