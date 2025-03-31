@@ -42,9 +42,9 @@ public class ModConfigScreen extends CustomConfigScreen {
         super(parent, config);
     }
 
-    public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background,
+    public ModConfigScreen(String modId, ItemStack mainIcon,
                            Component title, Screen parent, IModConfig config) {
-        super(modId, mainIcon, background, title, parent, config);
+        super(modId, mainIcon, title, parent, config);
         this.icons.putAll(ICONS);
     }
 
@@ -59,8 +59,8 @@ public class ModConfigScreen extends CustomConfigScreen {
     }
 
     @Override
-    public CustomConfigScreen createSubScreen(Component title) {
-        return new ModConfigScreen(this.modId, this.mainIcon, this.background, title, this, this.config);
+    public Factory getSubScreenFactory() {
+        return ModConfigScreen::new;
     }
 
     @Override

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.client.ItemRenderExtension;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
@@ -18,14 +19,19 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 
-public class CarvedPumpkinItemRenderer extends ItemStackRenderer {
+public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements ItemRenderExtension {
+
+    @Override
+    public ItemStackRenderer getItemRenderer() {
+        return this;
+    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -57,4 +63,10 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer {
 
         matrixStackIn.popPose();
     }
+
+    public void renderHelmetOverlay(ItemStack stack, Player player, int width, int height, float partialTick) {
+        BlurOverlay.renderPumpkin(stack, width, height);
+    }
+
+
 }

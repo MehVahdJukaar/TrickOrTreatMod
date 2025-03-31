@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.hauntedharvest.neoforge;
+package net.mehvahdjukaar.hauntedharvest.entity;
 
 import net.minecraft.world.item.ItemStack;
 

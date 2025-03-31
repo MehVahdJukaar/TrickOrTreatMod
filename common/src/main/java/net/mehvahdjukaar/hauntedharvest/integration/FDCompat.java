@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.integration;
 
 import com.google.common.base.Suppliers;
-import com.ibm.icu.impl.Assert;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.hauntedharvest.reg.ModFoods;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -26,8 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.BuddingTomatoBlock;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 import vectorwing.farmersdelight.common.item.ConsumableItem;
-import vectorwing.farmersdelight.common.registry.ModBlocks;
-import vectorwing.farmersdelight.common.registry.ModEffects;
 import vectorwing.farmersdelight.common.registry.ModItems;
 
 import java.util.function.Supplier;
@@ -40,9 +38,10 @@ public class FDCompat {
     public static void init() {
         RegHelper.addItemsToTabsRegistration(FDCompat::addItemToTabsEvent);
     }
-    private static final Supplier<Block> BUDDING_TOMATO_CROP = make("farmersdelight:budding_tomatoes", BuiltInRegistries.BLOCK);
-    private static final Supplier<Block> TOMATO_CROP = make("farmersdelight:tomatoes", BuiltInRegistries.BLOCK);
-    public static final Supplier<MobEffect> NOURISHMENT = make("farmersdelight:nourishment", BuiltInRegistries.MOB_EFFECT);
+
+    private static final Supplier<Block> BUDDING_TOMATO_CROP = obj("farmersdelight:budding_tomatoes", BuiltInRegistries.BLOCK);
+    private static final Supplier<Block> TOMATO_CROP = obj("farmersdelight:tomatoes", BuiltInRegistries.BLOCK);
+    public static final Supplier<Holder<MobEffect>> NOURISHMENT = holder("farmersdelight:nourishment", BuiltInRegistries.MOB_EFFECT);
 
     public static void addItemToTabsEvent(RegHelper.ItemToTabEvent event) {
         ModTabs.after(event, Items.BREAD, CreativeModeTabs.FOOD_AND_DRINKS, ModRegistry.CORN_NAME, CORNBREAD);
@@ -62,8 +61,8 @@ public class FDCompat {
     public static final FoodProperties SUCCOTASH_FOOD = makeFood();
 
     @ExpectPlatform
-    private static FoodProperties makeFood() {
-    throw new AssertionError();
+    public static FoodProperties makeFood() {
+        throw new AssertionError();
     }
 
     public static final Supplier<Block> CORN_CRATE = regWithItem(
@@ -81,8 +80,11 @@ public class FDCompat {
                     true));
 
 
+    private static <T> Supplier<@Nullable T> obj(String name, Registry<T> registry) {
+        return Suppliers.memoize(() -> registry.getOptional(ResourceLocation.parse(name)).orElseThrow());
+    }
 
-    private static <T> Supplier<@Nullable T> make(String name, Registry<T> registry) {
-        return Suppliers.memoize(() -> registry.getOptional(ResourceLocation.parse(name)).orElse(null));
+    private static <T> Supplier<@Nullable Holder<T>> holder(String name, Registry<T> registry) {
+        return Suppliers.memoize(() -> registry.getHolder(ResourceLocation.parse(name)).orElseThrow());
     }
 }

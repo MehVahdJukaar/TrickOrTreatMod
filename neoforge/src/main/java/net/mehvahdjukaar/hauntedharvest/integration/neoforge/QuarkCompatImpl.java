@@ -2,17 +2,18 @@ package net.mehvahdjukaar.hauntedharvest.integration.neoforge;
 
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.SimpleHarvestEvent;
 
 public class QuarkCompatImpl {
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.register(QuarkCompatImpl.class);
+        NeoForge.EVENT_BUS.register(QuarkCompatImpl.class);
     }
-
-    @SubscribeEvent
+//TODO: add back
+    /*
+    //@SubscribeEvent
     public static void onSimpleHarvest(SimpleHarvestEvent event) {
         Block b = event.blockState.getBlock();
         if (b instanceof AbstractCornBlock c) {
@@ -21,5 +22,5 @@ public class QuarkCompatImpl {
             } else event.setTargetPos(event.pos.below(c.getHeight()));
         }
     }
-
+*/
 }

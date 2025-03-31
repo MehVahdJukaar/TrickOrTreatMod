@@ -13,6 +13,8 @@ public class NetworkHandler {
 
         event.registerServerBound(ServerBoundCarvePumpkinPacket.TYPE);
         event.registerClientBound(ClientBoundCopyCarvingCommand.TYPE);
+        event.registerBidirectional(SyncSnowGolemPumpkinPacket.CODEC);
+
     }
 
 }

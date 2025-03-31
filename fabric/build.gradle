@@ -37,6 +37,7 @@ dependencies {
         exclude group: 'net.fabricmc.fabric-api'
     }
     modImplementation("curse.maven:yacl-667299:4574163")
+    modImplementation("curse.maven:fabric-seasons-413523:5789846")
 
     modCompileOnly("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"

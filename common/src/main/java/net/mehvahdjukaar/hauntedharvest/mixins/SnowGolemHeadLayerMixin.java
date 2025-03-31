@@ -1,7 +1,7 @@
-package net.mehvahdjukaar.hauntedharvest.mixins.neoforge;
+package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.hauntedharvest.neoforge.ICustomPumpkinHolder;
+import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CompatTurkeyEggEntityMixin extends ThrowableItemProjectile {
 
     @Unique
-    private boolean hasSpawnedChicken = false;
+    private boolean hauntedharvest$hasSpawnedChicken = false;
 
     protected CompatTurkeyEggEntityMixin(EntityType<? extends ThrowableItemProjectile> arg, Level arg2) {
         super(arg, arg2);
@@ -27,7 +27,7 @@ public abstract class CompatTurkeyEggEntityMixin extends ThrowableItemProjectile
     @Inject(method = "onHit", require = 0,
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/world/level/Level;)Lnet/minecraft/world/entity/Entity;"))
     protected void onSpawnChicken(HitResult pResult, CallbackInfo ci) {
-        this.hasSpawnedChicken = true;
+        this.hauntedharvest$hasSpawnedChicken = true;
     }
 
     //from player2
@@ -35,7 +35,7 @@ public abstract class CompatTurkeyEggEntityMixin extends ThrowableItemProjectile
             at = @At(value = "INVOKE", shift = At.Shift.AFTER,
                     target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci) {
-        if (!this.hasSpawnedChicken) SplatteredEggEntity.spawn(pResult, this);
+        if (!this.hauntedharvest$hasSpawnedChicken) SplatteredEggEntity.spawn(pResult, this);
     }
 
 }

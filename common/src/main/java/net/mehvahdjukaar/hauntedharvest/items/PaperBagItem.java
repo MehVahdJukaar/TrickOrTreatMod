@@ -27,4 +27,5 @@ public class PaperBagItem extends BlockItem {
     public boolean isEnderMask(ItemStack stack, Player player, EnderMan enderMan) {
         return PAPER_BAG_ENDERMAN.get();
     }
+
 }

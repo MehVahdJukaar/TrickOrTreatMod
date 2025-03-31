@@ -7,12 +7,14 @@
   "mixins": [
     "AbstractSkeletonMixin",
     "NearestAttackableTargetGoalMixin",
+    "SnowGolemMixin",
     "ThrownEggEntityMixin",
     "VillagerMixin",
     "WitchMixin",
     "ZombieMixin"
   ],
   "client": [
+    "SnowGolemHeadLayerMixin",
     "VillagerRendererMixin"
   ],
   "injectors": {

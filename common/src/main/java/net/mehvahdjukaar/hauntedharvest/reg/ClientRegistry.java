@@ -4,13 +4,12 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
-import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinTileRenderer;
-import net.mehvahdjukaar.hauntedharvest.client.HalloweenMaskLayer;
-import net.mehvahdjukaar.hauntedharvest.client.SplatteredEggRenderer;
+import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.gui.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBakedModel;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
+import net.mehvahdjukaar.moonlight.api.client.ItemRenderExtension;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -38,7 +37,7 @@ public class ClientRegistry {
     public static final Material PUMPKIN = new Material(LOCATION_BLOCKS, ResourceLocation.parse("block/pumpkin_side"));
     public static final Material CARVING_OUTLINE = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/carving_grid"));
 
-    public static final ResourceLocation PAPER_BAG_OVERLAY =HauntedHarvest.res("textures/misc/paper_bag_overlay.png");
+    public static final ResourceLocation PAPER_BAG_OVERLAY = HauntedHarvest.res("textures/misc/paper_bag_overlay.png");
 
     public static final CoreShaderContainer BLUR_SHARED = new CoreShaderContainer(GameRenderer::getPositionTexColorShader);
 
@@ -86,9 +85,10 @@ public class ClientRegistry {
         ClientHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
         ClientHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
         ClientHelper.addShaderRegistration(ClientRegistry::registerShaders);
-
+        ClientHelper.addItemRenderersRegistration(ClientRegistry::registerItemRenderers);
         ClientHelper.addClientSetup(ClientRegistry::setup);
     }
+
 
     public static void setup() {
         ClientHelper.registerRenderType(ModRegistry.CORN_BASE.get(), RenderType.cutout());
@@ -97,6 +97,15 @@ public class ClientRegistry {
         PumpkinType.getTypes().forEach(t -> ClientHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
         ClientHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CORN_POT.get(), RenderType.cutout());
+    }
+
+
+    @EventCalled
+    private static void registerItemRenderers(ClientHelper.ItemRendererEvent event) {
+        CarvedPumpkinItemRenderer renderer = new CarvedPumpkinItemRenderer();
+        event.register(ModRegistry.CARVED_PUMPKIN.get(), (ItemRenderExtension) renderer);
+        event.register(ModRegistry.JACK_O_LANTERN.get(), (ItemRenderExtension) renderer);
+        event.register(ModRegistry.PAPER_BAG.get(), new PaperBagRenderExtension());
     }
 
     @EventCalled
