@@ -1,9 +1,15 @@
 {
-  "type": "hauntedharvest:carved_pumpkin",
-  "conditions": [
+  "fabric:load_conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "carved_pumpkin"
+    }
+  ],
+  "neoforge:conditions": [
     {
       "type": "hauntedharvest:flag",
       "flag": "carved_pumpkin"
     }
-  ]
+  ],
+  "type": "hauntedharvest:carved_pumpkin"
 }

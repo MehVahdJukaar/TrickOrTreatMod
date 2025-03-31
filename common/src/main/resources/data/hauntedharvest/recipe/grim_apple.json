@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "grim_apple"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "grim_apple"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
@@ -18,13 +30,7 @@
     }
   ],
   "result": {
-    "item": "hauntedharvest:grim_apple",
-    "count": 1
-  },
-  "conditions": [
-    {
-      "type": "hauntedharvest:flag",
-      "flag": "grim_apple"
-    }
-  ]
+    "count": 1,
+    "id": "hauntedharvest:grim_apple"
+  }
 }

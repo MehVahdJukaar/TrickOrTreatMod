@@ -1,8 +1,14 @@
 {
   "fabric:load_conditions": [
     {
-      "flag": "corn",
-      "condition": "hauntedharvest:flag"
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
     }
   ],
   "type": "simple",

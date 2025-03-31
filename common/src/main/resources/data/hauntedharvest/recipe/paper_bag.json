@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "paper_bag"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "paper_bag"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
@@ -11,13 +23,7 @@
     }
   },
   "result": {
-    "item": "hauntedharvest:paper_bag",
-    "count": 1
-  },
-  "conditions": [
-    {
-      "type": "hauntedharvest:flag",
-      "flag": "paper_bag"
-    }
-  ]
+    "count": 1,
+    "id": "hauntedharvest:paper_bag"
+  }
 }

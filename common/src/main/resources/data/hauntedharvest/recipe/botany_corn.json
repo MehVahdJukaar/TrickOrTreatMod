@@ -1,51 +1,65 @@
 {
-    "global_conditions": [
-        {
-            "modid": "botanypots",
-            "type": "forge:mod_loaded"
-        }
-    ],
-    "type": "botanypots:crop",
-    "seed": {
-        "item": "hauntedharvest:kernels"
+  "fabric:load_conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
     },
-    "categories": [
-        "dirt",
-        "farmland"
-    ],
-    "growthTicks": 1200,
-    "display": [
-        {
-            "block": "hauntedharvest:corn_base",
-            "properties": {
-                "age": 3
-            }
-        },
-        {
-            "block": "hauntedharvest:corn_middle",
-            "properties": {
-                "age": 2
-            }
-        },
-        {
-            "block": "hauntedharvest:corn_top",
-            "properties": {
-                "age": 1
-            }
-        }
-    ],
-    "drops": [
-        {
-            "chance": 1.00,
-            "output": {
-                "item": "hauntedharvest:corn"
-            }
-        },
-        {
-            "chance": 0.05,
-            "output": {
-                "item": "hauntedharvest:kernels"
-            }
-        }
-    ]
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "botanypots"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "botanypots"
+    }
+  ],
+  "type": "botanypots:crop",
+  "seed": {
+    "item": "hauntedharvest:kernels"
+  },
+  "categories": [
+    "dirt",
+    "farmland"
+  ],
+  "growthTicks": 1200,
+  "display": [
+    {
+      "block": "hauntedharvest:corn_base",
+      "properties": {
+        "age": 3
+      }
+    },
+    {
+      "block": "hauntedharvest:corn_middle",
+      "properties": {
+        "age": 2
+      }
+    },
+    {
+      "block": "hauntedharvest:corn_top",
+      "properties": {
+        "age": 1
+      }
+    }
+  ],
+  "drops": [
+    {
+      "chance": 1.00,
+      "output": {
+        "item": "hauntedharvest:corn"
+      }
+    },
+    {
+      "chance": 0.05,
+      "output": {
+        "item": "hauntedharvest:kernels"
+      }
+    }
+  ]
 }

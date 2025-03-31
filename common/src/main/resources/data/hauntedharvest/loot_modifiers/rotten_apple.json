@@ -1,6 +1,5 @@
 {
-  "type": "moonlight:add_item",
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "block_state_property",
       "block": "minecraft:oak_leaves"
@@ -19,6 +18,26 @@
       ]
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "block_state_property",
+      "block": "minecraft:oak_leaves"
+    },
+    {
+      "type": "minecraft:random_chance",
+      "chance": 0.0008
+    },
+    {
+      "type": "moonlight:iconditions",
+      "values": [
+        {
+          "type": "hauntedharvest:flag",
+          "flag": "grim_apple"
+        }
+      ]
+    }
+  ],
+  "type": "moonlight:add_item",
   "item": {
     "id": "hauntedharvest:rotten_apple",
     "Count": 1
