@@ -71,6 +71,10 @@ public class PumpkinType {
         return name;
     }
 
+    public String getTextureKey() {
+        return name.getNamespace() + "/" + name.getPath();
+    }
+
     public boolean isJackOLantern() {
         return this != NORMAL;
     }

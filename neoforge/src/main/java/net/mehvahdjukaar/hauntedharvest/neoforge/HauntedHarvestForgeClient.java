@@ -17,8 +17,6 @@ import net.neoforged.neoforge.common.util.TriState;
 public class HauntedHarvestForgeClient {
 
     public static void init(IEventBus bus) {
-        bus.register(HauntedHarvestForgeClient.class);
-
         ClientHelper.addClientSetup(() -> {
             if (ModList.get().isLoaded("configured")) {
                 ModConfigSelectScreen.registerConfigScreen(HauntedHarvest.MOD_ID, ModConfigSelectScreen::new);

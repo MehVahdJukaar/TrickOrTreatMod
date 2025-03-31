@@ -44,8 +44,8 @@ public class ClientRegistry {
     private static final Map<PumpkinType, Material[]> PUMPKIN_MATERIALS = Util.make(() -> {
         var l = new Object2ObjectOpenHashMap<PumpkinType, Material[]>();
         for (var t : PumpkinType.getTypes()) {
-            Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_shade"));
-            Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getName() + "_background"));
+            Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getTextureKey() + "_shade"));
+            Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getTextureKey() + "_background"));
             l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, PUMPKIN_HIGHLIGHT});
         }
         return l;
@@ -55,7 +55,7 @@ public class ClientRegistry {
         var l = new Object2ObjectOpenHashMap<PumpkinType, ModelResourceLocation>();
         for (var t : PumpkinType.getTypes()) {
             l.put(t, RenderUtil.getStandaloneModelLocation(
-                    HauntedHarvest.res("block/" + t.getName() + "_frame")));
+                    HauntedHarvest.res("block/" + t.getTextureKey() + "_frame")));
         }
         return l;
     });

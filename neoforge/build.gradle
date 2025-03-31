@@ -110,7 +110,7 @@ dependencies {neoForge "net.neoforged:neoforge:${neo_version}"
     modCompileOnly("curse.maven:emi-580555:5704405")
 
     modCompileOnly("curse.maven:serene-seasons-291874:4502525")
-    modCompileOnly("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
+   // modImplementation("net.mehvahdjukaar:supplementaries:${project.supplementaries_version}")
 
     modCompileOnly("org.violetmoon.quark:Quark-4.0-beta-431.3254")
 

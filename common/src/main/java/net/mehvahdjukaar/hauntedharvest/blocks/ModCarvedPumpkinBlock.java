@@ -127,7 +127,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+        if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te) {
             return Utils.saveTileToItem(te);
         }
         return super.getCloneItemStack(level, pos, state);
