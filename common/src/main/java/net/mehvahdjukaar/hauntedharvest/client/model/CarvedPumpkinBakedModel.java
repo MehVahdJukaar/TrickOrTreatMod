@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.client.model;
 
 import com.mojang.math.Transformation;
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
@@ -9,6 +10,7 @@ import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -24,6 +26,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CarvedPumpkinBakedModel implements CustomBakedModel {
 
@@ -131,15 +134,20 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         float u1 = 1 - (x + width);
         float v1 = 1 - (y + height);
 
-        BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform);
-        builder.setAutoDirection();
+        AtomicReference<BakedQuad> quad = new AtomicReference<>();
+        try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform, quad::set)) {
+            builder.setAutoDirection();
 
-        putVertex(builder, x + width, y + height, z, u1, v1);
-        putVertex(builder, x + width, y, z, u1, v0);
-        putVertex(builder, x, y, z, u0, v0);
-        putVertex(builder, x, y + height, z, u0, v1);
+            putVertex(builder, x + width, y + height,z, u1, v1);
+            putVertex(builder, x + width, y,z, u1, v0);
+            putVertex(builder, x, y,z, u0, v0);
+            putVertex(builder, x, y + height,z, u0, v1);
 
-        return builder.build();
+            //if (emissive) builder.lightEmission(15);
+        } catch (Exception e) {
+            HauntedHarvest.LOGGER.error("Error creating quad", e);
+        }
+        return quad.get();
     }
 
 

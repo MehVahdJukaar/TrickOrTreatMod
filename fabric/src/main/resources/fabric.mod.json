@@ -26,6 +26,9 @@
     ],
     "jei_mod_plugin": [
       "net.mehvahdjukaar.hauntedharvest.integration.JEICompat"
+    ],
+    "emi": [
+      "net.mehvahdjukaar.hauntedharvest.integration.EMICompat"
     ]
   },
   "mixins": [

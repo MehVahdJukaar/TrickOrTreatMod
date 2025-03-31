@@ -2,7 +2,6 @@ package net.mehvahdjukaar.hauntedharvest;
 
 
 import com.google.common.primitives.Longs;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,13 +9,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
+import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -52,7 +51,7 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
             level.setBlock(pos, (isLantern ? ModRegistry.JACK_O_LANTERN : ModRegistry.CARVED_PUMPKIN).get()
                     .defaultBlockState().setValue(CarvedPumpkinBlock.FACING, direction), flag);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
-                tile.acceptPixels(getRandomCarving(level.getRandom(), onlyFaces));
+                tile.setPixels(PumpkinCarvingData.unpack(getRandomCarving(level.getRandom(), onlyFaces)));
                 tile.setChanged();
             }
         }
@@ -68,10 +67,12 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
         } else {
             item = (isLantern ? ModRegistry.JACK_O_LANTERN : ModRegistry.CARVED_PUMPKIN).get().asItem().getDefaultInstance();
 
-            CompoundTag tag = item.getOrCreateTag();
-            CompoundTag t = new CompoundTag();
-            t.putLongArray("Pixels", getRandomCarving(level.getRandom(), onlyFaces));
-            tag.put("BlockEntityTag", t);
+
+            item.set(ModRegistry.PUMPKIN_CARVING.get(), PumpkinCarvingData.of(
+                    PumpkinCarvingData.unpack(
+                    getRandomCarving(level.getRandom(), onlyFaces)),
+                    PumpkinType.fromPumpkinItem(item.getItem()), false
+            ));
         }
         return item;
     }
@@ -96,7 +97,7 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
             level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get()
                     .defaultBlockState().setValue(CarvedPumpkinBlock.FACING, Direction.WEST), 3);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
-                tile.acceptPixels(c);
+                tile.setPixels(PumpkinCarvingData.unpack(c));
                 tile.setChanged();
             }
             pos = pos.relative(Direction.NORTH);

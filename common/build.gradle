@@ -17,7 +17,6 @@ dependencies {
     } else {
         modImplementation("curse.maven:selene-499980:5882410")
     }
-
     modCompileOnly("curse.maven:jei-238222:5846878")
     modCompileOnly("curse.maven:roughly-enough-items-310111:5731643")
     modCompileOnly("curse.maven:emi-580555:5872513")

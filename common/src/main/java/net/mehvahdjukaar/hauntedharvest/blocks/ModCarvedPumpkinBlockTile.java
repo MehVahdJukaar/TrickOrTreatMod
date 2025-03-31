@@ -9,9 +9,11 @@ import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -72,6 +74,34 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         }
     }
 
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        if (!this.isEmpty()) {
+            components.set(ModRegistry.PUMPKIN_CARVING.get(), data);
+        }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        var data = componentInput.get(ModRegistry.PUMPKIN_CARVING.get());
+        if (data != null) {
+            this.data = data;
+        } else {
+            this.clearPixels();
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        //same as in the components itself
+        tag.remove("values");
+        tag.remove("type");
+        tag.remove("waxed");
+    }
+
     private static boolean[][] legacyUnpackPixels(long[] packed) {
         boolean[][] bytes = new boolean[16][16];
         int k = 0;
@@ -94,7 +124,6 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        //TODO:make consistent with supp one
         PumpkinCarvingData.CODEC.encodeStart(ops, this.data);
     }
 

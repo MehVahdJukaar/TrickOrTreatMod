@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.network;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
@@ -7,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.VarInt;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -26,8 +29,25 @@ public class ServerBoundCarvePumpkinPacket implements Message {
 
     public ServerBoundCarvePumpkinPacket(RegistryFriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.pixels = buf.readLongArray();
         this.dir = Direction.from2DDataValue(buf.readVarInt());
+        this.pixels = new boolean[16][16];
+        for (int i = 0; i < this.pixels.length; i++) {
+            this.pixels[i] = readBoolArray(buf);
+        }
+    }
+
+    private static boolean[] readBoolArray(ByteBuf buffer) {
+        int i = VarInt.read(buffer);
+        int maxSize = buffer.readableBytes();
+        if (i > maxSize) {
+            throw new DecoderException("ByteArray with size " + i + " is bigger than allowed " + maxSize);
+        } else {
+            boolean[] bs = new boolean[i];
+            for (int j = 0; j < i; j++) {
+                bs[j] = buffer.readBoolean();
+            }
+            return bs;
+        }
     }
 
     public ServerBoundCarvePumpkinPacket(BlockPos pos, boolean[][] pixels, Direction dir) {
@@ -40,8 +60,18 @@ public class ServerBoundCarvePumpkinPacket implements Message {
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
-        buf.writeLongArray(this.pixels);
         buf.writeVarInt(this.dir.get2DDataValue());
+        //manually writes this. be sure it matches the read one
+        for (boolean[] pixel : this.pixels) {
+            writeBoolArray(buf, pixel);
+        }
+    }
+
+    private static void writeBoolArray(ByteBuf buffer, boolean[] bs) {
+        VarInt.write(buffer, bs.length);
+        for (boolean b : bs) {
+            buffer.writeBoolean(b);
+        }
     }
 
     @Override

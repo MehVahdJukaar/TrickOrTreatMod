@@ -24,7 +24,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     private static final int SIZE = 16;
 
     public static final Codec<boolean[][]> PIXEL_CODEC = Codec.LONG_STREAM.xmap(LongStream::toArray, Arrays::stream)
-            .xmap(PumpkinCarvingData::unpackPixels, PumpkinCarvingData::packPixels);
+            .xmap(PumpkinCarvingData::unpack, PumpkinCarvingData::pack);
 
     public static final Codec<PumpkinCarvingData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             PIXEL_CODEC.fieldOf("values").forGetter(v -> v.pixels),
@@ -54,7 +54,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     };
 
     private static final StreamCodec<RegistryFriendlyByteBuf, boolean[][]> PIXELS_CODEC = LONG_ARRAY
-            .map(PumpkinCarvingData::unpackPixels, PumpkinCarvingData::packPixels);
+            .map(PumpkinCarvingData::unpack, PumpkinCarvingData::pack);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PumpkinCarvingData> STREAM_CODEC = StreamCodec.composite(
             PIXELS_CODEC, data -> data.pixels,
@@ -77,7 +77,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     }
 
     public static PumpkinCarvingData of(boolean[][] pixels, PumpkinType pumpkinType, boolean waxed) {
-        return new PumpkinCarvingData(new boolean[SIZE][SIZE], pumpkinType, waxed);
+        return new PumpkinCarvingData(pixels, pumpkinType, waxed);
     }
 
     public static PumpkinCarvingData empty(PumpkinType pumpkinType) {
@@ -155,7 +155,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return new PumpkinCarvingData(pixels, this.type, this.waxed);
     }
 
-    public static long[] packPixels(boolean[][] pixels) {
+    public static long[] pack(boolean[][] pixels) {
         long[] packed = new long[4];  // We need 4 long values, each holding 64 bits
 
         for (int i = 0; i < SIZE; i++) {
@@ -173,7 +173,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return packed;
     }
 
-    public static boolean[][] unpackPixels(long[] packed) {
+    public static boolean[][] unpack(long[] packed) {
         boolean[][] pixels = new boolean[SIZE][SIZE];
 
         for (int i = 0; i < SIZE; i++) {

@@ -16,6 +16,7 @@ public class REICompat implements REIClientPlugin {
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         SpecialRecipeDisplays.registerCraftingRecipes(l -> l.forEach(r -> registry.add(DefaultCraftingDisplay.of(r))));
+
         registry.add(new DefaultTillingDisplay(EntryStack.of(VanillaEntryTypes.ITEM, Items.GRAVEL.getDefaultInstance()),
                 EntryStack.of(VanillaEntryTypes.ITEM, ModRegistry.RAKED_GRAVEL.get().asItem().getDefaultInstance())));
     }

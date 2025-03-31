@@ -94,9 +94,6 @@ public class HauntedHarvest {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
 
-        RegHelper.registerChickenFood(ModRegistry.KERNELS.get());
-        RegHelper.registerParrotFood(ModRegistry.KERNELS.get());
-
         DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
             @Override
             protected ItemStack execute(BlockSource source, ItemStack stack) {
@@ -188,7 +185,7 @@ public class HauntedHarvest {
                 itemEntity.setDeltaMovement(level.random.nextDouble() * 0.02, 0.05 + level.random.nextDouble() * 0.02, level.random.nextDouble() * 0.02);
                 level.addFreshEntity(itemEntity);
 
-                stack.hurtAndBreak(1, player, hand);
+                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                 level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
                         .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
 

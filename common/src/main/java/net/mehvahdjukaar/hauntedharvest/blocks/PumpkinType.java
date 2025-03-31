@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -45,6 +46,13 @@ public class PumpkinType {
         this.torch = torch;
         this.pumpkin = pumpkin;
         this.vanillaPumpkin = vanillaPumpkin;
+    }
+
+    public static PumpkinType fromPumpkinItem(Item item) {
+        if (item instanceof BlockItem bi && bi.getBlock() instanceof ModCarvedPumpkinBlock block) {
+            return block.getType(block.defaultBlockState());
+        }
+        throw new IllegalArgumentException("Item is not a pumpkin");
     }
 
     public Item getTorch() {

@@ -24,7 +24,7 @@ public abstract class ZombieMixin extends Mob {
     }
 
     @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EquipmentSlot;getIndex()I"))
-    public void addCustomPumpkins(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
+    public void addCustomPumpkins(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if (getItemBySlot(EquipmentSlot.HEAD).isEmpty() && level instanceof Level l &&
                 HauntedHarvest.getSeasonManager().shouldWearCustomPumpkin(l)) {
             if (level.getRandom().nextFloat() < CommonConfigs.WEAR_CHANCE.get()) {

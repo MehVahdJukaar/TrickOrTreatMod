@@ -61,7 +61,7 @@ public class AskCandy extends Behavior<Villager> {
 
         target.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
         displayAsHeldItem(pEntity, new ItemStack(Items.BUNDLE));
-        BehaviorUtils.lockGazeAndWalkToEachOther(pEntity, target, 0.5F);
+        BehaviorUtils.lockGazeAndWalkToEachOther(pEntity, target, 0.5F, 2);
         this.lookTime = 200;
         this.gotCandy = false;
     }
