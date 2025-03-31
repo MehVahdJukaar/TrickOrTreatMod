@@ -3,7 +3,6 @@ package net.mehvahdjukaar.hauntedharvest.client.screens;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
@@ -62,21 +61,8 @@ public class CarvingButton extends BaseCarvingButton {
 
     @Override
     protected void renderButton(GuiGraphics graphics) {
-        /*
-        int rgb = BlackboardBlock.colorFromByte(this.carved);
-        float b = FastColor.ARGB32.blue(rgb) / 255f;
-        float g = FastColor.ARGB32.green(rgb) / 255f;
-        float r = FastColor.ARGB32.red(rgb) / 255f;
-
-        RenderSystem.setShaderColor(r, g, b, 1.0F);
-        int offset = this.carved > 0 ? 16 : 0;
-        graphics.blit(ModTextures.BLACKBOARD_GUI_TEXTURE,
-                this.x, this.y,
-                (float) (this.u + offset) * size, (float) this.v * size,
-                size, size, 32 * size, 16 * size);
-*/
         TextureAtlasSprite sprite = material.sprite();
-        RenderUtil.blitSpriteSection(graphics, x, y, SIZE, SIZE, u, v, 1, 1, sprite);
+        RenderUtil.blitSpriteSection(graphics, this.x, this.y, SIZE, SIZE, u / 16f, v / 16f, 1, 1, sprite);
     }
 
 

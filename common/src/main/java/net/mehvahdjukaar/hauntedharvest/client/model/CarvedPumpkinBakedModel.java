@@ -157,7 +157,7 @@ public class CarvedPumpkinBakedModel implements CustomBakedModel {
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
         builder.addVertex(posV.x, posV.y, posV.z);
         builder.setColor(-1);
-        builder.setUv(u, v);
+        builder.setUv(u / 16f, v / 16f);
         builder.setNormal(0, 0, -1);
     }
 

@@ -11,6 +11,8 @@ import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -66,18 +68,11 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         return ((ModCarvedPumpkinBlock) state.getBlock()).getType(state);
     }
 
-    @Override
-    public ExtraModelData getExtraModelData() {
-        return ExtraModelData.builder()
-                .with(CARVING, data)
-                .build();
-    }
-
 
     @Override
-    public void afterDataPacket(ExtraModelData oldData) {
-        refreshType();
-        IExtraModelDataProvider.super.afterDataPacket(oldData);
+    public void addExtraModelData(ExtraModelData.Builder builder) {
+        IExtraModelDataProvider.super.addExtraModelData(builder);
+        builder.with(CARVING, data);
     }
 
     //I need this for when it's changed manually
@@ -89,6 +84,12 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     }
 
     @Override
+    public void afterDataPacket(ExtraModelData oldData) {
+        refreshType();
+        IExtraModelDataProvider.super.afterDataPacket(oldData);
+    }
+
+    @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
@@ -97,6 +98,14 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         if (tag.contains("Pixels")) {
             this.data = this.data.withPixels(legacyUnpackPixels(tag.getLongArray("Pixels")));
         }
+        this.requestModelReload();
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        tag.merge((CompoundTag) PumpkinCarvingData.CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow());
     }
 
     @Override
@@ -145,12 +154,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         return b == 1;
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        PumpkinCarvingData.CODEC.encodeStart(ops, this.data);
-    }
+
 
     public void clear() {
         this.data = this.data.makeCleared();

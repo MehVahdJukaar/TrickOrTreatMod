@@ -72,6 +72,7 @@ public class PumpkinType {
     }
 
     public String getTextureKey() {
+        if (name.getNamespace().equals("minecraft")) return name.getPath();
         return name.getNamespace() + "/" + name.getPath();
     }
 

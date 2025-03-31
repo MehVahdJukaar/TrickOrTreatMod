@@ -39,7 +39,7 @@ public class ClientRegistry {
 
     public static final ResourceLocation PAPER_BAG_OVERLAY = HauntedHarvest.res("textures/misc/paper_bag_overlay.png");
 
-    public static final ResourceLocation BLACKBOARD_OUTLINE_SPRITE = HauntedHarvest.res("outline");
+    public static final ResourceLocation OUTLINE_SPRITE = HauntedHarvest.res("outline");
 
     public static final CoreShaderContainer BLUR_SHARED = new CoreShaderContainer(GameRenderer::getPositionTexColorShader);
 

@@ -57,8 +57,6 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements Item
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
 
-        matrixStackIn.mulPose(RotHlpr.Y180);
-        matrixStackIn.translate(-1, 0, 0);
         VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);
 
         matrixStackIn.popPose();
