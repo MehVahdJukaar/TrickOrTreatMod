@@ -27,8 +27,10 @@
   ],
   "result": [
     {
-      "count": 6,
-      "item": "hauntedharvest:kernels"
+      "item": {
+        "count": 2,
+        "id": "hauntedharvest:kernels"
+      }
     }
   ],
   "tool": {

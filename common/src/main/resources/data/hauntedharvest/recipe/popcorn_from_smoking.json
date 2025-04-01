@@ -15,7 +15,10 @@
   "ingredient": {
     "tag": "c:seeds/corn"
   },
-  "result": "hauntedharvest:popcorn",
+  "result": {
+    "count": 1,
+    "id": "hauntedharvest:popcorn"
+  },
   "experience": 0.35,
   "cookingtime": 100
 }
