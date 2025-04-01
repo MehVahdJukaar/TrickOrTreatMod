@@ -7,7 +7,7 @@ def convert_to_fabric_condition(condition):
     if "type" in condition:
         val = condition["type"]
         if isinstance(val, str):
-            new_cond["condition"] = val.replace("neoforge:", "fabric:")
+            new_cond["condition"] = val.replace("\"neoforge:", "\"fabric:")
         else:
             new_cond["condition"] = val
     # Process remaining keys
@@ -23,12 +23,12 @@ def convert_to_fabric_condition(condition):
                 if isinstance(item, dict):
                     new_list.append(convert_to_neoforge_condition(item))
                 elif isinstance(item, str):
-                    new_list.append(item.replace("neoforge:", "fabric:"))
+                    new_list.append(item.replace("\"neoforge:", "\"fabric:"))
                 else:
                     new_list.append(item)
             new_value = new_list
         elif isinstance(value, str):
-            new_value = value.replace("neoforge:", "fabric:")
+            new_value = value.replace("\"neoforge:", "\"fabric:")
         else:
             new_value = value
         new_cond[key] = new_value
@@ -54,7 +54,7 @@ def convert_to_neoforge_condition(condition):
     if "condition" in condition:
         val = condition["condition"]
         if isinstance(val, str):
-            new_cond["type"] = val.replace("forge:", "neoforge:").replace("fabric:", "neoforge:")
+            new_cond["type"] = val.replace("\"forge:", "\"neoforge:").replace("\"fabric:", "\"neoforge:")
         else:
             new_cond["type"] = val
     # Process remaining keys
@@ -70,12 +70,12 @@ def convert_to_neoforge_condition(condition):
                 if isinstance(item, dict):
                     new_list.append(convert_to_neoforge_condition(item))
                 elif isinstance(item, str):
-                    new_list.append(item.replace("forge:", "neoforge:").replace("fabric:", "neoforge:"))
+                    new_list.append(item.replace("\"forge:", "\"neoforge:").replace("\"fabric:", "\"neoforge:"))
                 else:
                     new_list.append(item)
             new_value = new_list
         elif isinstance(value, str):
-            new_value = value.replace("forge:", "neoforge:").replace("fabric:", "neoforge:")
+            new_value = value.replace("\"forge:", "\"neoforge:").replace("\"fabric:", "\"neoforge:")
         else:
             new_value = value
         new_cond[key] = new_value
