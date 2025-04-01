@@ -113,11 +113,6 @@ def process_json_file(file_path):
 
     modified = False
 
-    # replace "result": {"item"...} with "result": {"id"...}
-    if "result" in data and "item" in data["result"]:
-        data["result"]["id"] = data["result"].pop("item")
-        modified = True
-
     # if it has a top level "conditions" key, replace it with "neoforge:conditions"
     if "conditions" in data:
         data["neoforge:conditions"] = data.pop("conditions")
@@ -161,11 +156,14 @@ def process_folder(directory):
     """Recursively process all JSON files in a directory."""
     for root, _, files in os.walk(directory):
         for file in files:
+            """" check if file is in a /recipe directory"""
+            if "recipe" not in root:
+                continue
             if file.endswith(".json"):
                 process_json_file(os.path.join(root, file))
 
 if __name__ == "__main__":
-    folder_path = "common/src/main/resources"
+    folder_path = "common/src/main/resources/data"
     if os.path.isdir(folder_path):
         process_folder(folder_path)
         print("Processing complete.")
