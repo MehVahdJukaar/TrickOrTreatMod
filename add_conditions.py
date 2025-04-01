@@ -129,19 +129,12 @@ def process_json_file(file_path):
             ]
             modified = True
 
-        if "neoforge:conditions" in data:
+        if "neoforge:conditions" in data and "fabric:load_conditions" not in data:
             data["neoforge:conditions"] = [
                 convert_to_neoforge_condition(cond)
                 for cond in data["neoforge:conditions"]
             ]
             modified = True
-
-        if "neoforge:conditions" in data:
-             data["fabric:load_conditions"] = [
-                 convert_to_fabric_condition(cond)
-                 for cond in data["neoforge:conditions"]
-             ]
-             modified = True
 
     if modified:
         # Reorder top-level keys before writing back.
