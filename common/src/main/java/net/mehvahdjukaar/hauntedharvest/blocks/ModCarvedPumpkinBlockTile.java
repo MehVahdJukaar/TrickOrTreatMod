@@ -212,7 +212,8 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
                     player.getName().getString());
         }
         if (this.isEmpty()) {
-            level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(ModCarvedPumpkinBlock.FACING, dir));
+            level.setBlockAndUpdate(worldPosition, this.getBlockState()
+                    .setValue(ModCarvedPumpkinBlock.FACING, dir));
         }
         //check if all pixels are non colored
         if (!data.hasSamePixels(pixels)) {

@@ -5,6 +5,10 @@
     {
       "id": "farmersdelight:budding_tomatoes",
       "required": false
+    },
+    {
+      "id": "farmersdelight:tomatoes",
+      "required": false
     }
   ]
 }

@@ -12,12 +12,12 @@
         {
           "type": "minecraft:loot_table",
           "weight": 6,
-          "name": "hauntedharvest:chests/abandoned_farm/rare_animal_food"
+          "value": "hauntedharvest:chests/abandoned_farm/rare_animal_food"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 4,
-          "name": "hauntedharvest:chests/abandoned_farm/animal_equipment"
+          "value": "hauntedharvest:chests/abandoned_farm/animal_equipment"
         }
       ]
     },

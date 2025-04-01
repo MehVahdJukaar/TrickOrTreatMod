@@ -1,24 +1,5 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "minecraft:random_chance",
-      "chance": 0.0008
-    },
-    {
-      "condition": "block_state_property",
-      "block": "minecraft:dark_oak_leaves"
-    },
-    {
-      "condition": "moonlight:iconditions",
-      "values": [
-        {
-          "type": "hauntedharvest:flag",
-          "flag": "grim_apple"
-        }
-      ]
-    }
-  ],
-  "neoforge:conditions": [
+  "conditions": [
     {
       "type": "minecraft:random_chance",
       "chance": 0.0008

@@ -67,7 +67,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci,
                                    @Share("hasSpawnedChicken") LocalBooleanRef spawnedChicken) {
         if (!spawnedChicken.get() && CommonConfigs.SPLATTERED_EGG_ENABLED.get()) {
-            if(this.getOwner() instanceof ServerPlayer serverPlayer) {
+            if (this.getOwner() instanceof ServerPlayer serverPlayer) {
                 Utils.awardAdvancement(serverPlayer, HauntedHarvest.res("nether/splatter_eggs_in_nether"));
             }
             SplatteredEggEntity.spawn(pResult, this);

@@ -10,12 +10,11 @@
     "description": {
       "translate": "advancements.husbandry.carve_custom_pumpkin.description"
     },
-    "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "minecraft:carved_pumpkin"
+      "count": 1,
+      "id": "minecraft:carved_pumpkin"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.husbandry.carve_custom_pumpkin.title"
     }

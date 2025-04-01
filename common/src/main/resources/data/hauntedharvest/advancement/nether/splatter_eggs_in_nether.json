@@ -10,12 +10,11 @@
     "description": {
       "translate": "advancements.nether.splatter_eggs_in_nether.description"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
-      "item": "minecraft:egg"
+      "count": 1,
+      "id": "minecraft:egg"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.nether.splatter_eggs_in_nether.title"
     }
