@@ -22,7 +22,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "c:salad_ingredients"
+      "tag": "c:foods/leafy_green"
     },
     {
       "tag": "c:crops/corn"
@@ -35,6 +35,7 @@
     }
   ],
   "result": {
+    "count": 1,
     "id": "farmersdelight:mixed_salad"
   }
 }
