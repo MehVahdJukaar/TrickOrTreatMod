@@ -174,7 +174,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             witch.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
 
 
-            ForgeHelper.onLivingConvert(this, witch);
+            ForgeHelper.fireOnLivingConvert(this, witch);
         }
 
         if (!this.isSilent()) {

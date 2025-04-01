@@ -211,7 +211,10 @@ public class ModRegistry {
 
     public static Supplier<ModCarvedPumpkinBlock> regPumpkin(String name, Supplier<ModCarvedPumpkinBlock> supplier) {
         var block = regBlock(name, supplier);
-        var item = regItem(name, () -> new ModCarvedPumpkinItem(block.get(), new Item.Properties()));
+        var item = regItem(name, () -> new ModCarvedPumpkinItem(block.get(),
+                new Item.Properties()
+                        .component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(block.get()
+                                .getType(block.get().defaultBlockState())))));
         return block;
     }
 

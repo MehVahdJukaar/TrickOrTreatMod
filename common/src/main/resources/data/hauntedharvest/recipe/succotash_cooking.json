@@ -5,11 +5,8 @@
       "modid": "farmersdelight"
     },
     {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "fabric:tag_empty",
-        "tag": "c:crops/corn"
-      }
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
     }
   ],
   "neoforge:conditions": [
@@ -18,32 +15,30 @@
       "modid": "farmersdelight"
     },
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:tag_empty",
-        "tag": "c:crops/corn"
-      }
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
     }
   ],
   "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
   "ingredients": [
-    {
-      "item": "minecraft:beetroot"
-    },
     {
       "tag": "c:crops/tomato"
     },
     {
-      "tag": "c:cooked_pork"
+      "tag": "c:foods/cooked_pork"
+    },
+    {
+      "item": "minecraft:beetroot"
     },
     {
       "tag": "c:crops/corn"
     }
   ],
+  "recipe_book_tab": "meals",
   "result": {
     "count": 1,
-    "id": "hauntedharvest:succotash"
-  },
-  "cookingtime": 200,
-  "experience": 1
+    "id": "farmersdelight:succotash"
+  }
 }

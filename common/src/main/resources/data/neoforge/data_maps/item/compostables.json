@@ -1,0 +1,17 @@
+{
+  "moonlight_parse_on_fabric": true,
+  "values": {
+    "hauntedharvest:kernels": {
+      "chance": 0.3,
+      "can_villager_compost": true
+    },
+    "hauntedharvest:corn": {
+      "chance": 0.65,
+      "can_villager_compost": true
+    },
+    "hauntedharvest:carved_pumpkin": {
+      "chance": 0.65,
+      "can_villager_compost": true
+    }
+  }
+}

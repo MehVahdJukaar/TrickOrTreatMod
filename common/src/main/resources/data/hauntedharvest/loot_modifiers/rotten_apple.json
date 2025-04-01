@@ -1,21 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "grim_apple"
+    }
+  ],
   "conditions": [
     {
-      "type": "block_state_property",
+      "condition": "block_state_property",
       "block": "minecraft:oak_leaves"
     },
     {
-      "type": "minecraft:random_chance",
+      "condition": "minecraft:random_chance",
       "chance": 0.0008
-    },
-    {
-      "type": "moonlight:iconditions",
-      "values": [
-        {
-          "type": "hauntedharvest:flag",
-          "flag": "grim_apple"
-        }
-      ]
     }
   ],
   "type": "moonlight:add_item",

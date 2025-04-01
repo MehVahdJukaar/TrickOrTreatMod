@@ -6,7 +6,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
@@ -20,9 +19,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +63,8 @@ public class CarvingManager implements PreparableReloadListener {
                 }
             });
 
-    public static CarvingVisuals getInstance(PumpkinCarvingData key) {
+    public static CarvingVisuals getInstance(@NotNull PumpkinCarvingData key) {
+
         CarvingVisuals textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
             textureInstance = new CarvingVisuals(key.getPixelsUnsafe(), key.getType());

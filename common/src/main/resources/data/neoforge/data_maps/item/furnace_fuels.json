@@ -1,0 +1,8 @@
+{
+  "moonlight_parse_on_fabric": true,
+  "values": {
+    "hauntedharvest:paper_bag": {
+      "burn_time": 50
+    }
+  }
+}
