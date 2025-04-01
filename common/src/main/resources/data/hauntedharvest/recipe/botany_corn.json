@@ -15,7 +15,7 @@
       "flag": "corn"
     },
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "botanypots"
     }
   ],
@@ -50,7 +50,7 @@
   ],
   "drops": [
     {
-      "chance": 1.00,
+      "chance": 1.0,
       "output": {
         "item": "hauntedharvest:corn"
       }

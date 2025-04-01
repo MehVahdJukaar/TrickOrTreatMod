@@ -1,0 +1,24 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:crops/corn"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "hauntedharvest:kernels"
+  }
+}

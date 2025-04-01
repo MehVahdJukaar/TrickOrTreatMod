@@ -1,0 +1,21 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:crops/corn"
+  },
+  "result": "hauntedharvest:corn_on_the_cob",
+  "experience": 0.35,
+  "cookingtime": 200
+}

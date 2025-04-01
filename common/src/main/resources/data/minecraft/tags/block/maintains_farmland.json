@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "hauntedharvest:corn_base",
+    {
+      "id": "farmersdelight:budding_tomatoes",
+      "required": false
+    }
+  ]
+}

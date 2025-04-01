@@ -1,0 +1,29 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "tag": "c:crops/corn"
+  },
+  "result": "hauntedharvest:corn_on_the_cob",
+  "experience": 0.35,
+  "cookingtime": 100
+}

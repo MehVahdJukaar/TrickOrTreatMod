@@ -13,7 +13,9 @@ import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -63,8 +65,8 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements Item
     }
 
     @Override
-    public void renderHelmetOverlay(ItemStack stack, Player player, int width, int height, float partialTick) {
-        BlurOverlay.renderPumpkin(stack, width, height);
+    public void renderHelmetOverlay(ItemStack stack, Player player, GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        BlurOverlay.renderPumpkin(stack, player, guiGraphics, deltaTracker);
     }
 
 

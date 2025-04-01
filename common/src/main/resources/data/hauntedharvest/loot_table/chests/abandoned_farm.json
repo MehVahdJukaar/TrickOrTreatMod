@@ -181,7 +181,7 @@
               "add": false
             }
           ],
-          "name": "#forge:crops/tomato"
+          "name": "#c:crops/tomato"
         },
         {
           "type": "moonlight:optional_item",
@@ -197,7 +197,7 @@
               "add": false
             }
           ],
-          "name": "#forge:crops/flax"
+          "name": "#c:crops/flax"
         }
       ]
     }

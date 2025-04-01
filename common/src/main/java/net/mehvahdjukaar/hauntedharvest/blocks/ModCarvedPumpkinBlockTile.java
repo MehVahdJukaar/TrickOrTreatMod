@@ -93,10 +93,14 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        var oldType = this.getPumpkinType();
         this.data = PumpkinCarvingData.CODEC.parse(ops, tag).getOrThrow();
+        if (oldType != this.data.getType()) {
+            this.data = this.data.withType(oldType);
+        }
         //backwards compat
         if (tag.contains("Pixels")) {
-            this.data = this.data.withPixels(legacyUnpackPixels(tag.getLongArray("Pixels")));
+            this.data = this.data.withPixels(PumpkinCarvingData.unpack(tag.getLongArray("Pixels")));
         }
         this.requestModelReload();
     }
@@ -135,25 +139,6 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         tag.remove("type");
         tag.remove("waxed");
     }
-
-    private static boolean[][] legacyUnpackPixels(long[] packed) {
-        boolean[][] bytes = new boolean[16][16];
-        int k = 0;
-        for (long l : packed) {
-            for (int j = 0; j < 4; j++) {
-                for (int i = 0; i < 16; i++) {
-                    bytes[k][i] = toBoolean((short) ((l >> (i + j * 16)) & 1));
-                }
-                k++;
-            }
-        }
-        return bytes;
-    }
-
-    private static boolean toBoolean(short b) {
-        return b == 1;
-    }
-
 
 
     public void clear() {

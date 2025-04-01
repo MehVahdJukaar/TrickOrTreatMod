@@ -156,17 +156,14 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     }
 
     public static long[] pack(boolean[][] pixels) {
-        long[] packed = new long[4];  // We need 4 long values, each holding 64 bits
-
+        long[] packed = new long[SIZE / 4];  // Since each long stores 4 rows (64 bits)
         for (int i = 0; i < SIZE; i++) {
+            int chunk = i % 4;          // Which group of 4 rows (0-3)
+            int longIndex = i / 4;      // Which long in the packed array
             for (int j = 0; j < SIZE; j++) {
-                int index = i * SIZE + j;  // Calculate the overall index in the 256 bits
-                int longIndex = index / 64;  // Determine which long value this bit will go into
-                int bitIndex = index % 64;   // Determine which bit in the long value to set
-
-                // Set the bit in the corresponding long value if the pixel is true
                 if (pixels[i][j]) {
-                    packed[longIndex] |= (1L << (63 - bitIndex));  // Set the bit at the correct position
+                    int bitInLong = j + chunk * SIZE;  // Same bit position as unpack
+                    packed[longIndex] |= (1L << bitInLong);  // Set the bit
                 }
             }
         }
@@ -175,35 +172,16 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
 
     public static boolean[][] unpack(long[] packed) {
         boolean[][] pixels = new boolean[SIZE][SIZE];
-
         for (int i = 0; i < SIZE; i++) {
+            int chunk = i % 4;           // Determine which of the 4 row groups (per long)
+            int longIndex = i / 4;        // Which long in the packed array
             for (int j = 0; j < SIZE; j++) {
-                int index = i * SIZE + j;  // Calculate the overall index in the 256 bits
-                int longIndex = index / 64;  // Determine which long value this bit comes from
-                int bitIndex = index % 64;   // Determine which bit in the long value to check
-
-                // Check if the bit is set in the corresponding long value
-                pixels[i][j] = (packed[longIndex] & (1L << (63 - bitIndex))) != 0;
+                int bitInLong = j + chunk * SIZE;  // Bit position in the long (0-63)
+                pixels[i][j] = (packed[longIndex] & (1L << bitInLong)) != 0;
             }
         }
         return pixels;
     }
-
-/*
-    public static boolean[][] unpackPixels(long[] packed) {
-        boolean[][] bytes = new boolean[SIZE][SIZE];
-        int k = 0;
-        for (long l : packed) {
-            for (int j = 0; j < 4; j++) {
-                for (int i = 0; i < SIZE; i++) {
-                    bytes[k][i] = toBoolean((short) ((l >> (i + j * SIZE)) & 1));
-                }
-                k++;
-            }
-        }
-        return bytes;
-    }*/
-
 
 
     public static long[] unpackPixelsFromStringWhiteOnly(String packed) {

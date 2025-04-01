@@ -1,0 +1,37 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "condition": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "hauntedharvest:flag",
+      "flag": "corn"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "111",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "tag": "c:crops/corn"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "hauntedharvest:corn_crate"
+  }
+}
