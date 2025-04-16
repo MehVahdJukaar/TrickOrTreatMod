@@ -8,20 +8,11 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "source": "block_entity",
-              "ops": [
-                {
-                  "source": "Pixels",
-                  "target": "BlockEntityTag.Pixels",
-                  "op": "replace"
-                },
-                {
-                  "source": "Waxed",
-                  "target": "BlockEntityTag.Waxed",
-                  "op": "replace"
-                }
-              ]
+              "function": "minecraft:copy_components",
+              "include": [
+                "hauntedharvest:pumpkin_carving"
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "hauntedharvest:carved_pumpkin"

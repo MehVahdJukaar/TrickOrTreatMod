@@ -11,8 +11,6 @@ import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -109,7 +107,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        tag.merge((CompoundTag) PumpkinCarvingData.CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow());
+        tag.merge((CompoundTag) PumpkinCarvingData.CODEC.encodeStart(ops, data).getOrThrow());
     }
 
     @Override

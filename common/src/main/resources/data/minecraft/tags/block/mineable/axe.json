@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "hauntedharvest:carved_pumpkins",
+    "#hauntedharvest:carved_pumpkins",
     {
       "id": "hauntedharvest:corn_crate",
       "required": false
