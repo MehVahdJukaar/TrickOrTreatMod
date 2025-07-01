@@ -1,1 +1,1 @@
-- fixed some tags and loot tables
+fixed a server crash on fabric
