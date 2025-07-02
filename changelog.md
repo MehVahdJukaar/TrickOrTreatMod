@@ -1,5 +1,1 @@
-- paper bag can hide name tags
-- paper bags can hide from endermen
-- paper bags now have an overlay texture
-- fixed paper bag head inner model
-- fixed pumpkin overlay disappearing when reloading textures
+fixed a server crash on fabric

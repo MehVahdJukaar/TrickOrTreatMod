@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 
 public class HauntedHarvestFabric implements ModInitializer {
 
@@ -18,7 +19,9 @@ public class HauntedHarvestFabric implements ModInitializer {
 
         CommonLifecycleEvents.TAGS_LOADED.register((a, b) -> HauntedHarvest.onTagLoad());
 
-        ClientEntityEvents.ENTITY_LOAD.register(HauntedHarvest::onClientEntityLoad);
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            ClientEntityEvents.ENTITY_LOAD.register(HauntedHarvest::onClientEntityLoad);
+        }
     }
 
 
