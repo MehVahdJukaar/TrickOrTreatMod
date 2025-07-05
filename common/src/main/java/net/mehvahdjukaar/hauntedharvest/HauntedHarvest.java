@@ -199,7 +199,7 @@ public class HauntedHarvest {
                     Utils.awardAdvancement(serverPlayer, HauntedHarvest.res("husbandry/carve_custom_pumpkin"));
                     if (!player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te
                             && te.getCarveMode().canOpenGui()) {
-                        te.sendOpenGuiPacket(level, pos, player, player.getDirection().getOpposite());
+                        te.sendOpenGuiPacket(serverPlayer, player.getDirection().getOpposite());
                     }
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);

@@ -94,7 +94,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                 }
                 if (mode.canOpenGui()) {
                     if (player instanceof ServerPlayer serverPlayer) {
-                        te.tryOpeningEditGui(serverPlayer, pos, stack);
+                        te.tryOpeningEditGui(serverPlayer, pos, stack, hit.getDirection());
                     }
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);

@@ -45,10 +45,11 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         this.data = PumpkinCarvingData.empty(getPumpkinType());
     }
 
+
     @Override
-    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction hitFace) {
         if (isWaxed()) return false;
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, hitFace);
     }
 
     @Override
@@ -179,7 +180,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
 
 
     @Override
-    public void openScreen(Level level, BlockPos blockPos, Player player, Direction direction) {
+    public void openScreen(Level level, Player player, Direction direction) {
         CarvingScreen.open(this, direction);
     }
 
@@ -205,7 +206,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, boolean[][] pixels, Direction dir) {
 
-        if (!this.isEditingPlayer(player) || this.isWaxed() || !CommonConfigs.PUMPKIN_CARVE_MODE.get().canOpenGui()) {
+        if (!this.isEditingPlayer(this.worldPosition, player) || this.isWaxed() || !CommonConfigs.PUMPKIN_CARVE_MODE.get().canOpenGui()) {
             HauntedHarvest.LOGGER.warn("Player {} just tried to change non-editable carved pumpkin",
                     player.getName().getString());
         }
