@@ -7,11 +7,13 @@ import net.mehvahdjukaar.hauntedharvest.ai.IHarmlessProjectile;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
@@ -67,7 +69,8 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci,
                                    @Share("hasSpawnedChicken") LocalBooleanRef spawnedChicken) {
         if (!spawnedChicken.get() && CommonConfigs.SPLATTERED_EGG_ENABLED.get()) {
-            if (this.getOwner() instanceof ServerPlayer serverPlayer) {
+            if (this.getOwner() instanceof ServerPlayer serverPlayer &&
+                    serverPlayer.level().dimensionTypeRegistration().is(BuiltinDimensionTypes.NETHER)) {
                 Utils.awardAdvancement(serverPlayer, HauntedHarvest.res("nether/splatter_eggs_in_nether"));
             }
             SplatteredEggEntity.spawn(pResult, this);
