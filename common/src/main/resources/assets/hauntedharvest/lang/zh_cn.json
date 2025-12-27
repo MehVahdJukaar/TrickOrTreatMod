@@ -5,6 +5,7 @@
   "entity.hauntedharvest.splattered_egg": "打碎的蛋",
   "gui.hauntedharvest.carving.edit": "雕刻",
   "gui.hauntedharvest.carving.clear": "清除",
+  "gui.hauntedharvest.carving.undo": "撤销",
   "item.hauntedharvest.corn": "玉米",
   "item.hauntedharvest.corn_on_the_cob": "烤玉米",
   "item.hauntedharvest.popcorn": "爆米花",
@@ -26,5 +27,6 @@
   "advancements.nether.splatter_eggs_in_nether.description": "在下界投出一颗蛋",
   "advancements.nether.splatter_eggs_in_nether.title": "魔鬼蛋",
   "advancements.husbandry.carve_custom_pumpkin.description": "剪去南瓜的顶部",
-  "advancements.husbandry.carve_custom_pumpkin.title": "稍微剪短一些"
+  "advancements.husbandry.carve_custom_pumpkin.title": "稍微剪短一些",
+  "message.hauntedharvest.waxed": "已涂蜡"
 }
