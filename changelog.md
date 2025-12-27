@@ -1,1 +1,1 @@
-disabled quark compat
+updated pumpkin type code

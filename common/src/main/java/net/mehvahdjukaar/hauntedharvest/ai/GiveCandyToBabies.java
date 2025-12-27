@@ -90,7 +90,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
             else if (r < 3) {
                 spookVillager(pOwner, target);
             } else {
-                ItemStack stack = BuiltInRegistries.ITEM.getTag(ModTags.SWEETS)
+                ItemStack stack = BuiltInRegistries.ITEM.getTag(ModTags.VILLAGER_SWEETS)
                         .get().getRandomElement(pLevel.random).get().value().getDefaultInstance();
                 throwCandy(pOwner, target, stack);
 

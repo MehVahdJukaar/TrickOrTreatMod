@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"hauntedharvest:popcorn","required":false},
+    {"id":"hauntedharvest:candy_corn","required":false}
+  ]
+}

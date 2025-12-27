@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "hauntedharvest:corn"
+    "hauntedharvest:rotten_apple",
+    "hauntedharvest:grim_apple",
+    "hauntedharvest:corn_on_the_cob",
+    "hauntedharvest:candy_corn",
+    "hauntedharvest:popcorn"
   ]
 }

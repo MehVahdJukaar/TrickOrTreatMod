@@ -2,27 +2,43 @@
   "replace": false,
   "values": [
     {
+      "id": "minecraft:apple",
+      "required": true
+    },
+    {
       "id": "minecraft:cookie",
+      "required": true
+    },
+    {
+      "id": "#supplementaries:jar_cookies",
+      "required": true
+    },
+    {
+      "id": "hauntedharvest:candy_corn",
+      "required": true
+    },
+    {
+      "id": "hauntedharvest:popcorn",
+      "required": true
+    },
+    {
+      "id": "supplementaries:candy",
       "required": false
     },
     {
-      "id": "snowyspirit:candy_cane",
+      "id": "croptopia:raisin_oatmeal_cookie",
       "required": false
     },
     {
-      "id": "#villagersoctober:candy",
+      "id": "croptopia:nutty_cookie",
       "required": false
     },
     {
-      "id": "#halloween_mood:candies",
+      "id": "croptopia:nutty_cookie",
       "required": false
     },
     {
-      "id": "shuckhorror:candy_corn",
-      "required": false
-    },
-    {
-      "id": "shuckhorror:popcorn",
+      "id": "croptopia:chocolate",
       "required": false
     },
     {
@@ -38,7 +54,15 @@
       "required": false
     },
     {
+      "id": "vanillacookbook:chocolate",
+      "required": false
+    },
+    {
       "id": "vanillacookbook:sword_lollipop",
+      "required": false
+    },
+    {
+      "id": "bumpkinbatch:ore_o",
       "required": false
     },
     {
@@ -114,11 +138,31 @@
       "required": false
     },
     {
+      "id": "candymod:chocolate_bar",
+      "required": false
+    },
+    {
       "id": "trickortreat:bonebreaker",
       "required": false
     },
     {
       "id": "trickxortreat:sugarbone",
+      "required": false
+    },
+    {
+      "id": "snowyspirit:candy_cane",
+      "required": false
+    },
+    {
+      "id": "snowyspirit:gingerbread_cookie",
+      "required": false
+    },
+    {
+      "id": "buzzierbees:honey_apple",
+      "required": false
+    },
+    {
+      "id": "atmospheric:candied_orange_slices",
       "required": false
     }
   ]

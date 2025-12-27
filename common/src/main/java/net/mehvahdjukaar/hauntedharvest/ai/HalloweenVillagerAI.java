@@ -9,7 +9,6 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.entity.VillagerAIHooks;
 import net.mehvahdjukaar.moonlight.api.events.IVillagerBrainEvent;
-import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
@@ -124,7 +123,7 @@ public class HalloweenVillagerAI {
     public static void refreshCandies() {
         BABY_VILLAGER_EATABLE.clear();
         Set<Item> temp = new HashSet<>();
-        for (var p : BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.SWEETS)) {
+        for (var p : BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.VILLAGER_SWEETS)) {
             temp.add(p.value());
         }
         temp.add(ModRegistry.GRIM_APPLE.get());
