@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -47,8 +48,8 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements Item
 
         ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock) ((BlockItem) stack.getItem()).getBlock();
         BlockState state = block.defaultBlockState();
-        PumpkinType type = block.getType(state);
-        ModelResourceLocation frame = ClientRegistry.getPumpkinFrame(type);
+        Holder<PumpkinType> type = block.getType(state);
+        ModelResourceLocation frame = ClientRegistry.getPumpkinFrame(type.value());
 
         BakedModel model = ClientHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(), frame);
         blockRenderer.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -19,14 +20,14 @@ import java.util.Optional;
 
 public class ModCarvedPumpkinItem extends BlockItem {
 
-    private final PumpkinType type;
+    private final Holder<PumpkinType> type;
 
     public ModCarvedPumpkinItem(ModCarvedPumpkinBlock block, Properties properties) {
         super(block, properties);
         this.type = block.getType(block.defaultBlockState());
     }
 
-    public PumpkinType getType() {
+    public Holder<PumpkinType> getType() {
         return type;
     }
 
@@ -38,7 +39,7 @@ public class ModCarvedPumpkinItem extends BlockItem {
 
     @ForgeOverride
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
-        return type.isJackOLantern() ? null : EquipmentSlot.HEAD;
+        return getType().value().isJackOLantern() ? null : EquipmentSlot.HEAD;
     }
 
     @ForgeOverride

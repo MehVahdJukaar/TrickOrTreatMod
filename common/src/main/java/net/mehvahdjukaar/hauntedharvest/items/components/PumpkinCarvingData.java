@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -28,7 +29,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
 
     public static final Codec<PumpkinCarvingData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             PIXEL_CODEC.fieldOf("values").forGetter(v -> v.pixels),
-            PumpkinType.CODEC.fieldOf("type").forGetter(v -> v.type),
+            PumpkinType.REGISTRY.holderByNameCodec().fieldOf("type").forGetter(v -> v.type),
             Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
     ).apply(instance, PumpkinCarvingData::new));
 
@@ -58,29 +59,29 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PumpkinCarvingData> STREAM_CODEC = StreamCodec.composite(
             PIXELS_CODEC, data -> data.pixels,
-            PumpkinType.STREAM_CODEC, data -> data.type,
+            ByteBufCodecs.holderRegistry(PumpkinType.REGISTRY.key()), data -> data.type,
             ByteBufCodecs.BOOL, data -> data.waxed,
             PumpkinCarvingData::new
     );
 
     private final boolean[][] pixels;
     private final boolean waxed;
-    private final PumpkinType type;
+    private final Holder<PumpkinType> type;
 
     private final int cachedHashCode;
 
-    PumpkinCarvingData(boolean[][] pixels, PumpkinType type, boolean waxed) {
+    PumpkinCarvingData(boolean[][] pixels, Holder<PumpkinType> type, boolean waxed) {
         this.pixels = pixels;
         this.type = type;
         this.waxed = waxed;
         this.cachedHashCode = Objects.hash(Arrays.deepHashCode(pixels), type, waxed);
     }
 
-    public static PumpkinCarvingData of(boolean[][] pixels, PumpkinType pumpkinType, boolean waxed) {
+    public static PumpkinCarvingData of(boolean[][] pixels, Holder<PumpkinType> pumpkinType, boolean waxed) {
         return new PumpkinCarvingData(pixels, pumpkinType, waxed);
     }
 
-    public static PumpkinCarvingData empty(PumpkinType pumpkinType) {
+    public static PumpkinCarvingData empty(Holder<PumpkinType> pumpkinType) {
         return new PumpkinCarvingData(new boolean[SIZE][SIZE], pumpkinType, false);
     }
 
@@ -107,7 +108,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return waxed;
     }
 
-    public PumpkinType getType() {
+    public Holder<PumpkinType> getType() {
         return type;
     }
 
@@ -240,7 +241,7 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return builder.toString();
     }
 
-    public PumpkinCarvingData withType(PumpkinType pumpkinType) {
+    public PumpkinCarvingData withType(Holder<PumpkinType> pumpkinType) {
         return new PumpkinCarvingData(this.pixels, pumpkinType, this.waxed);
     }
 }

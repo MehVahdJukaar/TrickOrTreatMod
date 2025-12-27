@@ -7,6 +7,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -28,12 +29,8 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
 
     private static final int WIDTH = 6;
 
-    private final Minecraft mc;
-    private final Camera camera;
 
     public CarvedPumpkinTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.mc = Minecraft.getInstance();
-        this.camera = this.mc.gameRenderer.getMainCamera();
     }
 
     @Override
@@ -53,11 +50,10 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
         if (!tile.getCarveMode().canManualDraw()) return;
 
         Direction dir = tile.getDirection();
-        float yaw = -dir.toYRot();
-
-        Vec3 cameraPos = camera.getPosition();
+        Minecraft mc = Minecraft.getInstance();
+        LOD lod = LOD.at(tile);
         BlockPos pos = tile.getBlockPos();
-        if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, WIDTH / 16f)) return;
+        if (lod.isPlaneCulled(dir, WIDTH / 16f)) return;
 
 
         HitResult hit = mc.hitResult;
@@ -87,8 +83,8 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
                         matrixStackIn.pushPose();
 
                         matrixStackIn.translate(x, 1 - y - p, 0.001);
-                        addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1,
-                                1, 1, 1, 1, lu, lv, 0, 0, 1);
+                        VertexUtil.addQuad(builder2, matrixStackIn, 0, 0,  p, p, lu, lv);
+
                         matrixStackIn.popPose();
 
                         matrixStackIn.popPose();
@@ -96,26 +92,6 @@ public class CarvedPumpkinTileRenderer implements BlockEntityRenderer<ModCarvedP
                 }
             }
         }
-    }
-
-    @Deprecated(forRemoval = true)
-    public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
-                                   float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
-    }
-
-    @Deprecated(forRemoval = true)
-    public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
-                               float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        builder.addVertex(matrixStackIn.last().pose(), x, y, z);
-        builder.setColor(r, g, b, a);
-        builder.setUv(u, v);
-        builder.setOverlay(OverlayTexture.NO_OVERLAY);
-        builder.setUv2(lu, lv);
-        builder.setNormal(matrixStackIn.last(), nx, ny, nz);
     }
 
 }

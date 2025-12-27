@@ -47,15 +47,21 @@
           "condition": "minecraft:random_chance",
           "chance": 0.79
         },
-        {
-          "condition": "moonlight:iconditions",
-          "values": [
-            {
-              "type": "hauntedharvest:flag",
-              "flag": "grim_apple"
-            }
-          ]
-        }
+          {
+            "condition": "moonlight:load_conditions",
+            "fabric:load_conditions": [
+              {
+                "condition": "hauntedharvest:flag",
+                "flag": "grim_apple"
+              }
+            ],
+            "neoforge:conditions": [
+              {
+                "type": "hauntedharvest:flag",
+                "flag": "grim_apple"
+              }
+            ]
+          }
       ]
     },
     {
@@ -101,8 +107,14 @@
       ],
       "conditions": [
         {
-          "condition": "moonlight:iconditions",
-          "values": [
+          "condition": "moonlight:load_conditions",
+          "fabric:load_conditions": [
+            {
+              "condition": "hauntedharvest:flag",
+              "flag": "corn"
+            }
+          ],
+          "neoforge:conditions": [
             {
               "type": "hauntedharvest:flag",
               "flag": "corn"

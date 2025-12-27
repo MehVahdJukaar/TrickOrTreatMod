@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
-import net.mehvahdjukaar.hauntedharvest.HHPlatformStuff;
 import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -39,14 +39,14 @@ import java.util.function.Predicate;
 
 public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityBlock {
 
-    private final PumpkinType type;
+    private final Holder<PumpkinType> type;
 
-    public ModCarvedPumpkinBlock(Properties properties, PumpkinType type) {
+    public ModCarvedPumpkinBlock(Properties properties, Holder<PumpkinType> type) {
         super(properties);
         this.type = type;
     }
 
-    public PumpkinType getType(BlockState state) {
+    public Holder<PumpkinType> getType(BlockState state) {
         return type;
     }
 
@@ -94,7 +94,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
                 }
                 if (mode.canOpenGui()) {
                     if (player instanceof ServerPlayer serverPlayer) {
-                        te.tryOpeningEditGui(serverPlayer, pos, stack, hit.getDirection());
+                        Utils.openGuiIfPossible(te, serverPlayer, stack, hit.getDirection(), hit.getLocation());
                     }
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
@@ -144,7 +144,7 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
             SnowGolem snowGolem = EntityType.SNOW_GOLEM.create(level);
             if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
                 if (snowGolem instanceof ICustomPumpkinHolder customPumpkinHolder) {
-                    ItemStack stack =  Utils.saveTileToItem(tile);
+                    ItemStack stack = Utils.saveTileToItem(tile);
                     customPumpkinHolder.hauntedharvest$setCustomPumpkin(stack);
                 }
             }

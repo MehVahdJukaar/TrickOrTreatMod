@@ -34,7 +34,6 @@
         "projection": "rigid",
         "element_type": "hauntedharvest:random_feature_pool_element"
       }
-
     }
   ]
 }

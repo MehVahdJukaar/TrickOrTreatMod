@@ -5,7 +5,7 @@ import net.mehvahdjukaar.hauntedharvest.client.screens.CarvingScreen;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
+import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -13,24 +13,26 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenProvider, IOnePlayerInteractable,
+public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenProvider, IOneUserInteractable,
         IExtraModelDataProvider, IWaxable {
 
     public static final ModelDataKey<PumpkinCarvingData> CARVING = new ModelDataKey<>(PumpkinCarvingData.class);
@@ -45,24 +47,17 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         this.data = PumpkinCarvingData.empty(getPumpkinType());
     }
 
-
     @Override
-    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction hitFace) {
-        if (isWaxed()) return false;
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, hitFace);
-    }
-
-    @Override
-    public UUID getPlayerWhoMayEdit() {
+    public @Nullable UUID getCurrentUser() {
         return playerWhoMayEdit;
     }
 
     @Override
-    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
-        this.playerWhoMayEdit = playerWhoMayEdit;
+    public void setCurrentUser(@Nullable UUID uuid) {
+        this.playerWhoMayEdit = uuid;
     }
 
-    public PumpkinType getPumpkinType() {
+    public Holder<PumpkinType> getPumpkinType() {
         BlockState state = this.getBlockState();
         return ((ModCarvedPumpkinBlock) state.getBlock()).getType(state);
     }
@@ -92,7 +87,15 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        //Backwards compat
+        if (tag.contains("type")) {
+            var typeId = ResourceLocation.tryParse(tag.getString("type"));
+            if (typeId.getNamespace().equals("minecraft")) {
+                tag.putString("type", HauntedHarvest.res(typeId.getPath()).toString());
+            }
+        }
         var oldType = this.getPumpkinType();
+
         this.data = PumpkinCarvingData.CODEC.parse(ops, tag).getOrThrow();
         if (oldType != this.data.getType()) {
             this.data = this.data.withType(oldType);
@@ -178,9 +181,8 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         return this.getBlockState().getValue(ModCarvedPumpkinBlock.FACING);
     }
 
-
     @Override
-    public void openScreen(Level level, Player player, Direction direction) {
+    public void openScreen(Level level, Player player, Direction direction, Vec3 hitPos) {
         CarvingScreen.open(this, direction);
     }
 
@@ -195,7 +197,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     }
 
     public ModCarvedPumpkinBlock.CarveMode getCarveMode() {
-        if (this.getPumpkinType().isJackOLantern()) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
+        if (this.getPumpkinType().value().isJackOLantern()) return CommonConfigs.JACK_O_LANTERN_CARVE_MODE.get();
         return CommonConfigs.PUMPKIN_CARVE_MODE.get();
     }
 
@@ -206,7 +208,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, boolean[][] pixels, Direction dir) {
 
-        if (!this.isEditingPlayer(this.worldPosition, player) || this.isWaxed() || !CommonConfigs.PUMPKIN_CARVE_MODE.get().canOpenGui()) {
+        if (!this.canBeUsedBy(this.worldPosition, player) || this.isWaxed() || !CommonConfigs.PUMPKIN_CARVE_MODE.get().canOpenGui()) {
             HauntedHarvest.LOGGER.warn("Player {} just tried to change non-editable carved pumpkin",
                     player.getName().getString());
         }
@@ -218,7 +220,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         if (!data.hasSamePixels(pixels)) {
             level.playSound(null, this.worldPosition, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1, 1.2f);
 
-            this.setPlayerWhoMayEdit(null);
+            this.setCurrentUser(null);
             this.setPixels(pixels);
         }
         return true;

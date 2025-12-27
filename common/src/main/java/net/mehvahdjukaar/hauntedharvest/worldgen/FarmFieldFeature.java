@@ -56,10 +56,10 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
 
             if (level.getBlockState(p.below()).is(BlockTags.DIRT)) {
                 if (switch (crop) {
-                    default -> placePumpkin(p, level, random);
                     case CORN -> placeCorn(p, level, random);
                     case FLAX -> SuppCompat.placeFlax(p, level, random);
                     case TOMATOES -> placeTomatoes(p, level, random);
+                    default -> placePumpkin(p, level, random);
                 }) {
                     level.setBlock(p.below(), Blocks.FARMLAND.defaultBlockState(), 2);
                     ++i;

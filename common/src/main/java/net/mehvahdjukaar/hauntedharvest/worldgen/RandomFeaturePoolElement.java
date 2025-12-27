@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.worldgen;//
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
@@ -9,8 +8,6 @@ import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.SimpleWeightedRandomList;
-import net.minecraft.util.random.Weight;
-import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -29,16 +26,16 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 import java.util.List;
 
-public class SeedBasedFeaturePoolElement extends StructurePoolElement {
-    public static final MapCodec<SeedBasedFeaturePoolElement> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+public class RandomFeaturePoolElement extends StructurePoolElement {
+    public static final MapCodec<RandomFeaturePoolElement> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                     SimpleWeightedRandomList.wrappedCodec(PlacedFeature.CODEC).fieldOf("features").forGetter(e -> e.features),
                     projectionCodec())
-            .apply(i, SeedBasedFeaturePoolElement::new)
+            .apply(i, RandomFeaturePoolElement::new)
     );
     private final SimpleWeightedRandomList<Holder<PlacedFeature>> features;
     private final CompoundTag defaultJigsawNBT;
 
-    protected SeedBasedFeaturePoolElement(SimpleWeightedRandomList<Holder<PlacedFeature>> features, Projection projection) {
+    protected RandomFeaturePoolElement(SimpleWeightedRandomList<Holder<PlacedFeature>> features, Projection projection) {
         super(projection);
         this.defaultJigsawNBT = this.fillDefaultJigsawNBT();
         features = this.removeDisabledHack(features);
@@ -48,6 +45,7 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
     private SimpleWeightedRandomList<Holder<PlacedFeature>> removeDisabledHack(SimpleWeightedRandomList<Holder<PlacedFeature>> original) {
         var newList = new SimpleWeightedRandomList.Builder<Holder<PlacedFeature>>();
         for (var v : original.unwrap()) {
+            //hack. Use data conditions instead
             if (v.data().value().feature().value().config() instanceof FarmFieldFeature.Config c) {
                 if (!c.crop().isEnabled()) continue;
             }
@@ -66,6 +64,7 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
         return compoundTag;
     }
 
+    @Override
     public Vec3i getSize(StructureTemplateManager structureTemplateManager, Rotation rotation) {
         return Vec3i.ZERO;
     }
@@ -101,10 +100,12 @@ public class SeedBasedFeaturePoolElement extends StructurePoolElement {
                 .place(level, generator, random, blockPos);
     }
 
+    @Override
     public StructurePoolElementType<?> getType() {
         return ModRegistry.RANDOM_FEATURE_POOL.get();
     }
 
+    @Override
     public String toString() {
         return "Features[" + this.features + "]";
     }

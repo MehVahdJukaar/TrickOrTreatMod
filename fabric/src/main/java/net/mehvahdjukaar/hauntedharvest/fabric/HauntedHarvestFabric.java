@@ -17,8 +17,6 @@ public class HauntedHarvestFabric implements ModInitializer {
 
         UseBlockCallback.EVENT.register(HauntedHarvest::onRightClickBlock);
 
-        CommonLifecycleEvents.TAGS_LOADED.register((a, b) -> HauntedHarvest.onTagLoad());
-
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientEntityEvents.ENTITY_LOAD.register(HauntedHarvest::onClientEntityLoad);
         }

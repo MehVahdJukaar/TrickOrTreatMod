@@ -43,24 +43,8 @@ public class ClientRegistry {
 
     public static final CoreShaderContainer BLUR_SHARED = new CoreShaderContainer(GameRenderer::getPositionTexColorShader);
 
-    private static final Map<PumpkinType, Material[]> PUMPKIN_MATERIALS = Util.make(() -> {
-        var l = new Object2ObjectOpenHashMap<PumpkinType, Material[]>();
-        for (var t : PumpkinType.getTypes()) {
-            Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getTextureKey() + "_shade"));
-            Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getTextureKey() + "_background"));
-            l.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, PUMPKIN_HIGHLIGHT});
-        }
-        return l;
-    });
-
-    private static final Map<PumpkinType, ModelResourceLocation> PUMPKIN_FRAMES = Util.make(() -> {
-        var l = new Object2ObjectOpenHashMap<PumpkinType, ModelResourceLocation>();
-        for (var t : PumpkinType.getTypes()) {
-            l.put(t, RenderUtil.getStandaloneModelLocation(
-                    HauntedHarvest.res("block/" + t.getTextureKey() + "_frame")));
-        }
-        return l;
-    });
+    private static final Map<PumpkinType, Material[]> PUMPKIN_MATERIALS = new Object2ObjectOpenHashMap<>();
+    private static final Map<PumpkinType, ModelResourceLocation> PUMPKIN_FRAMES = new Object2ObjectOpenHashMap<>();
 
     public static Material getMaterial(PumpkinType type, int ordinal) {
         var m = PUMPKIN_MATERIALS.get(type);
@@ -75,7 +59,7 @@ public class ClientRegistry {
     }
 
     public static ModelResourceLocation getPumpkinFrame(PumpkinType type) {
-        return PUMPKIN_FRAMES.getOrDefault(type, PUMPKIN_FRAMES.get(PumpkinType.JACK));
+        return PUMPKIN_FRAMES.getOrDefault(type, PUMPKIN_FRAMES.get(PumpkinType.JACK.get()));
     }
 
     public static void init() {
@@ -96,9 +80,19 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.CORN_BASE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CORN_MIDDLE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CORN_TOP.get(), RenderType.cutout());
-        PumpkinType.getTypes().forEach(t -> ClientHelper.registerRenderType(t.getPumpkin(), RenderType.cutout()));
         ClientHelper.registerRenderType(Blocks.JACK_O_LANTERN, RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CORN_POT.get(), RenderType.cutout());
+
+        for (var t : PumpkinType.REGISTRY) {
+            ClientHelper.registerRenderType(t.getPumpkin(), RenderType.cutout());
+
+            Material shade = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getTextureKey() + "_shade"));
+            Material background = new Material(LOCATION_BLOCKS, HauntedHarvest.res("block/" + t.getTextureKey() + "_background"));
+            PUMPKIN_MATERIALS.put(t, new Material[]{ClientRegistry.PUMPKIN, shade, background, PUMPKIN_HIGHLIGHT});
+
+            PUMPKIN_FRAMES.put(t, RenderUtil.getStandaloneModelLocation(
+                    HauntedHarvest.res("block/" + t.getTextureKey() + "_frame")));
+        }
     }
 
 

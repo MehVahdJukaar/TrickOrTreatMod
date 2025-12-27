@@ -20,6 +20,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -46,6 +47,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,11 +79,15 @@ public class HauntedHarvest {
             ClientHelper.addClientReloadListener(() -> CarvingManager.INSTANCE, res("pumpkin_carvings"));
         }
         PlatHelper.addCommonSetup(HauntedHarvest::commonSetup);
+        PlatHelper.addReloadableCommonSetup(HauntedHarvest::reloadSetup);
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
         PlatHelper.addServerReloadListener(CustomCarvingsManager::new, res("pumpkin_carvings"));
         //TODO: pillager outposts pumpkins
+
+        PumpkinType.init();
     }
+
 
     //needs to be fired after configs are loaded
     public static void commonSetup() {
@@ -132,8 +138,7 @@ public class HauntedHarvest {
     }
 
     //refresh configs and tag stuff
-    @EventCalled
-    public static void onTagLoad() {
+    private static void reloadSetup(RegistryAccess registryAccess, Boolean client) {
         HalloweenVillagerAI.refreshCandies();
     }
 
@@ -198,8 +203,8 @@ public class HauntedHarvest {
 
                     Utils.awardAdvancement(serverPlayer, HauntedHarvest.res("husbandry/carve_custom_pumpkin"));
                     if (!player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te
-                            && te.getCarveMode().canOpenGui()) {
-                        te.tryOpeningEditGui(serverPlayer,pos, stack, player.getDirection().getOpposite());
+                            && te.getCarveMode().canOpenGui() && !te.isWaxed()) {
+                        Utils.openGuiIfPossible(te, serverPlayer, stack, player.getDirection().getOpposite(), Vec3.ZERO);
                     }
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);

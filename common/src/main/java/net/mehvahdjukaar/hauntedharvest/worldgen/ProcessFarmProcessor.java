@@ -105,6 +105,7 @@ public class ProcessFarmProcessor extends StructureProcessor {
         return replace;
     }
 
+    @Override
     protected StructureProcessorType<?> getType() {
         return ModRegistry.FARM_PROCESSOR.get();
     }

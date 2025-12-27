@@ -2,20 +2,15 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 
 import net.mehvahdjukaar.hauntedharvest.ai.PumpkinPoiSensor;
 import net.mehvahdjukaar.hauntedharvest.blocks.*;
-import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.hauntedharvest.items.GrimAppleItem;
 import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.items.PaperBagItem;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.items.crafting.ModCarvedPumpkinRecipe;
-import net.mehvahdjukaar.hauntedharvest.worldgen.AbandonedFarmStructure;
-import net.mehvahdjukaar.hauntedharvest.worldgen.FarmFieldFeature;
-import net.mehvahdjukaar.hauntedharvest.worldgen.ProcessFarmProcessor;
-import net.mehvahdjukaar.hauntedharvest.worldgen.SeedBasedFeaturePoolElement;
+import net.mehvahdjukaar.hauntedharvest.worldgen.*;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -24,13 +19,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -45,7 +40,6 @@ import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementTy
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.material.PushReaction;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -55,6 +49,11 @@ import static net.mehvahdjukaar.hauntedharvest.HauntedHarvest.res;
 public class ModRegistry {
 
     public static void init() {
+        RegHelper.addExtraBEBlockStatesRegistration(event -> {
+            for (var t : PumpkinType.REGISTRY) {
+                event.addBlocks(MOD_CARVED_PUMPKIN_TILE.get(), t.getPumpkin());
+            }
+        });
     }
 
 
@@ -71,9 +70,9 @@ public class ModRegistry {
             RegHelper.register(res("process_farm"), () ->
                     () -> ProcessFarmProcessor.CODEC, Registries.STRUCTURE_PROCESSOR);
 
-    public static final Supplier<StructurePoolElementType<SeedBasedFeaturePoolElement>> RANDOM_FEATURE_POOL =
+    public static final Supplier<StructurePoolElementType<RandomFeaturePoolElement>> RANDOM_FEATURE_POOL =
             RegHelper.register(res("random_feature_pool_element"), () ->
-                    () -> SeedBasedFeaturePoolElement.CODEC, Registries.STRUCTURE_POOL_ELEMENT);
+                    () -> RandomFeaturePoolElement.CODEC, Registries.STRUCTURE_POOL_ELEMENT);
 
     public static final Supplier<Feature<FarmFieldFeature.Config>> FARM_FIELD_FEATURE =
             RegHelper.registerFeature(res("farm_field"), () ->
@@ -109,16 +108,14 @@ public class ModRegistry {
             res("spooked"));
 
     //data comp
-
     public static final Supplier<DataComponentType<PumpkinCarvingData>> PUMPKIN_CARVING = RegHelper.registerDataComponent(
-            res("pumpkin_carving"), ()-> DataComponentType.<PumpkinCarvingData>builder()
-                     .networkSynchronized(PumpkinCarvingData.STREAM_CODEC)
-                     .persistent(PumpkinCarvingData.CODEC)
-                     .cacheEncoding()
-                     .build());
+            res("pumpkin_carving"), () -> DataComponentType.<PumpkinCarvingData>builder()
+                    .networkSynchronized(PumpkinCarvingData.STREAM_CODEC)
+                    .persistent(PumpkinCarvingData.CODEC)
+                    .cacheEncoding()
+                    .build());
 
     //items
-
     public static final String SPLATTERED_EGG_NAME = "splattered_egg";
     public static final Supplier<EntityType<SplatteredEggEntity>> SPLATTERED_EGG_ENTITY = RegHelper.registerEntityType(
             res(SPLATTERED_EGG_NAME), SplatteredEggEntity::new, MobCategory.MISC,
@@ -206,8 +203,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<ModCarvedPumpkinBlockTile>> MOD_CARVED_PUMPKIN_TILE =
             regTile("carved_pumpkin", () ->
-                    PlatHelper.newBlockEntityType(ModCarvedPumpkinBlockTile::new,
-                            PumpkinType.getTypes().stream().map(PumpkinType::getPumpkin).toArray(Block[]::new)));
+                    PlatHelper.newBlockEntityType(ModCarvedPumpkinBlockTile::new, CARVED_PUMPKIN.get()));
 
     public static Supplier<ModCarvedPumpkinBlock> regPumpkin(String name, Supplier<ModCarvedPumpkinBlock> supplier) {
         var block = regBlock(name, supplier);

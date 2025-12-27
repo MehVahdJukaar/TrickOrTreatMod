@@ -6,7 +6,7 @@ public class CompatHandler {
     public static final boolean SEASON_MOD_INSTALLED = PlatHelper.isModLoaded(PlatHelper.getPlatform().isForge() ? "sereneseasons" : "seasons");
     public static final boolean SUPP_INSTALLED = PlatHelper.isModLoaded("supplementaries");
     public static final boolean FD_INSTALLED = PlatHelper.isModLoaded("farmersdelight");
-    public static final boolean QUARK_INSTALLED = PlatHelper.isModLoaded("quark");
+    public static final boolean QUARK_INSTALLED = PlatHelper.isModLoaded("quark") && false; //TODO: ad back
     public static final boolean AUTUMNITY_INSTALLED = PlatHelper.isModLoaded("autumnity");
     public static final boolean IMMEDIATELY_FAST = PlatHelper.isModLoaded("immediatelyfast");
 

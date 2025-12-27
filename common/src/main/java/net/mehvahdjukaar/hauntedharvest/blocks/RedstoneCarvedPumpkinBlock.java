@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.blocks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -14,16 +15,18 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class RedstoneCarvedPumpkinBlock extends ModCarvedPumpkinBlock {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
 
-    public RedstoneCarvedPumpkinBlock(Properties properties, PumpkinType type) {
+    public RedstoneCarvedPumpkinBlock(Properties properties, Holder<PumpkinType> type) {
         super(properties.lightLevel(s -> s.getValue(BlockStateProperties.LIT) ? 7 : 0), type);
         this.registerDefaultState(this.defaultBlockState().setValue(LIT, false));
     }
 
     @Override
-    public PumpkinType getType(BlockState state) {
+    public Holder<PumpkinType> getType(BlockState state) {
         return state.getValue(LIT) ? super.getType(state) : PumpkinType.NORMAL;
     }
 

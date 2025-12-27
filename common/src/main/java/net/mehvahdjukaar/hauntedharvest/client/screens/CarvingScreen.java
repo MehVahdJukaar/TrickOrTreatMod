@@ -49,7 +49,8 @@ public class CarvingScreen extends Screen {
     }
 
     public void recomputeMaterials() {
-        var materials = PumpkinTextureGenerator.computePixelMaterialMap(computePixelMatrix(), tile.getPumpkinType());
+        var materials = PumpkinTextureGenerator.computePixelMaterialMap(computePixelMatrix(),
+                tile.getPumpkinType().value());
         //re-assign to buttons
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
@@ -81,7 +82,7 @@ public class CarvingScreen extends Screen {
 
     private boolean isValid() {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
-                this.tile.isEditingPlayer(this.tile.getBlockPos(), this.minecraft.player);
+                this.tile.canBeUsedBy(this.tile.getBlockPos(), this.minecraft.player);
     }
 
     @Override
