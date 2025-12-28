@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//cant use event since we still need to invoke normal logic to spawn a chicken sometimes
 @Mixin(ThrownEgg.class)
 public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile implements IHarmlessProjectile {
 

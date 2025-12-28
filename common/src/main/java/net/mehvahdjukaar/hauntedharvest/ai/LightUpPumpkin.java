@@ -2,6 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.ai;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class LightUpPumpkin extends Behavior<Villager> {
@@ -97,9 +99,14 @@ public class LightUpPumpkin extends Behavior<Villager> {
                     SoundType soundtype = Blocks.TORCH.defaultBlockState().getSoundType();
                     pLevel.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     pOwner.getBrain().eraseMemory(ModRegistry.PUMPKIN_POS.get());
+                    BlockEntity be = pLevel.getBlockEntity(pos);
                     Block toPlace = state.is(ModRegistry.CARVED_PUMPKIN.get()) ? ModRegistry.JACK_O_LANTERN.get() : Blocks.JACK_O_LANTERN;
                     pLevel.setBlockAndUpdate(pos, toPlace.defaultBlockState()
                             .setValue(CarvedPumpkinBlock.FACING, state.getValue(CarvedPumpkinBlock.FACING)));
+
+                    if (be instanceof ModCarvedPumpkinBlockTile tile && pLevel.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile newTile) {
+                        newTile.setPixels(tile.clonePixels());
+                    }
                 }
             }
 

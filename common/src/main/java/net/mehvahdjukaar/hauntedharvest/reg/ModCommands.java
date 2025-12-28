@@ -51,7 +51,7 @@ public class ModCommands {
                         NetworkHelper.sendToClientPlayer(p, new ClientBoundCopyCarvingCommand(
                                 PumpkinCarvingData.packPixelsToStringWhiteOnly(
                                         PumpkinCarvingData.pack(
-                                        carving.getPixelsUnsafe()))));
+                                        carving.clonePixels()))));
                         context.getSource().sendSuccess(() -> Component.literal("Copied content to clipboard"), false);
                         return 0;
                     }

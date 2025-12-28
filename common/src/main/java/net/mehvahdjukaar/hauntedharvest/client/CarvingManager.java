@@ -67,7 +67,7 @@ public class CarvingManager implements PreparableReloadListener {
 
         CarvingVisuals textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new CarvingVisuals(key.getPixelsUnsafe(), key.getType().value());
+            textureInstance = new CarvingVisuals(key.clonePixels(), key.getType().value());
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;

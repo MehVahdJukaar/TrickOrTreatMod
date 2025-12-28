@@ -1,1 +1,1 @@
-updated pumpkin type code
+added more tags

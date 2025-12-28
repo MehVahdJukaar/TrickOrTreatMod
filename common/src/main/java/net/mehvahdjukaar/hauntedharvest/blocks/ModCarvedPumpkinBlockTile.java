@@ -225,4 +225,8 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
         }
         return true;
     }
+
+    public boolean[][] clonePixels() {
+        return data.clonePixels();
+    }
 }

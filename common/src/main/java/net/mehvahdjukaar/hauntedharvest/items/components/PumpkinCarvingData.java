@@ -131,8 +131,12 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
         return pixels[xx][yy];
     }
 
-    public boolean[][] getPixelsUnsafe() {
-        return pixels;
+    public boolean[][] clonePixels() {
+        boolean[][] newPixels = new boolean[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            System.arraycopy(pixels[i], 0, newPixels[i], 0, SIZE);
+        }
+        return newPixels;
     }
 
     public PumpkinCarvingData makeCleared() {
