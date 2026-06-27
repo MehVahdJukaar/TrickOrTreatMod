@@ -13,13 +13,14 @@
   },
   "license": "${mod_license}",
   "icon": "icon.png",
+  "accessWidener": "hauntedharvest.accesswidener",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.mehvahdjukaar.hauntedharvest.fabric.HauntedHarvestFabric"
+      "net.mehvahdjukaar.hauntedharvest.platform.HauntedHarvestFabric"
     ],
     "modmenu": [
-      "net.mehvahdjukaar.hauntedharvest.integration.fabric.mod_menu.ModMenuCompat"
+      "net.mehvahdjukaar.hauntedharvest.integration.platform.mod_menu.ModMenuCompat"
     ],
     "rei_client": [
       "net.mehvahdjukaar.hauntedharvest.integration.REICompat"
@@ -36,9 +37,8 @@
     "${mod_id}-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.7",
-    "fabric": ">=0.92.0+1.20.1",
-    "minecraft": ">=${minecraft_min_version} <${minecraft_max_version}",
+    "fabric-api": "*",
+    "minecraft": "=${minecraft_version}",
     "moonlight": ">=${moonlight_min_version}"
   }
 }

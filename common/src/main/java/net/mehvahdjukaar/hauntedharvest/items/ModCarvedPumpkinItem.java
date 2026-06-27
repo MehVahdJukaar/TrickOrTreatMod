@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;

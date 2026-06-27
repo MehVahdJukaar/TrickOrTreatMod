@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.hauntedharvest.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;

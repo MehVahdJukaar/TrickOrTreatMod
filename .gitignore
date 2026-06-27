@@ -1,4 +1,4 @@
-build/
+../build/
 *.ipr
 run/
 *.iws
@@ -17,5 +17,15 @@ classes/
 .vscode
 .settings
 *.launch
-/forge/mods/
-/common/mods/
+/unique_lines.txt
+/.junie/memory/
+/.codex
+/.aiassistant/
+/.ai/
+/common/build/
+/fabric/build/
+/neoforge/build/
+/forge/build/
+/.cursor/
+/.claude/
+/claude.md

@@ -1,0 +1,79 @@
+package net.mehvahdjukaar.hauntedharvest.integration.platform.configured;
+
+
+import com.mrcrayfish.configured.api.IModConfig;
+import com.mrcrayfish.configured.client.util.ScreenUtil;
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
+import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
+import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+
+import java.util.HashMap;
+import java.util.Map;
+
+//credits to MrCrayfish's Configured Mod
+public class ModConfigScreen extends CustomConfigScreen {
+
+
+    private static final Map<String, ItemStack> ICONS = new HashMap<>();
+
+    static {
+        addIcon("trick or treating time", ModRegistry.CANDY_CORN.get());
+        //addIcon("halloween season", Items.JACK_O_LANTERN);
+        addIcon("mob pumpkins season", Items.ZOMBIE_HEAD);
+        addIcon("pumpkin carving", Items.CARVED_PUMPKIN);
+        addIcon("season mod compat", ModRegistry.COB_ITEM.get());
+        addIcon("general", Items.SKELETON_SKULL);
+        addIcon("splattered egg", Items.EGG);
+        addIcon("carved pumpkin", Items.CARVED_PUMPKIN);
+        addIcon("features", ModRegistry.PAPER_BAG.get());
+    }
+
+    public ModConfigScreen(CustomConfigSelectScreen parent, IModConfig config) {
+        super(parent, config);
+    }
+
+    public ModConfigScreen(String modId, ItemStack mainIcon,
+                           Component title, Screen parent, IModConfig config) {
+        super(modId, mainIcon, title, parent, config);
+        this.icons.putAll(ICONS);
+    }
+
+
+    private static void addIcon(String s, ItemLike i) {
+        ICONS.put(s, i.asItem().getDefaultInstance());
+    }
+
+
+    @Override
+    public void onSave() {
+    }
+
+    @Override
+    public Factory getSubScreenFactory() {
+        return ModConfigScreen::new;
+    }
+
+    @Override
+    public void render(GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
+        var level = Minecraft.getInstance().level;
+        if (level != null && HauntedHarvest.isHalloweenSeason(level)) {
+            int x = (int) (this.width * 0.93f);
+            poseStack.renderFakeItem(Items.JACK_O_LANTERN.getDefaultInstance(), x, 16);
+            if (ScreenUtil.isMouseWithin(x, 16, 16, 16, mouseX, mouseY)) {
+                poseStack.renderTooltip(this.font, this.font.split(Component.translatable("gui.hauntedharvest.autumn_season_on").withStyle(ChatFormatting.GOLD), 200), mouseX, mouseY);
+            }
+        }
+    }
+}

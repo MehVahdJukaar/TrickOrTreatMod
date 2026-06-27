@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.network;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
@@ -53,7 +52,7 @@ public record SyncSnowGolemPumpkinPacket(int entityID, ItemStack pumpkin) implem
     }
 
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public void handleSyncPumpkin(SyncSnowGolemPumpkinPacket message) {
         var l = Minecraft.getInstance().level;
         Entity e = l.getEntity(message.entityID());
