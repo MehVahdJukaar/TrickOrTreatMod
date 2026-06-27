@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -16,18 +16,18 @@ import java.util.List;
 
 public class HHPlatformStuff {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void setItemLifespan(ItemEntity item, int lifespan){
         throw new AssertionError();
     }
 
     @Contract
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean isTopCarver(ItemStack stack) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
         throw new AssertionError();
 

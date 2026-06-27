@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.hauntedharvest.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 public class QuarkCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void init(){
         throw new ArrayStoreException();
     }

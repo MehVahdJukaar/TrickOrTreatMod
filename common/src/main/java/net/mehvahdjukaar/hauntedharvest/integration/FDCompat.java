@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.hauntedharvest.integration;
 
 import com.google.common.base.Suppliers;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.hauntedharvest.reg.ModFoods;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTabs;
@@ -60,7 +60,7 @@ public class FDCompat {
 
     public static final FoodProperties SUCCOTASH_FOOD = makeFood();
 
-    @ExpectPlatform
+    @PlatformImpl
     public static FoodProperties makeFood() {
         throw new AssertionError();
     }
