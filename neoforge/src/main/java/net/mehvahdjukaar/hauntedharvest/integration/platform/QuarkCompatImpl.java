@@ -11,9 +11,8 @@ public class QuarkCompatImpl {
     public static void init() {
         NeoForge.EVENT_BUS.register(QuarkCompatImpl.class);
     }
-//TODO: add back
-    /*
-    //@SubscribeEvent
+
+    @SubscribeEvent
     public static void onSimpleHarvest(SimpleHarvestEvent event) {
         Block b = event.blockState.getBlock();
         if (b instanceof AbstractCornBlock c) {
@@ -22,5 +21,4 @@ public class QuarkCompatImpl {
             } else event.setTargetPos(event.pos.below(c.getHeight()));
         }
     }
-*/
 }
