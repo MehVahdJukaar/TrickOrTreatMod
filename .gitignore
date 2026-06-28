@@ -18,7 +18,7 @@ classes/
 .settings
 *.launch
 /unique_lines.txt
-/.junie/memory/
+/.junie/
 /.codex
 /.aiassistant/
 /.ai/
@@ -28,4 +28,6 @@ classes/
 /forge/build/
 /.cursor/
 /.claude/
-/claude.md
+/CLAUDE.md
+/AGENTS.md
+/GEMINI.md
