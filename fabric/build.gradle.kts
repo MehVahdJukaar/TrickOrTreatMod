@@ -17,12 +17,12 @@ dependencies {
 
     // Mirrored from common (platform variant)
     modImplementation("net.mehvahdjukaar:supplementaries-fabric:${supplementaries_version}")
-    modImplementation("curse.maven:farmers-delight-398521:5051242")
-    modCompileOnly("curse.maven:farmers-delight-398521:5772720")
-    modCompileOnly("curse.maven:jei-238222:5846878")
-    modCompileOnly("curse.maven:roughly-enough-items-310111:5731643")
-    modCompileOnly("curse.maven:emi-580555:5872513")
-    modCompileOnly("org.violetmoon.quark:Quark-4.0-beta-431.3254")
+    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:8088691")
+    modCompileOnly("curse.maven:jei-238222:7420583")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:6199139")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:6199140") // NeoForge build, provides me.shedaniel.rei.forge for common REICompat
+    modCompileOnly("curse.maven:emi-580555:6420930")
+    modCompileOnly("curse.maven:quark-243121:8146177")
     modCompileOnly("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
 
     // Fabric-only deps

@@ -1,28 +1,18 @@
 package net.mehvahdjukaar.hauntedharvest.platform;
 
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
-import net.mehvahdjukaar.hauntedharvest.client.BlurOverlay;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.platform.configured.ModConfigSelectScreen;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.moonlight.api.platform.neoforge.ClientHelperImpl;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.RenderNameTagEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.TriState;
-import org.jetbrains.annotations.Nullable;
 
 public class HauntedHarvestForgeClient {
 

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.mixins.neoforge;
 
+import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.minecraft.world.entity.EntityType;
@@ -36,7 +37,9 @@ public abstract class CompatTurkeyEggEntityMixin extends ThrowableItemProjectile
             at = @At(value = "INVOKE", shift = At.Shift.AFTER,
                     target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci) {
-        if (!this.hauntedharvest$hasSpawnedChicken) SplatteredEggEntity.spawn(pResult, this);
+        if (!this.hauntedharvest$hasSpawnedChicken && CommonConfigs.SPLATTERED_EGG_ENABLED.get()) {
+            SplatteredEggEntity.spawn(pResult, this);
+        }
     }
 
 }
