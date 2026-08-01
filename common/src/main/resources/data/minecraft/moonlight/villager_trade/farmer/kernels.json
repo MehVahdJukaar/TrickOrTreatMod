@@ -15,11 +15,11 @@
   "max_trades": 12,
   "offer": {
     "id": "minecraft:emerald",
-    "Count": 1
+    "count": 1
   },
   "price": {
     "id": "hauntedharvest:kernels",
-    "Count": 20
+    "count": 20
   },
   "level": 1
 }
