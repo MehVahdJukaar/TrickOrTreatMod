@@ -31,26 +31,27 @@ The quad offset was flipped to match (`-0.5` / `-0.001` on Z instead of `+0.5` /
 `(15 - px)` so the highlight lines up with the pixel that actually gets toggled - the same flip
 `CarvedPumpkinBakedModel` does. Also fixes the (previously invisible) mirrored X.
 
-### #11, #74, #72, and the duck egg half of #63 - modded eggs don't splatter
+### #74 and the duck egg half of #63 - modded eggs don't splatter
 
-There was a `hauntedharvest:splatterable_eggs` tag declared in `ModTags` that was never used and had no
-json. It's implemented now:
+Done with one ad hoc mixin per mod, cloning the existing `CompatTurkeyEggEntityMixin`:
 
-- New `ProjectileMixin` marks the hit at the head of `Projectile#onHitBlock` - the one method every modded
-  egg inherits, since they all subclass `ThrowableItemProjectile` and their `onHit` overrides call `super`.
-  Vanilla `ThrownEgg` is excluded because `ThrownEggEntityMixin` already handles it.
-- The splatter itself is spawned from an override of `remove(RemovalReason)`, not from `onHitBlock`.
-  `onHitBlock` runs from inside `super.onHit(...)`, i.e. *before* the egg rolls for a chick, so the
-  hatch isn't known yet; eggs only discard themselves once they're done. Whether one hatched is read off
-  the world - a `LivingEntity` with `tickCount == 0` overlapping where the egg landed - since there's no
-  way to see into each mod's own `onHit`. Same behaviour as vanilla eggs: hatch, no splatter.
-- `data/hauntedharvest/tags/item/splatterable_eggs.json` defaults to `#c:eggs` plus explicit optional
-  entries for Autumnity, Environmental and Deep Aether. Anything else is a one-line datapack away.
-- The config gate is checked in the same place, so "splattered eggs off" now applies to modded eggs too.
+- `CompatQuailEggEntityMixin` → `io.github.razordevs.deep_aether.entity.projectile.ThrownQuailEgg`
+- `CompatDuckEggEntityMixin` → `com.teamabnormals.environmental.common.entity.projectile.ThrownDuckEgg`
 
-**Note:** this made `CompatTurkeyEggEntityMixin` (NeoForge only) redundant, so I deleted it - keeping both
-would splatter turkey eggs twice. The generic path covers the hatch case too, and unlike the old one it
-also works on Fabric.
+Both mods copied vanilla `ThrownEgg#onHit` verbatim, so the turkey mixin's two injection points transfer
+unchanged: flag the hatch at the `EntityType#create` call, then spawn the splatter after
+`broadcastEntityEvent` if nothing hatched. That reads the mod's *actual* hatch branch rather than guessing
+from what appeared in the world, so "hatched → no splatter" is exact. Config gate is checked in the same
+place, and `@OptionalMixin` means they're skipped when the mod isn't installed.
+
+Environmental and Deep Aether were added as `modCompileOnly` deps next to Autumnity and Caverns & Chasms,
+so the IDE resolves the targets and both `@At`s - otherwise the descriptors are unverifiable strings that
+silently no-op under `require = 0`. Both mixins now validate clean.
+
+I first tried a generic `Projectile#onHitBlock` + item-tag approach, but it can't tell *why* an entity
+appeared, and eggs spawning something is the norm rather than the exception - so it's been dropped along
+with the `splatterable_eggs` tag json. (#11 is the broad "any modded egg" request; still open, since this
+covers only the mods that were actually reported.)
 
 ### Compat loot tables erroring on load - #58 all over again
 

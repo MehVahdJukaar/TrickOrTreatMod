@@ -21,7 +21,8 @@ public class CommonConfigs {
     static {
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON_SYNCED);
 
-        builder.icon(ModRegistry.CARVED_PUMPKIN_NAME).push("pumpkin_carving");
+        //vanilla pumpkins, not ours: ours draw through the carving item renderer and show up blank without carving data
+        builder.icon("minecraft:carved_pumpkin").push("pumpkin_carving");
         CUSTOM_CARVINGS = builder.comment("Allows custom carved pumpkins to be placed by villagers and appear in abandoned farm structure")
                 .define("custom_carvings", true);
         PUMPKIN_CARVE_MODE = builder.comment("Pumpkin carving mode")
@@ -30,7 +31,7 @@ public class CommonConfigs {
                 .define("jack_o_lantern_carve_mode", ModCarvedPumpkinBlock.CarveMode.NONE);
         builder.pop();
 
-        builder.icon("jack_o_lantern").push("halloween_season");
+        builder.icon("minecraft:jack_o_lantern").push("halloween_season");
         START_MONTH = builder.comment("Month from which villagers will start placing pumpkins & trick or treating")
                 .define("start_month", 10, 1, 12);
         START_DAY = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")
