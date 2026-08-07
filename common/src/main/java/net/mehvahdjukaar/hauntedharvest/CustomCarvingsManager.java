@@ -132,9 +132,9 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
         return jsonObject;
     }
 
-    private record CustomCarving(String author, boolean isFace, List<Long> pixels) {
+    public record CustomCarving(String author, boolean isFace, List<Long> pixels) {
 
-        private static final Codec<CustomCarving> CODEC = RecordCodecBuilder.create(i -> i.group(
+        public static final Codec<CustomCarving> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.STRING.optionalFieldOf("author", "").forGetter(CustomCarving::author),
                 Codec.BOOL.optionalFieldOf("is_face", false).forGetter(CustomCarving::isFace),
                 Codec.LONG.listOf().fieldOf("pixels").forGetter(CustomCarving::pixels)

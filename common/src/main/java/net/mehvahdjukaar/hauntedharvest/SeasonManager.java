@@ -27,6 +27,10 @@ public class SeasonManager {
         return trickOrTreatStart;
     }
 
+    public boolean usesSeasonMod() {
+        return useSeasonMod;
+    }
+
     public void refresh() {
         //refresh date after configs are loaded
 

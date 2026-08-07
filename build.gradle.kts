@@ -1,10 +1,12 @@
+import org.gradle.internal.logging.progress.ResourceOperation
+
 plugins {
     id("com.possible-triangle.core")
     id("com.possible-triangle.common") apply false
     id("com.possible-triangle.fabric") apply false
     id("com.possible-triangle.neoforge") apply false
-    id("net.mehvahdjukaar.candlelight") version "1.2.1" apply false
-    id("dev.mixinmcp.decompile") version "1.0.6" apply false
+    id("net.mehvahdjukaar.candlelight") version "1.2.6" apply false
+    id("dev.mixinmcp.decompile") version "1.3.0" apply false
 }
 
 mod {
@@ -26,7 +28,7 @@ subprojects {
     apply(plugin = "maven-publish")
 
     dependencies {
-        compileOnly("net.mehvahdjukaar:candlelight:1.2.1")
+        compileOnly("net.mehvahdjukaar:candlelight:1.2.6")
     }
 
 
@@ -40,7 +42,7 @@ subprojects {
 
 
 
-    upload {
+    ResourceOperation.Type.upload {
         maven {
             nexus()
         }

@@ -14,7 +14,6 @@ import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.minecraft.Util;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.GameRenderer;
@@ -73,6 +72,7 @@ public class ClientRegistry {
         ClientHelper.addShaderRegistration(ClientRegistry::registerShaders);
         ClientHelper.addItemRenderersRegistration(ClientRegistry::registerItemRenderers);
         ClientHelper.addClientSetup(ClientRegistry::setup);
+        SeasonConfigOverlay.register();
     }
 
 
