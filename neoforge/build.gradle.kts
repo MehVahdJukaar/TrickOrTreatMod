@@ -24,7 +24,7 @@ dependencies {
     modCompileOnly("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
 
     // NeoForge-only deps
-    modImplementation("curse.maven:configured-457570:5873783")
+    modImplementation("curse.maven:configured-457570:7276577")
     modCompileOnly("curse.maven:amendments-896746:5692774")
     modCompileOnly("curse.maven:serene-seasons-291874:4502525")
     modCompileOnly("curse.maven:autumnity-365045:7118591") // 1.21.1-6.0.1

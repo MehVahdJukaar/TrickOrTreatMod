@@ -2,13 +2,13 @@
   "fabric:load_conditions": [
     {
       "condition": "fabric:mod_loaded",
-      "modid": "botanypots"
+      "modid": "autumnity"
     }
   ],
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
-      "modid": "botanypots"
+      "modid": "autumnity"
     }
   ],
   "type": "minecraft:block",
