@@ -21,7 +21,7 @@ public class CommonConfigs {
     static {
         ConfigBuilder builder = ConfigBuilder.create(HauntedHarvest.res("common"), ConfigType.COMMON_SYNCED);
 
-        builder.push("pumpkin_carving");
+        builder.icon(ModRegistry.CARVED_PUMPKIN_NAME).push("pumpkin_carving");
         CUSTOM_CARVINGS = builder.comment("Allows custom carved pumpkins to be placed by villagers and appear in abandoned farm structure")
                 .define("custom_carvings", true);
         PUMPKIN_CARVE_MODE = builder.comment("Pumpkin carving mode")
@@ -30,7 +30,7 @@ public class CommonConfigs {
                 .define("jack_o_lantern_carve_mode", ModCarvedPumpkinBlock.CarveMode.NONE);
         builder.pop();
 
-        builder.push("halloween_season");
+        builder.icon("jack_o_lantern").push("halloween_season");
         START_MONTH = builder.comment("Month from which villagers will start placing pumpkins & trick or treating")
                 .define("start_month", 10, 1, 12);
         START_DAY = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")
@@ -41,7 +41,7 @@ public class CommonConfigs {
                 .define("end_day", 10, 1, 31);
         builder.pop();
 
-        builder.push("mob_pumpkins_season");
+        builder.icon("minecraft:zombie_head").push("mob_pumpkins_season");
         WEAR_CHANCE = builder.comment("Chance for a mob to wear a pumpkin. All this does not affect vanilla halloween behavior")
                 .definePercentage("wear_chance", 0.25);
         P_START_MONTH = builder.comment("Day from which zombies and skeletons can wear pumpkins")
@@ -55,7 +55,7 @@ public class CommonConfigs {
         builder.pop();
 
         //these get baked into the villagers brain schedule on setup
-        builder.push("trick_or_treating_time");
+        builder.icon("minecraft:clock").push("trick_or_treating_time");
         START_TIME = builder.gameRestart()
                 .comment("Time of day at which baby villagers will start trick-or-treating")
                 .define("start_time", 12000, 0, 24000);
@@ -64,7 +64,8 @@ public class CommonConfigs {
                 .define("end_time", 0, 0, 24000);
         builder.pop();
 
-        builder.push("season_mod_compat");
+        //the category name isn't an item, so the gate row can't infer one
+        builder.icon("minecraft:oak_leaves").push("season_mod_compat");
         builder.comment("Enables compatibility with Serene Seasons (Forge) or Fabric Seasons (Fabric). Only takes effect if the mod is installed. Will make halloween season only active during certain seasons. Note that this will override previous time window settings");
         SEASONS_MOD_COMPAT = builder.mainFeature(CompatHandler.SEASON_MOD_INSTALLED);
         if (CompatHandler.SEASON_MOD_INSTALLED) {
@@ -76,7 +77,7 @@ public class CommonConfigs {
         CREATIVE_TAB = builder.gameRestart().comment("Enable Creative Tab").define("creative_tab", false);
         builder.pop();
 
-        builder.push("features");
+        builder.icon(ModRegistry.CANDY_CORN_NAME).push("features");
 
         builder.push("paper_bag");
         PAPER_BAG = builder.gameRestart().mainFeature();
@@ -90,7 +91,8 @@ public class CommonConfigs {
         GRIM_APPLE = builder.gameRestart().feature(ModRegistry.GRIM_APPLE_NAME);
         POPCORN_ENABLED = builder.gameRestart().feature(ModRegistry.POPCORN_NAME);
         CARVED_PUMPKINS_ENABLED = builder.gameRestart().feature(ModRegistry.CARVED_PUMPKIN_NAME);
-        SPLATTERED_EGG_ENABLED = builder.gameRestart().feature(ModRegistry.SPLATTERED_EGG_NAME);
+        //entity only, so there's no item of that name to infer an icon from
+        SPLATTERED_EGG_ENABLED = builder.gameRestart().icon("minecraft:egg").feature(ModRegistry.SPLATTERED_EGG_NAME);
         CANDY_CORN_ENABLED = builder.gameRestart().feature(ModRegistry.CANDY_CORN_NAME);
         builder.pop();
 

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBakedModel;
 import net.mehvahdjukaar.hauntedharvest.client.screens.CarvingTooltipComponent;
+import net.mehvahdjukaar.hauntedharvest.client.screens.PumpkinShowcaseWidget;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.ItemRenderExtension;
@@ -73,6 +74,7 @@ public class ClientRegistry {
         ClientHelper.addItemRenderersRegistration(ClientRegistry::registerItemRenderers);
         ClientHelper.addClientSetup(ClientRegistry::setup);
         SeasonConfigOverlay.register();
+        PumpkinShowcaseWidget.register();
     }
 
 
@@ -99,8 +101,10 @@ public class ClientRegistry {
     @EventCalled
     private static void registerItemRenderers(ClientHelper.ItemRendererEvent event) {
         CarvedPumpkinItemRenderer renderer = new CarvedPumpkinItemRenderer();
-        event.register(ModRegistry.CARVED_PUMPKIN.get(), (ItemRenderExtension) renderer);
-        event.register(ModRegistry.JACK_O_LANTERN.get(), (ItemRenderExtension) renderer);
+        //compat ones included, else their items render as nothing
+        for (var t : PumpkinType.REGISTRY) {
+            event.register(t.getPumpkin(), (ItemRenderExtension) renderer);
+        }
         event.register(ModRegistry.PAPER_BAG.get(), new PaperBagRenderExtension());
     }
 

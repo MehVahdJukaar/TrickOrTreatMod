@@ -8,6 +8,7 @@ import net.mehvahdjukaar.hauntedharvest.client.CarvingManager;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
+import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.network.NetworkHandler;
 import net.mehvahdjukaar.hauntedharvest.network.SyncSnowGolemPumpkinPacket;
 import net.mehvahdjukaar.hauntedharvest.reg.*;
@@ -36,7 +37,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -48,7 +48,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -164,8 +163,18 @@ public class HauntedHarvest {
                     toPlace = t.getVanillaPumpkin().withPropertiesOf(state);
                 }
                 level.setBlockAndUpdate(pos, toPlace);
-                if (tag != null && level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
-                    tile.loadWithComponents(tag, level.registryAccess());
+                if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
+                    if (tag != null) {
+                        tile.loadWithComponents(tag, level.registryAccess());
+                    } else {
+                        //came from a plain carved pumpkin. Compat types have no plain lit block to turn into,
+                        //so we carve the vanilla face on our own block instead of leaving it blank
+                        long[] vanillaFace = CustomCarvingsManager.getVanillaFace();
+                        if (vanillaFace != null) {
+                            tile.setPixels(PumpkinCarvingData.unpack(vanillaFace));
+                            tile.setChanged();
+                        }
+                    }
                 }
 
                 SoundType soundType = toPlace.getSoundType();

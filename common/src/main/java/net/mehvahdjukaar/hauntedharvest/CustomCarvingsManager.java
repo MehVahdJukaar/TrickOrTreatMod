@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,11 @@ import java.util.TreeMap;
 
 public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
 
+    private static final ResourceLocation VANILLA_FACE_ID = HauntedHarvest.res("classic");
+
     private static final List<long[]> FACES = new ArrayList<>();
     private static final List<long[]> FANTASY = new ArrayList<>();
+    private static long[] vanillaFace = null;
 
     public CustomCarvingsManager(HolderLookup.Provider provider) {
         super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(), "pumpkin_carvings");
@@ -83,11 +87,18 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
         if (onlyFaces) l = FACES.get(randomSource.nextInt(FACES.size()));
         else {
             int i = randomSource.nextInt(FACES.size() + FANTASY.size());
-            if (i > FACES.size()) {
+            if (i >= FACES.size()) {
                 l = FANTASY.get(i - FACES.size());
             } else l = FACES.get(i);
         }
         return l;
+    }
+
+    // "classic" is a 1:1 copy of the vanilla jack o' lantern face. Needed for the compat jack o' lanterns,
+    // which have no plain non-tile variant to fall back on, so they'd otherwise end up faceless
+    @Nullable
+    public static long[] getVanillaFace() {
+        return vanillaFace;
     }
 
     public static void debugPlaceAllPumpkins(BlockPos pos, LevelAccessor level) {
@@ -108,10 +119,13 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
         FACES.clear();
         FANTASY.clear();
+        vanillaFace = null;
         jsons.forEach((key, json) -> {
             var data = CustomCarving.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
-            if (data.isFace) FACES.add(Longs.toArray(data.pixels));
-            else FANTASY.add(Longs.toArray(data.pixels));
+            long[] pixels = Longs.toArray(data.pixels);
+            if (key.equals(VANILLA_FACE_ID)) vanillaFace = pixels;
+            if (data.isFace) FACES.add(pixels);
+            else FANTASY.add(pixels);
         });
     }
 

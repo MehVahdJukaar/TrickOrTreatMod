@@ -10,7 +10,6 @@ import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ItemRenderExtension;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.DeltaTracker;
@@ -38,21 +37,28 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements Item
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+        ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock) ((BlockItem) stack.getItem()).getBlock();
+        PumpkinCarvingData carvingData = stack.get(ModRegistry.PUMPKIN_CARVING.get());
 
-        matrixStackIn.pushPose();
+        renderPumpkin(block, carvingData, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+    }
 
+    /**
+     * Draws a carved pumpkin filling the unit cube starting at the current pose origin. The frame model leaves the
+     * north face open and the carving goes on top of it as a single textured quad.
+     */
+    public static void renderPumpkin(ModCarvedPumpkinBlock block, PumpkinCarvingData carvingData, PoseStack poseStack,
+                                     MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-        PumpkinCarvingData carvingData = stack.get(ModRegistry.PUMPKIN_CARVING.get());
         var visuals = CarvingManager.getInstance(carvingData);
 
-        ModCarvedPumpkinBlock block = (ModCarvedPumpkinBlock) ((BlockItem) stack.getItem()).getBlock();
         BlockState state = block.defaultBlockState();
         Holder<PumpkinType> type = block.getType(state);
         ModelResourceLocation frame = ClientRegistry.getPumpkinFrame(type.value());
 
         BakedModel model = ClientHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(), frame);
-        blockRenderer.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),
+        blockRenderer.getModelRenderer().renderModel(poseStack.last(), bufferIn.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),
                 state, model, 1, 1, 1, combinedLightIn, combinedOverlayIn);
 
         VertexConsumer builder = bufferIn.getBuffer(visuals.getRenderType());
@@ -60,9 +66,7 @@ public class CarvedPumpkinItemRenderer extends ItemStackRenderer implements Item
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
 
-        VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);
-
-        matrixStackIn.popPose();
+        VertexUtil.addQuad(builder, poseStack, 0, 0, 1, 1, lu, lv);
     }
 
     @Override
