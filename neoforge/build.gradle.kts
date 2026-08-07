@@ -9,10 +9,13 @@ neoforge {
 
 val moonlight_version: String by extra
 val supplementaries_version: String by extra
+val codecui_version: String by extra
 
 dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    // JiJ'd into Moonlight, so not on the dev runtime classpath. Add explicitly to avoid a missing schema codec class.
+    modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
 
     // Mirrored from common (platform variant)
     modImplementation("net.mehvahdjukaar:supplementaries-neoforge:${supplementaries_version}")
@@ -29,4 +32,6 @@ dependencies {
     modCompileOnly("curse.maven:serene-seasons-291874:4502525")
     modCompileOnly("curse.maven:autumnity-365045:7118591") // 1.21.1-6.0.1
     modCompileOnly("curse.maven:caverns-and-chasms-438005:8155745") // 1.21.1-3.0.0
+    modCompileOnly("curse.maven:environmental-388992:7122147") // 1.21.1-4.0.1
+    modCompileOnly("curse.maven:deep-aether-852465:7843283") // 1.21.1-1.1.5.1
 }

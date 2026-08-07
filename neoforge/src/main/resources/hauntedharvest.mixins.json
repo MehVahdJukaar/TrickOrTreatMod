@@ -6,6 +6,8 @@
   "client": [
   ],
   "mixins": [
+    "CompatDuckEggEntityMixin",
+    "CompatQuailEggEntityMixin",
     "CompatTurkeyEggEntityMixin"
   ],
   "plugin": "net.mehvahdjukaar.hauntedharvest.mixins.MixinPlugin",
