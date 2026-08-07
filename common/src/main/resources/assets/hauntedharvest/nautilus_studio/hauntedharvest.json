@@ -1,0 +1,8 @@
+{
+  "class": "net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager$CustomCarving",
+  "field": "CODEC",
+  "side": "server",
+  "dir": "pumpkin_carvings",
+  "label": "hauntedharvest.nautilus_studio.pumpkin_carving",
+  "wiki": "https://github.com/MehVahdJukaar/TrickOrTreat"
+}

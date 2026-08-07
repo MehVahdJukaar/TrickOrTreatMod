@@ -1,5 +1,6 @@
 {
   "itemGroup.hauntedharvest": "Haunted Harvest",
+  "hauntedharvest.nautilus_studio.pumpkin_carving": "Pumpkin Carving",
   "item.hauntedharvest.grim_apple": "Grim Apple",
   "item.hauntedharvest.rotten_apple": "Rotten Apple",
   "entity.hauntedharvest.splattered_egg": "Splattered Egg",
@@ -24,6 +25,7 @@
   "item.hauntedharvest.cornbread": "Cornbread",
   "gui.hauntedharvest.autumn_season_on": "Autumn season on",
   "gui.hauntedharvest.autumn_season_off": "Autumn season off",
+  "gui.hauntedharvest.autumn_season_unknown": "Autumn season decided by the installed season mod",
   "advancements.nether.splatter_eggs_in_nether.description": "Splatter an egg in the Nether",
   "advancements.nether.splatter_eggs_in_nether.title": "Deviled Eggs",
   "advancements.husbandry.carve_custom_pumpkin.description": "Shear the top of a pumpkin",
