@@ -5,25 +5,20 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
-import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
-import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
+import net.mehvahdjukaar.moonlight.api.client.model.QuadBatch;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -36,10 +31,8 @@ public class CarvingManager implements PreparableReloadListener {
     public static final CarvingManager INSTANCE = new CarvingManager();
 
     @Override
-    public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager,
-                                          ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2,
-                                          Executor executor, Executor executor2) {
-
+    public CompletableFuture<Void> reload(SharedState sharedState, Executor executor,
+                                          PreparationBarrier preparationBarrier, Executor executor2) {
         Objects.requireNonNull(preparationBarrier);
         return CompletableFuture.completedFuture(null)
                 .thenCompose(preparationBarrier::wait)
@@ -76,8 +69,8 @@ public class CarvingManager implements PreparableReloadListener {
     public static class CarvingVisuals implements AutoCloseable {
         public static final int WIDTH = 16;
 
-        //models for each direction
-        private final Map<Direction, List<BakedQuad>> quadsCache = new EnumMap<>(Direction.class);
+        //quads for each direction
+        private final Map<Direction, QuadBatch> quadsCache = new EnumMap<>(Direction.class);
         private final boolean[][] pixels;
         private final PumpkinType type;
         //he is lazy
@@ -86,7 +79,7 @@ public class CarvingManager implements PreparableReloadListener {
         @Nullable
         private RenderType renderType;
         @Nullable
-        private ResourceLocation textureLocation;
+        private Identifier textureLocation;
 
         private CarvingVisuals(boolean[][] pixels, PumpkinType type) {
             this.pixels = pixels;
@@ -104,18 +97,18 @@ public class CarvingManager implements PreparableReloadListener {
         //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
 
         private void initializeTexture() {
-            this.texture = new DynamicTexture(WIDTH, WIDTH, false);
+            this.texture = new DynamicTexture("pumpkin carving", WIDTH, WIDTH, false);
             PumpkinTextureGenerator.drawCarving(texture, this);
             //texture manager has its own internal id
             this.textureLocation = Minecraft.getInstance().getTextureManager().register("carving/", this.texture);
-            this.renderType = RenderType.entitySolid(textureLocation);
+            this.renderType = RenderTypes.entitySolid(textureLocation);
         }
 
-        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<CarvingVisuals, Direction, List<BakedQuad>> modelFactory) {
-            return this.quadsCache.computeIfAbsent(dir, d -> modelFactory.apply(this, d));
+        public QuadBatch getOrCreateQuads(Direction dir, BiFunction<CarvingVisuals, Direction, QuadBatch> quadFactory) {
+            return this.quadsCache.computeIfAbsent(dir, d -> quadFactory.apply(this, d));
         }
 
-        public ResourceLocation getTextureLocation() {
+        public Identifier getTextureLocation() {
             if (textureLocation == null) {
                 //I can only initialize it here since this is guaranteed to be on render thread
                 this.initializeTexture();
@@ -124,7 +117,7 @@ public class CarvingManager implements PreparableReloadListener {
         }
 
         @Nullable
-        public ResourceLocation getPumpkinBlur() {
+        public Identifier getPumpkinBlur() {
             return getCachedBlurTexture(this);
         }
 
@@ -145,35 +138,14 @@ public class CarvingManager implements PreparableReloadListener {
     }
 
 
+    //TODO: blurred pumpkin overlay is off until the blur shader is ported to a RenderPipeline
     @Nullable
-    public static ResourceLocation getCachedBlurTexture(CarvingVisuals carving) {
-        if (pumpkinBlur == null) {
-            RenderedTexturesManager.requestTexture(
-                    HauntedHarvest.res("pumpkinblur"), 512,
-                    t -> {
-                        PumpkinTextureGenerator.drawBlur(t, carving);
-                        pumpkinBlur = t;
-                    }, false);
-
-            return null;
-        } else if (carving != currentCarvingBlur) {
-            PumpkinTextureGenerator.drawBlur(pumpkinBlur, carving);
-        }
-        currentCarvingBlur = carving;
-        return pumpkinBlur.getTextureLocation();
+    public static Identifier getCachedBlurTexture(CarvingVisuals carving) {
+        return null;
     }
 
     public static void onTextureReload() {
-        //idk why its needed. probably due to some bigger underlying bug
-        if (pumpkinBlur != null) {
-            pumpkinBlur.close();
-            pumpkinBlur = null;
-        }
     }
-
-    //no need to register a bunch of these just having one since theres only one player
-    private static CarvingVisuals currentCarvingBlur = null;
-    private static FrameBufferBackedDynamicTexture pumpkinBlur = null;
 
 
 }

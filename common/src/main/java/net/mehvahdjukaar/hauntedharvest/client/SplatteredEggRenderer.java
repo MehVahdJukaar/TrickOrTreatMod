@@ -13,13 +13,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
 
-    public static final ResourceLocation TEXTURE = HauntedHarvest.res("textures/entity/egg/splattered_egg.png");
-    public static final ResourceLocation TEXTURE_2 = HauntedHarvest.res("textures/entity/egg/splattered_egg_2.png");
+    public static final Identifier TEXTURE = HauntedHarvest.res("textures/entity/egg/splattered_egg.png");
+    public static final Identifier TEXTURE_2 = HauntedHarvest.res("textures/entity/egg/splattered_egg_2.png");
 
     public SplatteredEggRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -42,7 +42,7 @@ public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
      * Returns the location of an entity's texture.
      */
     @Override
-    public ResourceLocation getTextureLocation(SplatteredEggEntity pEntity) {
+    public Identifier getTextureLocation(SplatteredEggEntity pEntity) {
         return pEntity.altTexture ? TEXTURE_2 : TEXTURE;
     }
 

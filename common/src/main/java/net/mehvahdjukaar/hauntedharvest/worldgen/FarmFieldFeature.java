@@ -3,11 +3,9 @@ package net.mehvahdjukaar.hauntedharvest.worldgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
-import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.SuppCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +14,10 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AttachedStemBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -71,10 +72,11 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
     }
 
     private boolean placeTomatoes(BlockPos.MutableBlockPos p, WorldGenLevel level, RandomSource random) {
-        if (level.getBlockState(p).isAir()) {
-            level.setBlock(p, FDCompat.getTomato(random), 2);
-            return true;
-        }
+        //TODO: restore when farmers delight ports to 26.1.2
+        //if (level.getBlockState(p).isAir()) {
+        //    level.setBlock(p, FDCompat.getTomato(random), 2);
+        //    return true;
+        //}
         return false;
     }
 

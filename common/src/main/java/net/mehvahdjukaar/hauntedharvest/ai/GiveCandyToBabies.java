@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -90,8 +90,8 @@ public class GiveCandyToBabies extends Behavior<Villager> {
             else if (r < 3) {
                 spookVillager(pOwner, target);
             } else {
-                ItemStack stack = BuiltInRegistries.ITEM.getTag(ModTags.VILLAGER_SWEETS)
-                        .get().getRandomElement(pLevel.random).get().value().getDefaultInstance();
+                ItemStack stack = BuiltInRegistries.ITEM.get(ModTags.VILLAGER_SWEETS)
+                        .get().getRandomElement(pLevel.getRandom()).get().value().getDefaultInstance();
                 throwCandy(pOwner, target, stack);
 
                 pLevel.broadcastEntityEvent(pOwner, (byte) 14);
@@ -152,7 +152,7 @@ public class GiveCandyToBabies extends Behavior<Villager> {
         pEntity.stopSleeping();
         LivingEntity target = this.lookAtTarget(pEntity);
 
-        this.timeToGiveCandy = 20 + pLevel.random.nextInt(30);
+        this.timeToGiveCandy = 20 + pLevel.getRandom().nextInt(30);
         this.tickSinceStarted = 0;
         this.hasGivenCandy = false;
         //     BehaviorUtils.lockGazeAndWalkToEachOther(pOwner, villager, 0.5F);

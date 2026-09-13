@@ -7,19 +7,19 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractGolem;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -63,20 +63,20 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     }
 
     public static boolean isCarverItem(ItemStack stack) {
-        return stack.is(ModTags.CARVERS) || stack.getItem() instanceof SwordItem;
+        return stack.is(ModTags.CARVERS) || stack.is(ItemTags.SWORDS);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                              InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                          InteractionHand hand, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te && !te.isWaxed()) {
-            ItemInteractionResult waxingRes = te.tryWaxingWithItem(level, pos, player, stack);
+            InteractionResult waxingRes = te.tryWaxingWithItem(level, pos, player, stack);
 
             if (waxingRes.consumesAction()) {
                 level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
                 te.setChanged(); //this also sends block update in tile
             }
-            if (waxingRes != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return waxingRes;
+            if (waxingRes != InteractionResult.TRY_WITH_EMPTY_HAND) return waxingRes;
             //torch is handled by event since it needs to cover vanilla ones aswell
 
             CarveMode mode = te.getCarveMode();
@@ -90,17 +90,17 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
 
                     te.setPixel(x, y, !te.getPixel(x, y));
                     te.setChanged();
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
                 if (mode.canOpenGui()) {
                     if (player instanceof ServerPlayer serverPlayer) {
                         Utils.openGuiIfPossible(te, serverPlayer, stack, hit.getDirection(), hit.getLocation());
                     }
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public enum CarveMode {
@@ -123,78 +123,53 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
         if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile te) {
             return Utils.saveTileToItem(te);
         }
-        return super.getCloneItemStack(level, pos, state);
+        return super.getCloneItemStack(level, pos, state, includeData);
     }
 
     @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!oldState.is(state.getBlock())) {
             this.trySpawnGolemWithCustomPumpkin(level, pos);
         }
     }
 
+    //TODO: copper golems can be built from a carved pumpkin too now. needs the weather state + chest swap from vanilla
     protected void trySpawnGolemWithCustomPumpkin(Level level, BlockPos pos) {
-        BlockPattern.BlockPatternMatch blockPatternMatch = SNOW_GOLEM_FULL.find(level, pos);
-        if (blockPatternMatch != null) {
-
-            SnowGolem snowGolem = EntityType.SNOW_GOLEM.create(level);
-            if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
-                if (snowGolem instanceof ICustomPumpkinHolder customPumpkinHolder) {
-                    ItemStack stack = Utils.saveTileToItem(tile);
-                    customPumpkinHolder.hauntedharvest$setCustomPumpkin(stack);
+        BlockPattern.BlockPatternMatch snowMatch = SNOW_GOLEM_FULL.find(level, pos);
+        if (snowMatch != null) {
+            SnowGolem snowGolem = EntityType.SNOW_GOLEM.create(level, EntitySpawnReason.TRIGGERED);
+            if (snowGolem != null) {
+                if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile
+                        && snowGolem instanceof ICustomPumpkinHolder customPumpkinHolder) {
+                    customPumpkinHolder.hauntedharvest$setCustomPumpkin(Utils.saveTileToItem(tile));
                 }
+                spawnGolemInWorld(level, snowMatch, snowGolem, snowMatch.getBlock(0, 2, 0).getPos());
             }
-
-            for (int i = 0; i < SNOW_GOLEM_FULL.getHeight(); ++i) {
-                BlockInWorld blockInWorld = blockPatternMatch.getBlock(0, i, 0);
-                level.setBlock(blockInWorld.getPos(), Blocks.AIR.defaultBlockState(), 2);
-                level.levelEvent(2001, blockInWorld.getPos(), Block.getId(blockInWorld.getState()));
-            }
-
-            BlockPos blockPos = blockPatternMatch.getBlock(0, 2, 0).getPos();
-            spawnToLocation(level, blockPos, snowGolem);
-
-            for (int j = 0; j < SNOW_GOLEM_FULL.getHeight(); ++j) {
-                BlockInWorld blockInWorld2 = blockPatternMatch.getBlock(0, j, 0);
-                level.blockUpdated(blockInWorld2.getPos(), Blocks.AIR);
-            }
-        } else {
-            blockPatternMatch = this.getOrCreateIronGolemFull().find(level, pos);
-            if (blockPatternMatch != null) {
-                for (int i = 0; i < this.getOrCreateIronGolemFull().getWidth(); ++i) {
-                    for (int k = 0; k < this.getOrCreateIronGolemFull().getHeight(); ++k) {
-                        BlockInWorld blockInWorld3 = blockPatternMatch.getBlock(i, k, 0);
-                        level.setBlock(blockInWorld3.getPos(), Blocks.AIR.defaultBlockState(), 2);
-                        level.levelEvent(2001, blockInWorld3.getPos(), Block.getId(blockInWorld3.getState()));
-                    }
-                }
-
-                BlockPos blockPos2 = blockPatternMatch.getBlock(1, 2, 0).getPos();
-                IronGolem ironGolem = EntityType.IRON_GOLEM.create(level);
+            return;
+        }
+        BlockPattern.BlockPatternMatch ironMatch = IRON_GOLEM_FULL.find(level, pos);
+        if (ironMatch != null) {
+            IronGolem ironGolem = EntityType.IRON_GOLEM.create(level, EntitySpawnReason.TRIGGERED);
+            if (ironGolem != null) {
                 ironGolem.setPlayerCreated(true);
-                spawnToLocation(level, blockPos2, ironGolem);
-
-                for (int j = 0; j < this.getOrCreateIronGolemFull().getWidth(); ++j) {
-                    for (int l = 0; l < this.getOrCreateIronGolemFull().getHeight(); ++l) {
-                        BlockInWorld blockInWorld4 = blockPatternMatch.getBlock(j, l, 0);
-                        level.blockUpdated(blockInWorld4.getPos(), Blocks.AIR);
-                    }
-                }
+                spawnGolemInWorld(level, ironMatch, ironGolem, ironMatch.getBlock(1, 2, 0).getPos());
             }
         }
     }
 
-    private static void spawnToLocation(Level level, BlockPos blockPos2, AbstractGolem ironGolem) {
-        ironGolem.moveTo(blockPos2.getX() + 0.5, blockPos2.getY() + 0.05, blockPos2.getZ() + 0.5, 0.0F, 0.0F);
-        level.addFreshEntity(ironGolem);
+    private static void spawnGolemInWorld(Level level, BlockPattern.BlockPatternMatch match, Entity golem, BlockPos spawnPos) {
+        clearPatternBlocks(level, match);
+        golem.snapTo(spawnPos.getX() + 0.5, spawnPos.getY() + 0.05, spawnPos.getZ() + 0.5, 0.0F, 0.0F);
+        level.addFreshEntity(golem);
 
-        for (ServerPlayer serverPlayer : level.getEntitiesOfClass(ServerPlayer.class, ironGolem.getBoundingBox().inflate(5.0))) {
-            CriteriaTriggers.SUMMONED_ENTITY.trigger(serverPlayer, ironGolem);
+        for (ServerPlayer serverPlayer : level.getEntitiesOfClass(ServerPlayer.class, golem.getBoundingBox().inflate(5.0))) {
+            CriteriaTriggers.SUMMONED_ENTITY.trigger(serverPlayer, golem);
         }
+        updatePatternBlocks(level, match);
     }
 
     private static final Predicate<BlockState> PUMPKINS_PREDICATE = blockState -> blockState != null
@@ -204,6 +179,13 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
             .aisle("^", "#", "#")
             .where('^', BlockInWorld.hasState(PUMPKINS_PREDICATE))
             .where('#', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.SNOW_BLOCK)))
+            .build();
+
+    private static final BlockPattern IRON_GOLEM_FULL = BlockPatternBuilder.start()
+            .aisle("~^~", "###", "~#~")
+            .where('^', BlockInWorld.hasState(PUMPKINS_PREDICATE))
+            .where('#', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.IRON_BLOCK)))
+            .where('~', BlockInWorld.hasState(BlockState::isAir))
             .build();
 
 }

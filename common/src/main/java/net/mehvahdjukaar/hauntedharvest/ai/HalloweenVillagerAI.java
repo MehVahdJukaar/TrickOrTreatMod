@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,10 +33,6 @@ public class HalloweenVillagerAI {
     }
 
     public static void setup() {
-        //memories
-        VillagerAIHooks.registerMemory(MemoryModuleType.ATTACK_TARGET);
-        VillagerAIHooks.registerMemory(ModRegistry.PUMPKIN_POS.get());
-        VillagerAIHooks.registerMemory(ModRegistry.NEAREST_PUMPKIN.get());
     }
 
 
@@ -44,6 +40,10 @@ public class HalloweenVillagerAI {
         Villager villager = event.getVillager();
         //hopefully level isnt null
         if (HauntedHarvest.isHalloweenSeason(villager.level())) {
+
+            event.registerMemory(MemoryModuleType.ATTACK_TARGET);
+            event.registerMemory(ModRegistry.PUMPKIN_POS.get());
+            event.registerMemory(ModRegistry.NEAREST_PUMPKIN.get());
 
             event.addSensor(ModRegistry.PUMPKIN_POI_SENSOR.get());
 
@@ -53,8 +53,9 @@ public class HalloweenVillagerAI {
                 event.addTaskToActivity(Activity.PLAY, Pair.of(9, new EatCandy(100, 130)));
                 event.addTaskToActivity(Activity.PLAY, Pair.of(10, new CarvePumpkin(0.5f)));
 
-                event.scheduleActivity(ModRegistry.TRICK_OR_TREAT.get(), HauntedHarvest.getSeasonManager().getTrickOrTreatStart(),
-                        HauntedHarvest.getSeasonManager().getTrickOrTreatEnd());
+                //TODO: 26.1 dropped Schedule for datapack Timelines, so the trick or treat window has to
+                // become a timeline on EnvironmentAttributes.BABY_VILLAGER_ACTIVITY. until then babies
+                // never switch into the activity on their own
 
             } else {
 

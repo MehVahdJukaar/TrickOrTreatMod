@@ -1,16 +1,13 @@
 package net.mehvahdjukaar.hauntedharvest.integration;
 
-import net.raphimc.immediatelyfastapi.BatchingAccess;
-import net.raphimc.immediatelyfastapi.ImmediatelyFastApi;
-
+//TODO: bodies commented out until immediatelyfast has a 26.1.2 build
 public class ImmediatelyFastCompat {
 
-    public static void startBatching(){
-        BatchingAccess batching = ImmediatelyFastApi.getApiImpl().getBatching();
-        batching.beginHudBatching();
+    public static void startBatching() {
+        //ImmediatelyFastApi.getApiImpl().getBatching().beginHudBatching();
     }
 
-    public static void endBatching(){
-        ImmediatelyFastApi.getApiImpl().getBatching().endHudBatching();
+    public static void endBatching() {
+        //ImmediatelyFastApi.getApiImpl().getBatching().endHudBatching();
     }
 }

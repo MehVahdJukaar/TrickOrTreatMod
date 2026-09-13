@@ -22,22 +22,20 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.core.dispenser.EquipmentDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -47,10 +45,11 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Author: MehVahdJukaar
@@ -59,11 +58,11 @@ public class HauntedHarvest {
 
     public static final String MOD_ID = "hauntedharvest";
 
-    public static ResourceLocation res(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+    public static Identifier res(String name) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, name);
     }
 
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     private static SeasonManager seasonManager;
 
@@ -103,14 +102,7 @@ public class HauntedHarvest {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.KERNELS.get().asItem(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.COB_ITEM.get().asItem(), 0.5F);
 
-        DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
-            @Override
-            protected ItemStack execute(BlockSource source, ItemStack stack) {
-                this.setSuccess(ArmorItem.dispenseArmor(source, stack));
-                return stack;
-            }
-        };
-        DispenserBlock.registerBehavior(ModRegistry.PAPER_BAG.get(), armorBehavior);
+        DispenserBlock.registerBehavior(ModRegistry.PAPER_BAG.get(), EquipmentDispenseItemBehavior.INSTANCE);
     }
 
     public static SeasonManager getSeasonManager() {
@@ -165,7 +157,9 @@ public class HauntedHarvest {
                 level.setBlockAndUpdate(pos, toPlace);
                 if (level.getBlockEntity(pos) instanceof ModCarvedPumpkinBlockTile tile) {
                     if (tag != null) {
-                        tile.loadWithComponents(tag, level.registryAccess());
+                        try (var reporter = new ProblemReporter.ScopedCollector(tile.problemPath(), LOGGER)) {
+                            tile.loadWithComponents(TagValueInput.create(reporter, level.registryAccess(), tag));
+                        }
                     } else {
                         //came from a plain carved pumpkin. Compat types have no plain lit block to turn into,
                         //so we carve the vanilla face on our own block instead of leaving it blank
@@ -186,7 +180,7 @@ public class HauntedHarvest {
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
             return InteractionResult.PASS;
         }
@@ -200,10 +194,10 @@ public class HauntedHarvest {
                         pos.getX() + 0.5, pos.getY() + 1.15f, pos.getZ() + 0.5,
                         new ItemStack(Items.PUMPKIN_SEEDS, 4));
 
-                itemEntity.setDeltaMovement(level.random.nextDouble() * 0.02, 0.05 + level.random.nextDouble() * 0.02, level.random.nextDouble() * 0.02);
+                itemEntity.setDeltaMovement(level.getRandom().nextDouble() * 0.02, 0.05 + level.getRandom().nextDouble() * 0.02, level.getRandom().nextDouble() * 0.02);
                 level.addFreshEntity(itemEntity);
 
-                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+                stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
                 level.setBlock(pos, ModRegistry.CARVED_PUMPKIN.get().withPropertiesOf(state)
                         .setValue(ModCarvedPumpkinBlock.FACING, player.getDirection().getOpposite()), 11);
 
@@ -218,7 +212,7 @@ public class HauntedHarvest {
                         Utils.openGuiIfPossible(te, serverPlayer, stack, player.getDirection().getOpposite(), Vec3.ZERO);
                     }
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.PASS;
@@ -227,7 +221,7 @@ public class HauntedHarvest {
 
     @EventCalled
     public static void onClientEntityLoad(Entity entity, Level level) {
-        if (!entity.level().isClientSide) return;
+        if (!entity.level().isClientSide()) return;
         if (entity instanceof ICustomPumpkinHolder q) {
             //ask server to send quiver data
             NetworkHelper.sendToServer(new SyncSnowGolemPumpkinPacket(entity, q));

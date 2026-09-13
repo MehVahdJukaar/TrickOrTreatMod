@@ -5,14 +5,12 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,23 +19,26 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -110,7 +111,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         int fill = state.getValue(FILL_LEVEL);
         ItemStack item;
         if (level.getBlockEntity(pos) instanceof CandyBagTile tile) {
@@ -119,7 +120,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
         } else {
             item = new ItemStack(getContent(state), fill);
         }
-        if (item == null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION ;
+        if (item == null) return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 
         int delta = 0;
@@ -136,20 +137,23 @@ public class CandyBagBlock extends Block implements EntityBlock {
         } else {
             if (item.has(DataComponents.FOOD) && player.canEat(false) && !player.isCreative()) {
                 //eat cookies
-                player.eat(level, item.copy());
+                ItemStack eaten = item.copy().split(1);
+                player.getFoodData().eat(eaten.get(DataComponents.FOOD));
+                Consumable consumable = eaten.get(DataComponents.CONSUMABLE);
+                if (consumable != null) consumable.onConsume(level, player, eaten);
                 delta = -1;
-                if (level.isClientSide) {
-                    ParticleOptions particleOptions = new ItemParticleOption(ParticleTypes.ITEM, item);
+                if (level.isClientSide()) {
+                    ParticleOptions particleOptions = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(item));
                     double dy = 0.005 + fill / 16d;
                     double power = 0.2;
                     for (int i = 0; i < 12; ++i) {
                         level.addParticle(particleOptions,
-                                pos.getX() + 2 / 16f + level.random.nextFloat() * 12 / 16f,
+                                pos.getX() + 2 / 16f + level.getRandom().nextFloat() * 12 / 16f,
                                 pos.getY() + dy,
-                                pos.getZ() + 2 / 16f + level.random.nextFloat() * 12 / 16f,
-                                (level.random.nextFloat() - 0.5) * power,
-                                (level.random.nextFloat()) * power * 0.7,
-                                (level.random.nextFloat() - 0.5) * power);
+                                pos.getZ() + 2 / 16f + level.getRandom().nextFloat() * 12 / 16f,
+                                (level.getRandom().nextFloat() - 0.5) * power,
+                                (level.getRandom().nextFloat()) * power * 0.7,
+                                (level.getRandom().nextFloat() - 0.5) * power);
                     }
                 }
             }
@@ -162,9 +166,9 @@ public class CandyBagBlock extends Block implements EntityBlock {
             } else {
                 level.setBlockAndUpdate(pos, state.setValue(FILL_LEVEL, newFill));
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     private static void playSound(Level level, BlockPos pos) {
@@ -175,17 +179,18 @@ public class CandyBagBlock extends Block implements EntityBlock {
     public Item getContent(BlockState state) {
         var c = state.getValue(CONTENT);
         if (c.drop != null) {
-            var i = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(c.drop));
+            var i = BuiltInRegistries.ITEM.getOptional(Identifier.parse(c.drop));
             if (i.isPresent()) return i.get();
         }
         return null;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, level, pos, neighbor, fromPos, isMoving);
-        if (state.getValue(CONTENT) == Content.KERNELS && canCook(level.getBlockState(fromPos))) {
-            level.scheduleTick(pos, this, POPCORN_COOK_TIME);
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, @Nullable Orientation orientation, boolean isMoving) {
+        super.neighborChanged(state, level, pos, neighbor, orientation, isMoving);
+        //orientation carries redstone propagation state, not the neighbor pos, so we have to look around ourselves
+        if (state.getValue(CONTENT) == Content.KERNELS) {
+            schedulePopTickIfPossible(state, level, pos);
         }
     }
 
@@ -219,9 +224,9 @@ public class CandyBagBlock extends Block implements EntityBlock {
 
         ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5, item);
 
-        itemEntity.setDeltaMovement(level.random.nextDouble() * 0.02,
-                0.08 + level.random.nextDouble() * 0.2,
-                level.random.nextDouble() * 0.02);
+        itemEntity.setDeltaMovement(level.getRandom().nextDouble() * 0.02,
+                0.08 + level.getRandom().nextDouble() * 0.2,
+                level.getRandom().nextDouble() * 0.02);
         level.addFreshEntity(itemEntity);
 
         level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.BLOCKS, 0.2f, 2f);
@@ -230,10 +235,10 @@ public class CandyBagBlock extends Block implements EntityBlock {
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
         if (id == 1) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 int fill = state.getValue(FILL_LEVEL);
                 ItemStack item = new ItemStack(ModRegistry.POP_CORN.get());
-                ParticleOptions particleOptions = new ItemParticleOption(ParticleTypes.ITEM, item);
+                ParticleOptions particleOptions = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(item));
                 double dy = 0.005 + fill / 16d;
                 double power = 0.3;
                 for (int i = 0; i < 7; ++i) {
@@ -241,9 +246,9 @@ public class CandyBagBlock extends Block implements EntityBlock {
                             pos.getX() + 0.5,
                             pos.getY() + dy,
                             pos.getZ() + 0.5,
-                            (level.random.nextFloat() - 0.5) * power,
-                            (level.random.nextFloat()) * power + 0.2,
-                            (level.random.nextFloat() - 0.5) * power);
+                            (level.getRandom().nextFloat() - 0.5) * power,
+                            (level.getRandom().nextFloat()) * power + 0.2,
+                            (level.getRandom().nextFloat() - 0.5) * power);
                 }
             }
             return true;
@@ -263,7 +268,7 @@ public class CandyBagBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
         return ModRegistry.PAPER_BAG.get().asItem().getDefaultInstance();
     }
 

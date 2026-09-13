@@ -15,7 +15,7 @@ import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -47,7 +47,7 @@ public class CarvePumpkin extends Behavior<Villager> {
 
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-        this.cooldown = 20 * (30 + pLevel.random.nextInt(30)) + pLevel.random.nextInt(20);
+        this.cooldown = 20 * (30 + pLevel.getRandom().nextInt(30)) + pLevel.getRandom().nextInt(20);
         this.ticksSinceReached = 0;
 
         BlockPos targetPos = pEntity.getBrain().getMemory(ModRegistry.NEAREST_PUMPKIN.get()).get().pos();

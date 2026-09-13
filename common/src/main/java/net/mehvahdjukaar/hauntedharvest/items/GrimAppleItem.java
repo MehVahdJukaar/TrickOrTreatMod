@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.items;
 
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
@@ -18,7 +20,10 @@ public class GrimAppleItem extends Item {
         if (entity instanceof IHalloweenVillager v) {
             v.hauntedharvest$startConverting();
 
-            pLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), entity.getEatingSound(pStack), SoundSource.NEUTRAL, 1.0F, 1.0F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.4F);
+            Consumable consumable = pStack.get(DataComponents.CONSUMABLE);
+            if (consumable != null) {
+                pLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), consumable.sound().value(), SoundSource.NEUTRAL, 1.0F, 1.0F + (pLevel.getRandom().nextFloat() - pLevel.getRandom().nextFloat()) * 0.4F);
+            }
             pStack.shrink(1);
 
             entity.gameEvent(GameEvent.EAT);

@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -28,14 +28,14 @@ public final class AbandonedFarmStructure extends Structure {
     public static final MapCodec<AbandonedFarmStructure> CODEC = RecordCodecBuilder.<AbandonedFarmStructure>mapCodec((instance) -> instance.group(
             settingsCodec(instance),
             StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter((j) -> j.startPool),
-            ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter((j) -> j.startJigsawName),
+            Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter((j) -> j.startJigsawName),
             Codec.intRange(0, 7).fieldOf("size").forGetter((j) -> j.maxDepth),
             Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(j -> j.projectStartToHeightmap),
             Codec.INT.fieldOf("min_y").forGetter(structure -> structure.minY),
             Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY)
     ).apply(instance, AbandonedFarmStructure::new)).flatXmap(verifyRange(), verifyRange());
     private final Holder<StructureTemplatePool> startPool;
-    private final Optional<ResourceLocation> startJigsawName;
+    private final Optional<Identifier> startJigsawName;
     private final int maxDepth;
     private final Optional<Heightmap.Types> projectStartToHeightmap;
     private final int maxY;
@@ -46,7 +46,7 @@ public final class AbandonedFarmStructure extends Structure {
     }
 
     public AbandonedFarmStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> startPool,
-                                  Optional<ResourceLocation> startJigsawName, int depth,
+                                  Optional<Identifier> startJigsawName, int depth,
                                   Optional<Heightmap.Types> projectStartToHeightmap, int minY, int maxY) {
         super(config);
         this.startPool = startPool;
@@ -68,7 +68,7 @@ public final class AbandonedFarmStructure extends Structure {
         int y = generator.getFirstOccupiedHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);
         if (y > maxY || y < minY) return Optional.empty();
         return JigsawPlacement.addPieces(context, this.startPool, this.startJigsawName, this.maxDepth,
-                blockPos, false, this.projectStartToHeightmap, 20,
+                blockPos, false, this.projectStartToHeightmap, new JigsawStructure.MaxDistance(20),
                 PoolAliasLookup.EMPTY,
                 JigsawStructure.DEFAULT_DIMENSION_PADDING,
                 JigsawStructure.DEFAULT_LIQUID_SETTINGS);

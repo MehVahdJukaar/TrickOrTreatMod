@@ -1,15 +1,9 @@
 package net.mehvahdjukaar.hauntedharvest.entity;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
@@ -17,7 +11,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,11 +18,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
 public class SplatteredEggEntity extends HangingEntity {
@@ -62,7 +56,7 @@ public class SplatteredEggEntity extends HangingEntity {
             HangingEntity hangingentity = new SplatteredEggEntity(level, relative, direction);
 
             if (hangingentity.survives()) {
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     hangingentity.playPlacementSound();
                     level.gameEvent(egg.getOwner(), GameEvent.ENTITY_PLACE, blockpos);
                     level.addFreshEntity(hangingentity);
@@ -71,26 +65,15 @@ public class SplatteredEggEntity extends HangingEntity {
         }
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
-        return new ClientboundAddEntityPacket(this, this.direction.get3DDataValue(), this.getPos());
-    }
-
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket p_149626_) {
-        super.recreateFromPacket(p_149626_);
-        this.setDirection(Direction.from3DDataValue(p_149626_.getData()));
-    }
-
     /**
-     * Updates facing and bounding box based on it
+     * Updates facing and bounding box based on it. Can't call super, it rejects vertical faces
      */
     @Override
     protected void setDirection(Direction pFacingDirection) {
-        this.direction = pFacingDirection;
+        this.setDirectionRaw(pFacingDirection);
         if (pFacingDirection.getAxis().isHorizontal()) {
             this.setXRot(0.0F);
-            this.setYRot((this.direction.get2DDataValue() * 90));
+            this.setYRot((pFacingDirection.get2DDataValue() * 90));
         } else {
             this.setXRot((-90 * pFacingDirection.getAxisDirection().getStep()));
             this.setYRot(0.0F);
@@ -100,7 +83,7 @@ public class SplatteredEggEntity extends HangingEntity {
         this.yRotO = this.getYRot();
         this.recalculateBoundingBox();
         RandomSource ran = RandomSource.create(pos.asLong());
-        this.altTexture = ran.nextInt(direction.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
+        this.altTexture = ran.nextInt(pFacingDirection.getAxis() == Direction.Axis.Y ? 6 : 2) == 0;
     }
 
     @Override
@@ -123,20 +106,16 @@ public class SplatteredEggEntity extends HangingEntity {
         if (!level.noCollision(this)) {
             return false;
         } else {
-            BlockState blockstate = level.getBlockState(this.pos.relative(this.direction.getOpposite()));
-            return (blockstate.isSolid() || this.direction.getAxis().isHorizontal() && DiodeBlock.isDiode(blockstate)) &&
-                    level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
+            Direction dir = this.getDirection();
+            BlockState blockstate = level.getBlockState(this.pos.relative(dir.getOpposite()));
+            return (blockstate.isSolid() || dir.getAxis().isHorizontal() && DiodeBlock.isDiode(blockstate))
+                    && this.canCoexist(false);
         }
     }
 
 
-    @ForgeOverride
-    public @Nullable ItemStack getPickedResult(HitResult target) {
-        return Items.EGG.getDefaultInstance();
-    }
-
     @Override
-    public void dropItem(@Nullable Entity pBrokenEntity) {
+    public void dropItem(ServerLevel level, @Nullable Entity brokenBy) {
 
     }
 
@@ -156,18 +135,15 @@ public class SplatteredEggEntity extends HangingEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putByte("Facing", (byte) this.direction.get3DDataValue());
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putByte("Facing", (byte) this.getDirection().get3DDataValue());
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.setDirection(Direction.from3DDataValue(pCompound.getByte("Facing")));
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.setDirection(Direction.from3DDataValue(input.getByteOr("Facing", (byte) 0)));
     }
 
 
@@ -177,21 +153,22 @@ public class SplatteredEggEntity extends HangingEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
-    }
-
-    @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide && this.tickCount > 20 * 30) {
+        if (!this.level().isClientSide() && this.tickCount > 20 * 30) {
             this.discard();
         }
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource pSource) {
-        if (pSource.is(DamageTypeTags.IS_PROJECTILE)) return true;
-        return super.isInvulnerableTo(pSource);
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        if (source.is(DamageTypeTags.IS_PROJECTILE)) return false;
+        return super.hurtServer(level, source, damage);
+    }
+
+    @Override
+    public boolean hurtClient(DamageSource source) {
+        if (source.is(DamageTypeTags.IS_PROJECTILE)) return false;
+        return super.hurtClient(source);
     }
 }

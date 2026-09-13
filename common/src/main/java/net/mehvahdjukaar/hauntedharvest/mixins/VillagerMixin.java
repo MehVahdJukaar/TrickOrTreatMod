@@ -4,10 +4,10 @@ import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,13 +16,14 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Witch;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -74,7 +75,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Override
     public void hauntedharvest$setEntityOnCooldown(Entity e, int cooldownSec) {
-        hauntedharvest$adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level().random.nextInt(20)));
+        hauntedharvest$adultCandyCooldown.put(e.getUUID(), 20 * (cooldownSec + e.level().getRandom().nextInt(20)));
     }
 
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
@@ -90,7 +91,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         super.onItemPickup(itemEntity);
         if (HalloweenVillagerAI.isTrickOrTreater(this) && HalloweenVillagerAI.isCandyOrApple(itemEntity.getItem())) {
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            if (!this.level().isClientSide) {
+            if (!this.level().isClientSide()) {
                 this.level().broadcastEntityEvent(this, (byte) 14);
             }
         }
@@ -102,7 +103,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         if (!this.hauntedharvest$isConverting()) {
             this.hauntedharvest$conversionTime = 60 * 20;
             this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 2));
+            this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 60 * 20, 2));
         }
     }
 
@@ -110,31 +111,25 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     private int hauntedharvest$conversionTime = -1;
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
-        tag.putInt("ConversionTime", this.hauntedharvest$conversionTime);
+    public void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+        output.putInt("ConversionTime", this.hauntedharvest$conversionTime);
 
         //can't get thingie brain memory saving to work
         //TODO: figure out why it's not read after getting saved
         if (this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
             GlobalPos globalpos = this.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
             if (globalpos.dimension() == this.level().dimension()) {
-                tag.put("Pumpkin", NbtUtils.writeBlockPos(globalpos.pos()));
+                output.store("Pumpkin", BlockPos.CODEC, globalpos.pos());
             }
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
-        this.hauntedharvest$conversionTime = compoundNBT.getInt("ConversionTime");
+    public void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+        this.hauntedharvest$conversionTime = input.getIntOr("ConversionTime", -1);
 
-        if (compoundNBT.contains("Pumpkin")) {
-            try {
-                this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level().dimension(),
-                        NbtUtils.readBlockPos(compoundNBT, "Pumpkin").get()));
-            } catch (Exception ignored) {
-            }
-        }
-
+        input.read("Pumpkin", BlockPos.CODEC).ifPresent(pos ->
+                this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level().dimension(), pos)));
     }
 
     @Override
@@ -154,18 +149,16 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
         for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
             ItemStack itemstack = this.getItemBySlot(equipmentSlot);
             if (!itemstack.isEmpty()) {
-                double d0 = this.getEquipmentDropChance(equipmentSlot);
-                if (d0 > 1.0D) {
-                    this.spawnAtLocation(itemstack);
+                if (this.getDropChances().byEquipment(equipmentSlot) > 1.0F
+                        && this.level() instanceof ServerLevel serverLevel) {
+                    this.spawnAtLocation(serverLevel, itemstack);
                 }
             }
             this.setItemSlot(equipmentSlot, ItemStack.EMPTY);
         }
         //rest of the inventory gets discarded
 
-        Witch witch = this.convertTo(EntityType.WITCH, true);
-        if (witch != null) {
-
+        this.convertTo(EntityType.WITCH, ConversionParams.single((Villager) (Object) this, false, false), witch -> {
             witch.yBodyRot = yBodyRot;
             witch.yHeadRot = yHeadRot;
             //witch.yBodyRotO = yBodyRotO;
@@ -173,9 +166,8 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
             witch.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
 
-
             ForgeHelper.fireOnLivingConvert(this, witch);
-        }
+        });
 
         if (!this.isSilent()) {
             this.level().levelEvent(null, 1027, this.blockPosition(), 0);
@@ -203,7 +195,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
     public void tick(CallbackInfo ci) {
-        if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
+        if (!this.level().isClientSide() && this.isAlive() && !this.isNoAi()) {
             if (this.hauntedharvest$isConverting()) {
                 --this.hauntedharvest$conversionTime;
 
@@ -221,10 +213,9 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
             this.hauntedharvest$conversionTime = -1;
             Level level = this.level();
             itemstack.finishUsingItem(level, this);
-            this.eat(level, itemstack);
             pPlayer.setItemInHand(pHand, new ItemStack(Items.BUCKET));
             cir.cancel();
-            cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
+            cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }
 

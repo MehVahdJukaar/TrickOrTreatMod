@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -57,7 +57,7 @@ public class AutumnityCompatImpl {
 
     private static class EndergeticCompat {
         private final Supplier<Item> enderTorch = Suppliers.memoize(() -> BuiltInRegistries.ITEM.getOptional(
-                ResourceLocation.parse("endergetic:ender_torch")).orElse(null));
+                Identifier.parse("endergetic:ender_torch")).orElse(null));
 
         public final Supplier<ModCarvedPumpkinBlock> enderJackOLantern = regPumpkin("ender_jack_o_lantern",
                 () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
@@ -69,7 +69,7 @@ public class AutumnityCompatImpl {
 
     private static class CavesAndChasmCompat {
         private final Supplier<Item> cupricTorch = Suppliers.memoize(() -> BuiltInRegistries.ITEM.getOptional(
-                ResourceLocation.parse("caverns_and_chasms:cupric_torch")).orElse(null));
+                Identifier.parse("caverns_and_chasms:cupric_torch")).orElse(null));
 
         public final Supplier<ModCarvedPumpkinBlock> cupricJackOLantern = regPumpkin("cupric_jack_o_lantern",
                 () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
@@ -79,7 +79,7 @@ public class AutumnityCompatImpl {
                 cupricTorch, cupricJackOLantern, cupricJackOLantern);
     }
 
-    private static @NotNull ResourceLocation res(String name) {
-        return ResourceLocation.fromNamespaceAndPath("autumnity", name);
+    private static @NotNull Identifier res(String name) {
+        return Identifier.fromNamespaceAndPath("autumnity", name);
     }
 }

@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -48,7 +48,7 @@ public class PlacePumpkin extends Behavior<Villager> {
         if (cooldown-- > 0) return false;
         if (pOwner.isBaby()) return false;
         //rarer
-        if (pLevel.random.nextInt(2) == 0) {
+        if (pLevel.getRandom().nextInt(2) == 0) {
             cooldown = 20 * 20;
             return false;
         }
@@ -61,7 +61,7 @@ public class PlacePumpkin extends Behavior<Villager> {
 
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-        this.cooldown = 20 * (15 + pLevel.random.nextInt(10)) + pLevel.random.nextInt(20);
+        this.cooldown = 20 * (15 + pLevel.getRandom().nextInt(10)) + pLevel.getRandom().nextInt(20);
         this.ticksSinceReached = 0;
         targetPos = getValidPumpkinPos(pLevel, pEntity);
 
