@@ -1,5 +1,3 @@
-import org.gradle.internal.logging.progress.ResourceOperation
-
 plugins {
     id("com.possible-triangle.core")
     id("com.possible-triangle.common") apply false
@@ -40,7 +38,7 @@ subprojects {
 
 
 
-    ResourceOperation.Type.upload {
+    upload {
         maven {
             nexus()
         }
