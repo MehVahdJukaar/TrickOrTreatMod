@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.ai;
 
-import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -9,10 +8,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
@@ -43,7 +44,7 @@ public class EatCandy extends Behavior<Villager> {
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
         super.start(pLevel, pEntity, pGameTime);
-        this.cooldown = 20 * (3 + pLevel.random.nextInt(4)) + pLevel.random.nextInt(20);
+        this.cooldown = 20 * (3 + pLevel.getRandom().nextInt(4)) + pLevel.getRandom().nextInt(20);
         //stay still
         pEntity.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
         //hax
@@ -79,13 +80,14 @@ public class EatCandy extends Behavior<Villager> {
                 pos = pos.yRot(-pOwner.getYRot() * ((float) Math.PI / 180F));
                 pos = pos.add(pOwner.getX(), pOwner.getEyeY(), pOwner.getZ());
 
-                pLevel.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack),
+                pLevel.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack)),
                         pos.x, pos.y - 0.2, pos.z, 2,
                         0.03, 0.05, 0.03, 0.0D);
             }
-            if (eatingTime % 5 == 0) {
-                pOwner.playSound(pOwner.getEatingSound(stack), 0.3F + 0.4F * pLevel.random.nextInt(2),
-                        (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F + 1.3F);
+            Consumable consumable = stack.get(DataComponents.CONSUMABLE);
+            if (eatingTime % 5 == 0 && consumable != null) {
+                pOwner.playSound(consumable.sound().value(), 0.3F + 0.4F * pLevel.getRandom().nextInt(2),
+                        (pLevel.getRandom().nextFloat() - pLevel.getRandom().nextFloat()) * 0.2F + 1.3F);
             }
         }
     }

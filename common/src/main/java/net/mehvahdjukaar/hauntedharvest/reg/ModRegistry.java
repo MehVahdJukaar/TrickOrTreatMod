@@ -8,30 +8,29 @@ import net.mehvahdjukaar.hauntedharvest.items.ModCarvedPumpkinItem;
 import net.mehvahdjukaar.hauntedharvest.items.PaperBagItem;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.items.crafting.ModCarvedPumpkinRecipe;
-import net.mehvahdjukaar.hauntedharvest.worldgen.*;
+import net.mehvahdjukaar.hauntedharvest.worldgen.AbandonedFarmStructure;
+import net.mehvahdjukaar.hauntedharvest.worldgen.FarmFieldFeature;
+import net.mehvahdjukaar.hauntedharvest.worldgen.ProcessFarmProcessor;
+import net.mehvahdjukaar.hauntedharvest.worldgen.RandomFeaturePoolElement;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -41,6 +40,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.material.PushReaction;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.hauntedharvest.HauntedHarvest.res;
@@ -67,12 +67,10 @@ public class ModRegistry {
 
 
     public static final Supplier<StructureProcessorType<ProcessFarmProcessor>> FARM_PROCESSOR =
-            RegHelper.register(res("process_farm"), () ->
-                    () -> ProcessFarmProcessor.CODEC, Registries.STRUCTURE_PROCESSOR);
+            RegHelper.registerStructureProcessor(res("process_farm"), ProcessFarmProcessor.CODEC);
 
     public static final Supplier<StructurePoolElementType<RandomFeaturePoolElement>> RANDOM_FEATURE_POOL =
-            RegHelper.register(res("random_feature_pool_element"), () ->
-                    () -> RandomFeaturePoolElement.CODEC, Registries.STRUCTURE_POOL_ELEMENT);
+            RegHelper.registerStructurePoolElement(res("random_feature_pool_element"), RandomFeaturePoolElement.CODEC);
 
     public static final Supplier<Feature<FarmFieldFeature.Config>> FARM_FIELD_FEATURE =
             RegHelper.registerFeature(res("farm_field"), () ->
@@ -80,17 +78,12 @@ public class ModRegistry {
 
     //ai
 
-    //do not use
-    public static final Supplier<Schedule> HALLOWEEN_VILLAGER_BABY_SCHEDULE =
-            RegHelper.registerSchedule(res("villager_baby_halloween"), Schedule::new);
-
     public static final Supplier<MemoryModuleType<GlobalPos>> PUMPKIN_POS =
-            RegHelper.registerMemoryModule(res("pumpkin_pos"), () ->
-                    new MemoryModuleType<>(Optional.of(GlobalPos.CODEC)));
+            RegHelper.registerMemoryModule(res("pumpkin_pos"), GlobalPos.CODEC);
 
     public static final Supplier<MemoryModuleType<GlobalPos>> NEAREST_PUMPKIN =
             RegHelper.registerMemoryModule(res("nearest_pumpkin"), () ->
-                    new MemoryModuleType<>(Optional.empty()));
+                    new MemoryModuleType<GlobalPos>(Optional.empty()));
 
 
     public static final Supplier<SensorType<PumpkinPoiSensor>> PUMPKIN_POI_SENSOR =
@@ -118,122 +111,122 @@ public class ModRegistry {
     //items
     public static final String SPLATTERED_EGG_NAME = "splattered_egg";
     public static final Supplier<EntityType<SplatteredEggEntity>> SPLATTERED_EGG_ENTITY = RegHelper.registerEntityType(
-            res(SPLATTERED_EGG_NAME), SplatteredEggEntity::new, MobCategory.MISC,
-            0.5F, 0.5F, 10, Integer.MAX_VALUE);
+            res(SPLATTERED_EGG_NAME), EntityType.Builder.<SplatteredEggEntity>of(SplatteredEggEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE));
 
     public static final String GRIM_APPLE_NAME = "grim_apple";
-    public static final Supplier<Item> GRIM_APPLE = regItem(GRIM_APPLE_NAME, () ->
-            new GrimAppleItem(new Item.Properties()
-                    .rarity(Rarity.RARE).food(ModFoods.DEATH_APPLE)));
+    public static final Supplier<Item> GRIM_APPLE = regItem(GRIM_APPLE_NAME, GrimAppleItem::new,
+            new Item.Properties().rarity(Rarity.RARE).food(ModFoods.DEATH_APPLE, ModFoods.DEATH_APPLE_CONSUMABLE));
 
     public static final String ROTTEN_APPLE_NAME = "rotten_apple";
-    public static final Supplier<Item> ROTTEN_APPLE = regItem(ROTTEN_APPLE_NAME, () ->
-            new Item(new Item.Properties()
-                    .food(ModFoods.ROTTEN_APPLE)));
+    public static final Supplier<Item> ROTTEN_APPLE = regItem(ROTTEN_APPLE_NAME, Item::new,
+            new Item.Properties().food(ModFoods.ROTTEN_APPLE, ModFoods.ROTTEN_APPLE_CONSUMABLE));
 
 
-    public static final Supplier<Block> CORN_BASE = regBlock("corn_base", () -> new CornBaseBlock(
+    public static final Supplier<Block> CORN_BASE = regBlock("corn_base", CornBaseBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.NONE)
                     .instabreak()
-                    .sound(SoundType.CROP))
-    );
+                    .sound(SoundType.CROP));
 
-    public static final Supplier<Block> CORN_MIDDLE = regBlock("corn_middle", () -> new CornMiddleBlock(
-            BlockBehaviour.Properties.ofFullCopy(CORN_BASE.get()))
-    );
+    public static final Supplier<Block> CORN_MIDDLE = regBlock("corn_middle", CornMiddleBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(CORN_BASE.get()));
 
-    public static final Supplier<Block> CORN_TOP = regBlock("corn_top", () -> new CornTopBlock(
-            BlockBehaviour.Properties.ofFullCopy(CORN_BASE.get()))
-    );
+    public static final Supplier<Block> CORN_TOP = regBlock("corn_top", CornTopBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(CORN_BASE.get()));
 
     //pot
-    public static final Supplier<Block> CORN_POT = regBlock("potted_corn", () -> PlatHelper.newFlowerPot(
-            () -> (FlowerPotBlock) Blocks.FLOWER_POT, CORN_BASE, BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT)));
+    public static final Supplier<Block> CORN_POT = regBlock("potted_corn",
+            p -> PlatHelper.newFlowerPot(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CORN_BASE, p),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT));
 
     public static final String CORN_NAME = "corn";
-    public static final Supplier<Item> COB_ITEM = regItem(CORN_NAME, () -> new Item(
-            new Item.Properties()));
+    public static final Supplier<Item> COB_ITEM = regItem(CORN_NAME, Item::new, new Item.Properties());
 
-    public static final Supplier<Item> COOKED_COB = regItem("corn_on_the_cob", () -> new Item(
-            new Item.Properties()
-                    .stacksTo(16).food(ModFoods.CORN_ON_THE_COB)));
+    public static final Supplier<Item> COOKED_COB = regItem("corn_on_the_cob", Item::new,
+            new Item.Properties().stacksTo(16).food(ModFoods.CORN_ON_THE_COB));
 
-    public static final Supplier<Item> KERNELS = regItem("kernels", () -> new ItemNameBlockItem(CORN_BASE.get(),
-            new Item.Properties()));
+    public static final Supplier<Item> KERNELS = regItem("kernels", p -> new BlockItem(CORN_BASE.get(), p),
+            new Item.Properties().useItemDescriptionPrefix());
 
     public static final String POPCORN_NAME = "popcorn";
-    public static final Supplier<Item> POP_CORN = regItem(POPCORN_NAME, () -> new Item(
-            new Item.Properties()
-                    .food(ModFoods.POPCORN)));
+    public static final Supplier<Item> POP_CORN = regItem(POPCORN_NAME, Item::new,
+            new Item.Properties().food(ModFoods.POPCORN, ModFoods.POPCORN_CONSUMABLE));
 
     public static final String CANDY_CORN_NAME = "candy_corn";
-    public static final Supplier<Item> CANDY_CORN = regItem(CANDY_CORN_NAME, () -> new CandyCornItem(
-            new Item.Properties()
-                    .food(ModFoods.CANDY_CORN)));
+    public static final Supplier<Item> CANDY_CORN = regItem(CANDY_CORN_NAME, CandyCornItem::new,
+            new Item.Properties().food(ModFoods.CANDY_CORN, ModFoods.CANDY_CORN_CONSUMABLE));
 
 
-    public static final Supplier<Block> PAPER_BAG = regBlock("paper_bag", () -> new PaperBagBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(0.5f, 0.5f)));
+    public static final Supplier<Block> PAPER_BAG = regBlock("paper_bag", PaperBagBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(0.5f, 0.5f));
 
     public static final String PAPER_BAG_NAME = "paper_bag";
-    public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME, () -> new PaperBagItem(
-            PAPER_BAG.get(), new Item.Properties()));
+    public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME,
+            p -> new PaperBagItem(PAPER_BAG.get(), p), new Item.Properties()
+                    .equippable(EquipmentSlot.HEAD));
 
 
-    public static final Supplier<Block> CANDY_BAG = regBlock("candy_bag", () -> new CandyBagBlock(
-            BlockBehaviour.Properties.ofFullCopy(PAPER_BAG.get())
-                    .pushReaction(PushReaction.DESTROY)));
+    public static final Supplier<Block> CANDY_BAG = regBlock("candy_bag", CandyBagBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(PAPER_BAG.get())
+                    .pushReaction(PushReaction.DESTROY));
 
-    public static final Supplier<BlockEntityType<CandyBagTile>> CANDY_BAG_TILE = regTile(
-            "candy_bag", () -> PlatHelper.newBlockEntityType(
-                    CandyBagTile::new, CANDY_BAG.get()));
+    public static final Supplier<BlockEntityType<CandyBagTile>> CANDY_BAG_TILE = RegHelper.registerBlockEntityType(
+            res("candy_bag"), CandyBagTile::new, CANDY_BAG);
 
 
     public static final String CARVED_PUMPKIN_NAME = "carved_pumpkin";
     public static final Supplier<ModCarvedPumpkinBlock> CARVED_PUMPKIN = regPumpkin(CARVED_PUMPKIN_NAME,
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN), PumpkinType.NORMAL));
+            p -> new ModCarvedPumpkinBlock(p, PumpkinType.NORMAL),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN));
 
 
     public static final Supplier<ModCarvedPumpkinBlock> JACK_O_LANTERN = regPumpkin("jack_o_lantern",
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
-                    .lightLevel(s -> 15), PumpkinType.JACK));
+            p -> new ModCarvedPumpkinBlock(p, PumpkinType.JACK),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN).lightLevel(s -> 15));
 
 
     public static final Supplier<BlockEntityType<ModCarvedPumpkinBlockTile>> MOD_CARVED_PUMPKIN_TILE =
-            regTile("carved_pumpkin", () ->
-                    PlatHelper.newBlockEntityType(ModCarvedPumpkinBlockTile::new, CARVED_PUMPKIN.get()));
+            RegHelper.registerBlockEntityType(res("carved_pumpkin"), ModCarvedPumpkinBlockTile::new, CARVED_PUMPKIN);
 
-    public static Supplier<ModCarvedPumpkinBlock> regPumpkin(String name, Supplier<ModCarvedPumpkinBlock> supplier) {
-        var block = regBlock(name, supplier);
-        var item = regItem(name, () -> new ModCarvedPumpkinItem(block.get(),
-                new Item.Properties()
-                        .component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(block.get()
-                                .getType(block.get().defaultBlockState())))));
+    public static Supplier<ModCarvedPumpkinBlock> regPumpkin(String name,
+                                                             Function<BlockBehaviour.Properties, ModCarvedPumpkinBlock> factory,
+                                                             BlockBehaviour.Properties properties) {
+        var block = regBlock(name, factory, properties);
+        RegHelper.registerItem(res(name), p -> {
+            var type = block.get().getType(block.get().defaultBlockState());
+            p.component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(type));
+            //jack o' lanterns are too bright to wear
+            if (!type.value().isJackOLantern()) p.equippable(EquipmentSlot.HEAD);
+            return new ModCarvedPumpkinItem(block.get(), p);
+        });
         return block;
     }
 
-    public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
-        return RegHelper.registerItem(res(name), sup);
+    public static <T extends Item> Supplier<T> regItem(String name, Function<Item.Properties, T> factory,
+                                                       Item.Properties properties) {
+        return RegHelper.registerItem(res(name), factory, properties);
     }
 
-    public static <T extends BlockEntityType<E>, E extends BlockEntity> Supplier<T> regTile(String name, Supplier<T> sup) {
-        return RegHelper.registerBlockEntityType(res(name), sup);
+
+    public static <T extends Block> Supplier<T> regBlock(String name, Function<BlockBehaviour.Properties, T> factory,
+                                                         BlockBehaviour.Properties properties) {
+        return RegHelper.registerBlock(res(name), factory, properties);
     }
 
-    public static <T extends Block> Supplier<T> regBlock(String name, Supplier<T> sup) {
-        return RegHelper.registerBlock(res(name), sup);
+    public static <T extends Block> Supplier<T> regBlock(String name, Function<BlockBehaviour.Properties, T> factory,
+                                                         Supplier<BlockBehaviour.Properties> properties) {
+        return RegHelper.registerBlock(res(name), factory, properties);
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties) {
-        Supplier<T> block = regBlock(name, blockFactory);
-        regBlockItem(name, block, properties);
-        return block;
+    public static <T extends Block> Supplier<T> regWithItem(String name, Function<BlockBehaviour.Properties, T> factory,
+                                                            BlockBehaviour.Properties properties, Item.Properties itemProperties) {
+        return RegHelper.registerBlockWithItem(res(name), factory, properties, itemProperties);
     }
 
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
-        return RegHelper.registerItem(res(name), () -> new BlockItem(blockSup.get(), properties));
+        return RegHelper.registerItem(res(name), p -> new BlockItem(blockSup.get(), p), properties);
     }
 
 }

@@ -15,11 +15,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,6 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,7 +73,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     //I need this for when it's changed manually
     @Override
     public void setChanged() {
-        if (this.level == null || this.level.isClientSide) return;
+        if (this.level == null || this.level.isClientSide()) return;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
         super.setChanged();
     }
@@ -84,34 +85,20 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        //Backwards compat
-        if (tag.contains("type")) {
-            var typeId = ResourceLocation.tryParse(tag.getString("type"));
-            if (typeId.getNamespace().equals("minecraft")) {
-                tag.putString("type", HauntedHarvest.res(typeId.getPath()).toString());
-            }
-        }
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         var oldType = this.getPumpkinType();
-
-        this.data = PumpkinCarvingData.CODEC.parse(ops, tag).getOrThrow();
+        this.data = input.read(PumpkinCarvingData.MAP_CODEC).orElseGet(() -> PumpkinCarvingData.empty(oldType));
         if (oldType != this.data.getType()) {
             this.data = this.data.withType(oldType);
-        }
-        //backwards compat
-        if (tag.contains("Pixels")) {
-            this.data = this.data.withPixels(PumpkinCarvingData.unpack(tag.getLongArray("Pixels")));
         }
         this.requestModelReload();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        tag.merge((CompoundTag) PumpkinCarvingData.CODEC.encodeStart(ops, data).getOrThrow());
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.store(PumpkinCarvingData.MAP_CODEC, data);
     }
 
     @Override
@@ -123,7 +110,7 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
         var data = componentInput.get(ModRegistry.PUMPKIN_CARVING.get());
         if (data != null) {
@@ -134,12 +121,12 @@ public class ModCarvedPumpkinBlockTile extends BlockEntity implements IScreenPro
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
         //same as in the components itself
-        tag.remove("values");
-        tag.remove("type");
-        tag.remove("waxed");
+        output.discard("values");
+        output.discard("type");
+        output.discard("waxed");
     }
 
 

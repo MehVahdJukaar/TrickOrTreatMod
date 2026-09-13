@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.items.components;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -27,11 +29,13 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     public static final Codec<boolean[][]> PIXEL_CODEC = Codec.LONG_STREAM.xmap(LongStream::toArray, Arrays::stream)
             .xmap(PumpkinCarvingData::unpack, PumpkinCarvingData::pack);
 
-    public static final Codec<PumpkinCarvingData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<PumpkinCarvingData> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             PIXEL_CODEC.fieldOf("values").forGetter(v -> v.pixels),
             PumpkinType.REGISTRY.holderByNameCodec().fieldOf("type").forGetter(v -> v.type),
             Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
     ).apply(instance, PumpkinCarvingData::new));
+
+    public static final Codec<PumpkinCarvingData> CODEC = MAP_CODEC.codec();
 
 
     private static final StreamCodec<RegistryFriendlyByteBuf, long[]> LONG_ARRAY = new StreamCodec<>() {
@@ -98,7 +102,8 @@ public class PumpkinCarvingData implements TooltipComponent, TooltipProvider {
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag,
+                             DataComponentGetter components) {
         if (waxed) {
             tooltipAdder.accept(WAXED_TOOLTIP);
         }

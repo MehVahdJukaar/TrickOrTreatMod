@@ -117,7 +117,7 @@ public class SeasonManager {
     }
 
     public boolean isTrickOrTreatTime(Level level) {
-        return isHalloween(level) && isBetween(trickOrTreatStart, trickOrTreatEnd, level.getDayTime() % 24000);
+        return isHalloween(level) && isBetween(trickOrTreatStart, trickOrTreatEnd, level.getOverworldClockTime() % 24000);
     }
 
     private boolean isBetween(float start, float end, float mid) {

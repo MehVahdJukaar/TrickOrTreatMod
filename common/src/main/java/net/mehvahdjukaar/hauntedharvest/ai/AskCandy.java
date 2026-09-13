@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -110,7 +110,7 @@ public class AskCandy extends Behavior<Villager> {
 
                 pLevel.broadcastEntityEvent(pEntity, (byte) 13);
                 //egg time
-                if(pLevel.random.nextInt(10) < 7) {
+                if (pLevel.getRandom().nextInt(10) < 7) {
                     brain.setMemory(MemoryModuleType.ATTACK_TARGET, currentVillager);
                     if (pEntity instanceof IHalloweenVillager c) {
                         c.hauntedharvest$setEntityOnCooldown(currentVillager);

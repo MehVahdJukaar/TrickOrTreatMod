@@ -35,7 +35,6 @@ public class ModCommands {
 
         public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
             return Commands.literal("copycarving")
-                    .requires((p) -> p.hasPermission(0))
                     .executes(new CopyCarvings());
         }
 

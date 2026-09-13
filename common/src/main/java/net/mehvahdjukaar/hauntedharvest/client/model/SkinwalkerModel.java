@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.client.model;
 
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PigModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;

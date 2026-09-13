@@ -3,12 +3,13 @@ package net.mehvahdjukaar.hauntedharvest.mixins;
 import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.mehvahdjukaar.hauntedharvest.network.SyncSnowGolemPumpkinPacket;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,17 +32,14 @@ public abstract class SnowGolemMixin extends Entity implements ICustomPumpkinHol
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    protected void hauntedharvest$saveCustomPumpkinData(CompoundTag tag, CallbackInfo ci) {
+    protected void hauntedharvest$saveCustomPumpkinData(ValueOutput output, CallbackInfo ci) {
         ItemStack itemStack = this.hauntedharvest$getCustomPumpkin();
-        if (!itemStack.isEmpty()) tag.put("CustomPumpkin", itemStack.save(level().registryAccess(), new CompoundTag()));
+        if (!itemStack.isEmpty()) output.store("CustomPumpkin", ItemStack.CODEC, itemStack);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    protected void hauntedharvest$loadCustomPumpkinData(CompoundTag tag, CallbackInfo ci) {
-        if (tag.contains("CustomPumpkin")) {
-            this.hauntedharvest$setCustomPumpkin(
-                    ItemStack.parseOptional(level().registryAccess(), tag.getCompound("CustomPumpkin")));
-        }
+    protected void hauntedharvest$loadCustomPumpkinData(ValueInput input, CallbackInfo ci) {
+        input.read("CustomPumpkin", ItemStack.CODEC).ifPresent(this::hauntedharvest$setCustomPumpkin);
     }
 
     @Override
@@ -52,7 +50,7 @@ public abstract class SnowGolemMixin extends Entity implements ICustomPumpkinHol
     @Override
     public void hauntedharvest$setCustomPumpkin(ItemStack stack) {
         hauntedHarvest$customPumpkin = stack;
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             //only needed when entity is already spawned
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                     new SyncSnowGolemPumpkinPacket(this));

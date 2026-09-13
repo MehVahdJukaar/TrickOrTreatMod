@@ -3,21 +3,15 @@ package net.mehvahdjukaar.hauntedharvest.items.crafting;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class ModCarvedPumpkinRecipe extends CustomRecipe {
-    public ModCarvedPumpkinRecipe(CraftingBookCategory category) {
-        super(category);
-    }
 
     @Override
     public boolean matches(CraftingInput inv, Level level) {
@@ -44,7 +38,7 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
+    public ItemStack assemble(CraftingInput inv) {
         Item jack = ModRegistry.CARVED_PUMPKIN.get().asItem();
 
         for (int i = 0; i < inv.size(); ++i) {
@@ -88,12 +82,7 @@ public class ModCarvedPumpkinRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width * height >= 2;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<ModCarvedPumpkinRecipe> getSerializer() {
         return ModRegistry.CARVED_PUMPKIN_RECIPE.get();
     }
 

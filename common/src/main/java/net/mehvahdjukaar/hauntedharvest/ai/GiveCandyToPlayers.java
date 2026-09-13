@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -85,7 +85,7 @@ public class GiveCandyToPlayers extends Behavior<Villager> {
                 spookVillager(pOwner, target);
             } else {
                 //TODO: finish
-                //ItemStack stack = Halloween.SWEETS.getRandomElement(pLevel.random).getDefaultInstance();
+                //ItemStack stack = Halloween.SWEETS.getRandomElement(pLevel.getRandom()).getDefaultInstance();
                // throwCandy(pOwner, target, stack);
 
                 pLevel.broadcastEntityEvent(pOwner, (byte) 14);
@@ -145,7 +145,7 @@ public class GiveCandyToPlayers extends Behavior<Villager> {
         pEntity.stopSleeping();
         LivingEntity target = this.lookAtTarget(pEntity);
 
-        this.timeToGiveCandy = 20 + pLevel.random.nextInt(30);
+        this.timeToGiveCandy = 20 + pLevel.getRandom().nextInt(30);
         this.tickSinceStarted = 0;
         this.hasGivenCandy = false;
         //     BehaviorUtils.lockGazeAndWalkToEachOther(pOwner, villager, 0.5F);

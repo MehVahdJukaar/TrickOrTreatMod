@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -17,9 +18,9 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 public class SkinwalkerEntity extends Monster implements NeutralMob {
 
@@ -53,13 +54,13 @@ public class SkinwalkerEntity extends Monster implements NeutralMob {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
     }
 
     @Override
@@ -94,22 +95,22 @@ public class SkinwalkerEntity extends Monster implements NeutralMob {
 
 
     @Override
-    public int getRemainingPersistentAngerTime() {
-        return 0;
+    public long getPersistentAngerEndTime() {
+        return NO_ANGER_END_TIME;
     }
 
     @Override
-    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
+    public void setPersistentAngerEndTime(long endTime) {
 
     }
 
     @Override
-    public @Nullable UUID getPersistentAngerTarget() {
+    public @Nullable EntityReference<LivingEntity> getPersistentAngerTarget() {
         return null;
     }
 
     @Override
-    public void setPersistentAngerTarget(@Nullable UUID persistentAngerTarget) {
+    public void setPersistentAngerTarget(@Nullable EntityReference<LivingEntity> persistentAngerTarget) {
 
     }
 

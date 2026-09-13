@@ -14,10 +14,9 @@ import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -51,7 +50,7 @@ public class RemovePumpkin extends Behavior<Villager> {
 
     @Override
     protected void start(ServerLevel pLevel, Villager pEntity, long pGameTime) {
-        this.cooldown = 20 * (5 + pLevel.random.nextInt(20)) + pLevel.random.nextInt(20);
+        this.cooldown = 20 * (5 + pLevel.getRandom().nextInt(20)) + pLevel.getRandom().nextInt(20);
         this.ticksSinceReached = 0;
         this.lastBreakProgress = -1;
         GlobalPos globalpos = pEntity.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();

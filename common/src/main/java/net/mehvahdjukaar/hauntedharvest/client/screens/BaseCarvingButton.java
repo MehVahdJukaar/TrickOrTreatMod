@@ -2,7 +2,6 @@ package net.mehvahdjukaar.hauntedharvest.client.screens;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
@@ -11,13 +10,13 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 
 
 public abstract class BaseCarvingButton implements GuiEventListener, Renderable, NarratableEntry {
     protected final CarvingScreen parent;
-    private final ResourceLocation outlineTexture;
+    private final Identifier outlineTexture;
     public final int size;
     public final int x;
     public final int y;
@@ -26,7 +25,7 @@ public abstract class BaseCarvingButton implements GuiEventListener, Renderable,
     protected boolean focused;
 
     public BaseCarvingButton(CarvingScreen screen, int x, int y, boolean carved, int size,
-                             ResourceLocation outlineTexture) {
+                             Identifier outlineTexture) {
         this.x = x;
         this.y = y;
         this.parent = screen;

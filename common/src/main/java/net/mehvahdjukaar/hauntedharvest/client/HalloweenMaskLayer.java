@@ -7,22 +7,22 @@ import net.mehvahdjukaar.hauntedharvest.client.model.HalloweenMaskModel;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
-import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerDataHolder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerDataHolder;
 
 public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M extends EntityModel<T> & HeadedModel> extends RenderLayer<T, M> {
 
-    private static final ResourceLocation[] TEXTURES = {
+    private static final Identifier[] TEXTURES = {
             HauntedHarvest.res("textures/entity/villager/masks/pumpkin.png"),
             HauntedHarvest.res("textures/entity/villager/masks/zombie.png"),
             HauntedHarvest.res("textures/entity/villager/masks/skeleton.png"),
@@ -42,7 +42,7 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
     }
 
     @Override
-    protected ResourceLocation getTextureLocation(T entity) {
+    protected Identifier getTextureLocation(T entity) {
         return TEXTURES[(int) Math.abs(entity.getUUID().getLeastSignificantBits() % (CommonConfigs.PAPER_BAG.get() ? 9 : 8))];
     }
 

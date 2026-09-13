@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -93,7 +93,7 @@ public class PumpkinType {
         }
     }
 
-    public static RegSupplier<PumpkinType> register(ResourceLocation name,
+    public static RegSupplier<PumpkinType> register(Identifier name,
                                                     Supplier<? extends Item> torch,
                                                     Supplier<? extends ModCarvedPumpkinBlock> pumpkin,
                                                     Supplier<? extends Block> vanillaPumpkin) {

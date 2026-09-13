@@ -10,8 +10,8 @@ import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.projectile.ThrownEgg;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEgg;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -53,8 +53,8 @@ public class ThrowEggs extends Behavior<Villager> {
         displayAsHeldItem(pEntity, new ItemStack(Items.EGG));
         if (eggs == 0) {
             this.duration = 20 * 20;
-            this.eggs = pLevel.random.nextInt(2) + 1;
-            this.cooldownBetweenAttacks = 35 + pLevel.random.nextInt(30);
+            this.eggs = pLevel.getRandom().nextInt(2) + 1;
+            this.cooldownBetweenAttacks = 35 + pLevel.getRandom().nextInt(30);
         }
     }
 
@@ -64,11 +64,11 @@ public class ThrowEggs extends Behavior<Villager> {
         if (target == null) return;
         BehaviorUtils.lookAtEntity(pOwner, target);
         if (this.cooldownBetweenAttacks-- == 0) {
-            this.cooldownBetweenAttacks = 20 + pLevel.random.nextInt(30);
+            this.cooldownBetweenAttacks = 20 + pLevel.getRandom().nextInt(30);
             this.eggs--;
 
             //this is always server side
-            ThrownEgg egg = new ThrownEgg(pLevel, pOwner);
+            ThrownEgg egg = new ThrownEgg(pLevel, pOwner, new ItemStack(Items.EGG));
             if (egg instanceof IHarmlessProjectile e) e.hauntedharvest$setHarmless(true);
             double d0 = target.getY() - 0.5;
             double d1 = target.getX() - pOwner.getX();

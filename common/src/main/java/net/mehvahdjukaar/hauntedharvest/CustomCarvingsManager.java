@@ -2,11 +2,9 @@ package net.mehvahdjukaar.hauntedharvest;
 
 
 import com.google.common.primitives.Longs;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlockTile;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
@@ -16,7 +14,8 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.RandomSource;
@@ -32,16 +31,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
+public class CustomCarvingsManager extends SimpleJsonResourceReloadListener<CustomCarvingsManager.CustomCarving> {
 
-    private static final ResourceLocation VANILLA_FACE_ID = HauntedHarvest.res("classic");
+    private static final Identifier VANILLA_FACE_ID = HauntedHarvest.res("classic");
 
     private static final List<long[]> FACES = new ArrayList<>();
     private static final List<long[]> FANTASY = new ArrayList<>();
     private static long[] vanillaFace = null;
 
     public CustomCarvingsManager(HolderLookup.Provider provider) {
-        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(), "pumpkin_carvings");
+        super(CustomCarving.CODEC, FileToIdConverter.json("pumpkin_carvings"));
     }
 
     public static void placeRandomPumpkin(BlockPos pos, LevelAccessor level, Direction direction,
@@ -116,12 +115,11 @@ public class CustomCarvingsManager extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, CustomCarving> carvings, ResourceManager resourceManager, ProfilerFiller profiler) {
         FACES.clear();
         FANTASY.clear();
         vanillaFace = null;
-        jsons.forEach((key, json) -> {
-            var data = CustomCarving.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
+        carvings.forEach((key, data) -> {
             long[] pixels = Longs.toArray(data.pixels);
             if (key.equals(VANILLA_FACE_ID)) vanillaFace = pixels;
             if (data.isFace) FACES.add(pixels);

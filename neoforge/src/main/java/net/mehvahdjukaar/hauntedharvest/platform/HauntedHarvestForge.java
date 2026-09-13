@@ -62,7 +62,7 @@ public class HauntedHarvestForge {
 
     @SubscribeEvent
     public void onEntityJoin(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide) {
+        if (event.getLevel().isClientSide()) {
             HauntedHarvest.onClientEntityLoad(event.getEntity(), event.getLevel());
         }
     }

@@ -8,12 +8,14 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowable {
@@ -35,7 +37,7 @@ public abstract class AbstractCornBlock extends CropBlock implements IBeeGrowabl
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (!PlatHelper.isAreaLoaded(level, pos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
-        if (level.getRawBrightness(pos, 0) >= 9 && level.random.nextFloat() < 0.6) {
+        if (level.getRawBrightness(pos, 0) >= 9 && level.getRandom().nextFloat() < 0.6) {
             if (this.isValidBonemealTarget(level, pos, state)) {
 
                 float f = HHPlatformStuff.getGrowthSpeed(state, level, pos);

@@ -1,16 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,14 +22,14 @@ public class BlurOverlay {
         PumpkinCarvingData data = stack.get(ModRegistry.PUMPKIN_CARVING.get());
         if (data == null) return;
         var carving = CarvingManager.getInstance(data);
-        ResourceLocation textureLocation = carving.getPumpkinBlur();
+        Identifier textureLocation = carving.getPumpkinBlur();
 
         if (textureLocation == null) return;
 
         renderScreenOverlay(stack, player, guiGraphics, deltaTracker, textureLocation);
     }
 
-    private static void renderScreenOverlay(ItemStack stack, Player player, GuiGraphics graphics, DeltaTracker deltaTracker, ResourceLocation textureLocation) {
+    private static void renderScreenOverlay(ItemStack stack, Player player, GuiGraphics graphics, DeltaTracker deltaTracker, Identifier textureLocation) {
        /*
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);

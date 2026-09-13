@@ -13,7 +13,6 @@ import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.gui.ConfigScreenExtensions;
 import net.mehvahdjukaar.moonlight.api.client.gui.particle.ScreenParticle;
 import net.mehvahdjukaar.moonlight.api.client.gui.particle.ScreenParticleEngine;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -28,14 +27,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-/**
- * The pumpkin sitting in the corner of our config screen: it turns to whatever the cursor is doing and gets a new
- * face on click. A jack o'lantern instead of a plain carved pumpkin while the autumn season is on.
- */
 public class PumpkinShowcaseWidget extends AbstractWidget {
 
     public static final ConfigScreenExtensions.Showcase SHOWCASE = new ConfigScreenExtensions.Showcase() {
@@ -50,8 +46,6 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
         }
     };
 
-    // carvings are datapack driven and there's no world behind a config screen, so the usual pool is empty when
-    // this is opened from the main menu. packed pixels of a few of the faces we ship, as a stand in
     private static final List<long[]> BUILTIN_FACES = List.of(
             new long[]{2177506019154853888L, 2143745309474307640L, 4339280020737375616L, 236985912L}, // classic
             new long[]{2177505812996423680L, 2193318990237679164L, 2178682549142822496L, 234888760L}, // happy
@@ -66,25 +60,16 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
             new long[]{4393266040839077888L, 4323518246135804056L, 4073568363537767424L, 13194549528792L}, // wacky
             new long[]{2249564712763129856L, 4323522644780007032L, 4357299126597073920L, 3848544460344L}); // psycho
 
-    // of the smaller widget side. the turned block projects wider than one unit, so this leaves the corners room
-    // to swing out without touching the panel edges
     private static final float BLOCK_FILL = 0.76f;
     private static final float MAX_YAW = 38;
     private static final float MAX_PITCH = 24;
-    // fraction of the angle left to cover per second, so the head turn lags the cursor a little
     private static final float FOLLOW_SPEED = 12;
-    // how far the cursor has to travel from the widget for the pumpkin to be turned all the way, as a fraction of
-    // the screen. it lives in a narrow side panel, so anything wider barely moves it
     private static final float FOLLOW_RANGE = 0.35f;
     private static final int RECARVE_ATTEMPTS = 4;
-    // idle hover. the two run at frequencies that don't line up, so the bob and the tilt keep drifting apart
-    // instead of settling into an obvious loop
     private static final float BOB_SPEED = 2.2f;
     private static final float BOB_HEIGHT = 0.035f;
     private static final float WOBBLE_SPEED = 1.5f;
     private static final float WOBBLE_ANGLE = 3.5f;
-    // carving crumbs, standing in for the block break particles the real thing throws off. shades picked off the
-    // pumpkin side texture
     private static final int[] CRUMB_TINTS = {0xE0912B, 0xC4761C, 0x9C5613};
     private static final int CRUMB_COUNT = 14;
     // the pumpkin sits well forward in the gui, so the crumbs have to be pushed past it or they come out behind
@@ -146,7 +131,7 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
 
     private void animate(int mouseX, int mouseY) {
         long now = Util.getMillis();
-        float dt = this.lastMs < 0 ? 0 : Math.min((now - this.lastMs) / 1000f, 0.1f); // clamp screen-reopen gaps
+        float dt = this.lastMs < 0 ? 0 : Math.min((now - this.lastMs) / 1000f, 0.1f); //clamp gaps from reopening the screen
         this.lastMs = now;
         this.time += dt;
 
@@ -165,7 +150,7 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
         this.block = (isAutumnSeason() ? ModRegistry.JACK_O_LANTERN : ModRegistry.CARVED_PUMPKIN).get();
 
         boolean[][] pixels = PumpkinCarvingData.unpack(this.rollFace());
-        // landing back on the face already shown reads as the click having done nothing
+        //same face again would look like click did nothing
         for (int i = 0; i < RECARVE_ATTEMPTS && this.carving != null && this.carving.hasSamePixels(pixels); i++) {
             pixels = PumpkinCarvingData.unpack(this.rollFace());
         }
@@ -185,7 +170,6 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
     private static boolean isAutumnSeason() {
         SeasonManager seasons = HauntedHarvest.getSeasonManager();
         Level level = Minecraft.getInstance().level;
-        //season mods decide per world, so outside of one we have nothing to go by
         if (seasons.usesSeasonMod() && level == null) return false;
         return seasons.isHalloween(level);
     }
@@ -201,7 +185,7 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
             float speed = 25 + this.random.nextFloat() * 45;
             this.crumbs.add(ScreenParticle
                     .square(centerX + Mth.cos(angle) * dist, centerY + Mth.sin(angle) * dist)
-                    .velocity(Mth.cos(angle) * speed, Mth.sin(angle) * speed - 30) // biased up, so they arc
+                    .velocity(Mth.cos(angle) * speed, Mth.sin(angle) * speed - 30)
                     .gravity(170)
                     .drag(1.4f)
                     .size(1.5f + this.random.nextFloat() * 2f)
@@ -219,7 +203,6 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
 
     @Override
     public void playDownSound(SoundManager handler) {
-        // same sound and pitch carving one in the world gives you
         handler.play(SimpleSoundInstance.forUI(SoundEvents.PUMPKIN_CARVE, 1.2f));
     }
 
