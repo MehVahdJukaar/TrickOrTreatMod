@@ -15,9 +15,11 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ResolvableModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 public class CarvedPumpkinBlockModel implements CustomBlockModel {
 
@@ -35,7 +37,6 @@ public class CarvedPumpkinBlockModel implements CustomBlockModel {
         if (state == null) return;
         PumpkinCarvingData key = data.get(ModCarvedPumpkinBlockTile.CARVING);
         if (key == null) return;
-        //the model is authored facing north, the blockstate variant rotates it from there
         var carving = CarvingManager.getInstance(key);
         emitter.emitAll(carving.getOrCreateQuads(state.getValue(ModCarvedPumpkinBlock.FACING),
                 CarvedPumpkinBlockModel::generateQuads));
@@ -59,6 +60,8 @@ public class CarvedPumpkinBlockModel implements CustomBlockModel {
     private static QuadBatch generateQuads(CarvingManager.CarvingVisuals carving, Direction direction) {
         TextureAtlasSprite[][] pixels = PumpkinTextureGenerator.computePixelSpriteMap(carving.getPixels(), carving.getType());
         QuadBatch.Recorder recorder = QuadBatch.recorder();
+        float yRot = direction.getOpposite().toYRot() * Mth.DEG_TO_RAD;
+        recorder.transform(new Matrix4f().translate(0.5f, 0.5f, 0.5f).rotateY(-yRot).translate(-0.5f, -0.5f, -0.5f));
 
         for (int x = 0; x < pixels.length; x++) {
             int length = 0;
@@ -74,7 +77,7 @@ public class CarvedPumpkinBlockModel implements CustomBlockModel {
                     }
                     current = b;
                 }
-                emitPixelQuad(recorder, (15 - x) / 16f, (16 - length - startY) / 16f,
+                emitPixelQuad(recorder, direction, (15 - x) / 16f, (16 - length - startY) / 16f,
                         1 / 16f, length / 16f, prevColor);
                 startY = y;
                 if (current != null) {
@@ -86,7 +89,7 @@ public class CarvedPumpkinBlockModel implements CustomBlockModel {
         return recorder.build();
     }
 
-    private static void emitPixelQuad(QuadEmitter emitter, float x, float y, float width, float height,
+    private static void emitPixelQuad(QuadEmitter emitter, Direction facing, float x, float y, float width, float height,
                                       TextureAtlasSprite sprite) {
         float u0 = 1 - x;
         float v0 = 1 - y;
@@ -94,8 +97,8 @@ public class CarvedPumpkinBlockModel implements CustomBlockModel {
         float v1 = 1 - (y + height);
 
         emitter.sprite(sprite)
-                .cullFace(Direction.NORTH)
-                .direction(Direction.NORTH)
+                .cullFace(facing)
+                .direction(facing)
                 .color(-1);
         putVertex(emitter, 0, x + width, y + height, u1, v1);
         putVertex(emitter, 1, x + width, y, u1, v0);
