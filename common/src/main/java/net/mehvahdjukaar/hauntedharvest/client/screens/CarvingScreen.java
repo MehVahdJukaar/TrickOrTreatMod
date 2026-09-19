@@ -7,7 +7,7 @@ import net.mehvahdjukaar.hauntedharvest.network.ServerBoundCarvePumpkinPacket;
 import net.mehvahdjukaar.moonlight.api.misc.CircularList;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
@@ -48,13 +48,13 @@ public class CarvingScreen extends Screen {
         Minecraft.getInstance().setScreen(new CarvingScreen(tile, dir));
     }
 
-    public void recomputeMaterials() {
-        var materials = PumpkinTextureGenerator.computePixelMaterialMap(computePixelMatrix(),
+    public void recomputeSprites() {
+        var sprites = PumpkinTextureGenerator.computePixelSpriteMap(computePixelMatrix(),
                 tile.getPumpkinType().value());
         //re-assign to buttons
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                this.buttons[xx][yy].setMaterial(materials[xx][yy]);
+                this.buttons[xx][yy].setSprite(sprites[xx][yy]);
             }
         }
     }
@@ -106,7 +106,7 @@ public class CarvingScreen extends Screen {
     //dynamic refreshTextures for client
     public void updateBlackboard(int x, int y, boolean newColor) {
         this.tile.setPixel(x, y, newColor);
-        recomputeMaterials();
+        recomputeSprites();
     }
 
     public void addHistory(int x, int y, boolean oldColor) {
@@ -165,7 +165,7 @@ public class CarvingScreen extends Screen {
                 this.buttons[xx][yy] = this.addRenderableWidget(widget);
             }
         }
-        this.recomputeMaterials();
+        this.recomputeSprites();
 
         int buttonW = 56;
         int sep = 4;
@@ -180,36 +180,19 @@ public class CarvingScreen extends Screen {
 
     }
 
-    /*
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
-
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
-
-        // RenderSystem.enableDepthTest();
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        // RenderSystem.disableDepthTest();
-        graphics.pose().pushPose();
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.centeredText(this.font, this.title, this.width / 2, 40, 0xFFFFFFFF);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         label:
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 CarvingButton button = this.buttons[xx][yy];
                 if (button.isShouldDrawOverlay()) {
-                    button.renderHoverOverlay(graphics);
+                    button.extractHoverOverlay(graphics);
                     break label;
                 }
             }
         }
-        graphics.pose().popPose();
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
-    }
-
-*/
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
-        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }
-

@@ -3,11 +3,12 @@ package net.mehvahdjukaar.hauntedharvest.reg;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
+import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinSpecialRenderer;
 import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinTileRenderer;
-import net.mehvahdjukaar.hauntedharvest.client.HalloweenMaskLayer;
 import net.mehvahdjukaar.hauntedharvest.client.SeasonConfigOverlay;
 import net.mehvahdjukaar.hauntedharvest.client.SplatteredEggRenderer;
 import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBlockModel;
+import net.mehvahdjukaar.hauntedharvest.client.model.HalloweenMaskModel;
 import net.mehvahdjukaar.hauntedharvest.client.screens.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.client.screens.PumpkinShowcaseWidget;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
@@ -30,8 +31,6 @@ public class ClientRegistry {
     public static final SpriteId PUMPKIN_HIGHLIGHT = blockSprite(HauntedHarvest.res("block/pumpkin_highlight"));
     public static final SpriteId PUMPKIN = blockSprite(Identifier.parse("block/pumpkin_side"));
     public static final SpriteId CARVING_OUTLINE = blockSprite(HauntedHarvest.res("block/carving_grid"));
-
-    public static final Identifier PAPER_BAG_OVERLAY = HauntedHarvest.res("textures/misc/paper_bag_overlay.png");
 
     public static final Identifier OUTLINE_SPRITE = HauntedHarvest.res("outline");
 
@@ -61,6 +60,7 @@ public class ClientRegistry {
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
         ClientHelper.addParticleRegistration(ClientRegistry::registerParticles);
         ClientHelper.addBlockModelRegistration(ClientRegistry::registerBlockModels);
+        ClientHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
         ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
         ClientHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
@@ -81,7 +81,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerModelLayers(ClientHelper.ModelLayerEvent event) {
-        event.register(VILLAGER_MASK, HalloweenMaskLayer::createMesh);
+        event.register(VILLAGER_MASK, HalloweenMaskModel::createMesh);
     }
 
     @EventCalled
@@ -107,5 +107,10 @@ public class ClientRegistry {
     @EventCalled
     private static void registerBlockModels(ClientHelper.BlockModelEvent event) {
         event.register(HauntedHarvest.res("carved_pumpkin"), CarvedPumpkinBlockModel.Unbaked.CODEC);
+    }
+
+    @EventCalled
+    private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
+        event.register(HauntedHarvest.res("pumpkin_carving"), CarvedPumpkinSpecialRenderer.Unbaked.CODEC);
     }
 }

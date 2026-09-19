@@ -3,7 +3,6 @@ package net.mehvahdjukaar.hauntedharvest.platform;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -25,7 +24,6 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 public class HauntedHarvestForge {
 
     public HauntedHarvestForge(IEventBus bus) {
-        RegHelper.startRegisteringFor(bus);
         HauntedHarvest.commonInit();
 
         NeoForge.EVENT_BUS.register(this);

@@ -79,7 +79,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     }
 
     @Inject(method = ("wantsToPickUp"), at = @At("HEAD"), cancellable = true)
-    protected void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    protected void wantsToPickUp(ServerLevel level, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         //hax. pickup candy
         if (HalloweenVillagerAI.isTrickOrTreater(this) && HalloweenVillagerAI.isCandyOrApple(stack)) {
             cir.setReturnValue(true);

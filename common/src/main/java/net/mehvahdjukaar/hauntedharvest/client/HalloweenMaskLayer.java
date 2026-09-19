@@ -1,26 +1,21 @@
 package net.mehvahdjukaar.hauntedharvest.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.client.model.HalloweenMaskModel;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HeadedModel;
-import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.minecraft.client.model.npc.VillagerModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.npc.villager.Villager;
-import net.minecraft.world.entity.npc.villager.VillagerDataHolder;
+import org.jetbrains.annotations.Nullable;
 
-public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M extends EntityModel<T> & HeadedModel> extends RenderLayer<T, M> {
+public class HalloweenMaskLayer extends RenderLayer<VillagerRenderState, VillagerModel> {
 
     private static final Identifier[] TEXTURES = {
             HauntedHarvest.res("textures/entity/villager/masks/pumpkin.png"),
@@ -34,32 +29,24 @@ public class HalloweenMaskLayer<T extends Villager & VillagerDataHolder, M exten
             HauntedHarvest.res("textures/entity/villager/masks/paper_bag.png")
     };
 
-    private final HalloweenMaskModel<T> headModel;
+    private final HalloweenMaskModel maskModel;
 
-    public HalloweenMaskLayer(RenderLayerParent<T, M> parent, EntityRendererProvider.Context context) {
+    public HalloweenMaskLayer(RenderLayerParent<VillagerRenderState, VillagerModel> parent, EntityRendererProvider.Context context) {
         super(parent);
-        this.headModel = new HalloweenMaskModel<>(context.bakeLayer(ModelLayers.VILLAGER));
+        this.maskModel = new HalloweenMaskModel(context.bakeLayer(ClientRegistry.VILLAGER_MASK));
+    }
+
+    @Nullable
+    public static Identifier getMaskTexture(Villager villager) {
+        if (!villager.isBaby() || !HauntedHarvest.isTrickOrTreatTime(villager.level())) return null;
+        return TEXTURES[(int) Math.abs(villager.getUUID().getLeastSignificantBits() % (CommonConfigs.PAPER_BAG.get() ? 9 : 8))];
     }
 
     @Override
-    protected Identifier getTextureLocation(T entity) {
-        return TEXTURES[(int) Math.abs(entity.getUUID().getLeastSignificantBits() % (CommonConfigs.PAPER_BAG.get() ? 9 : 8))];
-    }
-
-    @Override
-    public void render(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        if (pLivingEntity.isBaby() && HauntedHarvest.isTrickOrTreatTime(pLivingEntity.level())) {
-            headModel.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
-            this.getParentModel().copyPropertiesTo(headModel);
-            headModel.getHead().copyFrom(this.getParentModel().getHead());
-            VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(pLivingEntity)));
-            headModel.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-            headModel.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY,-1);
+    public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, VillagerRenderState state, float yRot, float xRot) {
+        Identifier mask = ((IHalloweenVillagerRenderState) state).hauntedharvest$getMaskTexture();
+        if (mask != null) {
+            coloredCutoutModelCopyLayerRender(this.maskModel, mask, poseStack, collector, light, state, -1, 1);
         }
-    }
-
-    public static LayerDefinition createMesh(){
-        var m = VillagerModel.createBodyModel();
-        return LayerDefinition.create(m, 64,64);
     }
 }

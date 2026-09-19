@@ -43,7 +43,6 @@ public class HalloweenVillagerAI {
 
             event.registerMemory(MemoryModuleType.ATTACK_TARGET);
             event.registerMemory(ModRegistry.PUMPKIN_POS.get());
-            event.registerMemory(ModRegistry.NEAREST_PUMPKIN.get());
 
             event.addSensor(ModRegistry.PUMPKIN_POI_SENSOR.get());
 

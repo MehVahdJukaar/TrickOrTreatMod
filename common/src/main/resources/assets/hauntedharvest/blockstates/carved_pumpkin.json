@@ -1,19 +1,35 @@
 {
   "variants": {
     "facing=north": {
-      "model": "hauntedharvest:block/carved_pumpkin"
+      "type": "hauntedharvest:carved_pumpkin",
+      "fabric:type": "hauntedharvest:carved_pumpkin",
+      "model": {
+        "model": "hauntedharvest:block/carved_pumpkin"
+      }
     },
     "facing=east": {
-      "model": "hauntedharvest:block/carved_pumpkin",
-      "y": 90
+      "type": "hauntedharvest:carved_pumpkin",
+      "fabric:type": "hauntedharvest:carved_pumpkin",
+      "model": {
+        "model": "hauntedharvest:block/carved_pumpkin",
+        "y": 90
+      }
     },
     "facing=south": {
-      "model": "hauntedharvest:block/carved_pumpkin",
-      "y": 180
+      "type": "hauntedharvest:carved_pumpkin",
+      "fabric:type": "hauntedharvest:carved_pumpkin",
+      "model": {
+        "model": "hauntedharvest:block/carved_pumpkin",
+        "y": 180
+      }
     },
     "facing=west": {
-      "model": "hauntedharvest:block/carved_pumpkin",
-      "y": 270
+      "type": "hauntedharvest:carved_pumpkin",
+      "fabric:type": "hauntedharvest:carved_pumpkin",
+      "model": {
+        "model": "hauntedharvest:block/carved_pumpkin",
+        "y": 270
+      }
     }
   }
 }

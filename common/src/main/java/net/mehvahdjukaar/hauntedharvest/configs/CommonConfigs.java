@@ -9,6 +9,8 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 
+import java.time.LocalTime;
+import java.time.MonthDay;
 import java.util.function.Supplier;
 
 public class CommonConfigs {
@@ -32,37 +34,29 @@ public class CommonConfigs {
         builder.pop();
 
         builder.icon("minecraft:jack_o_lantern").push("halloween_season");
-        START_MONTH = builder.comment("Month from which villagers will start placing pumpkins & trick or treating")
-                .define("start_month", 10, 1, 12);
-        START_DAY = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")
-                .define("start_day", 20, 1, 31);
-        END_MONTH = builder.comment("Month from which villagers will start removing placed pumpkins")
-                .define("end_month", 11, 1, 12);
-        END_DAY = builder.comment("Day from which villagers will start removing placed pumpkins")
-                .define("end_day", 10, 1, 31);
+        SEASON_START = builder.comment("Day from which villagers will start placing pumpkins & trick or treating")
+                .defineDate("start", MonthDay.of(10, 20));
+        SEASON_END = builder.comment("Day from which villagers will start removing placed pumpkins")
+                .defineDate("end", MonthDay.of(11, 10));
         builder.pop();
 
         builder.icon("minecraft:zombie_head").push("mob_pumpkins_season");
         WEAR_CHANCE = builder.comment("Chance for a mob to wear a pumpkin. All this does not affect vanilla halloween behavior")
                 .definePercentage("wear_chance", 0.25);
-        P_START_MONTH = builder.comment("Day from which zombies and skeletons can wear pumpkins")
-                .define("start_month", 10, 1, 12);
-        P_START_DAY = builder.comment("Day from which zombies and skeletons can wear pumpkins")
-                .define("start_day", 30, 1, 31);
-        P_END_MONTH = builder.comment("Day from which zombies and skeletons can wear pumpkins")
-                .define("end_month", 10, 1, 12);
-        P_END_DAY = builder.comment("Day from which zombies and skeletons can wear pumpkins")
-                .define("end_day", 31, 1, 31);
+        WEAR_START = builder.comment("Day from which zombies and skeletons can wear pumpkins")
+                .defineDate("start", MonthDay.of(10, 30));
+        WEAR_END = builder.comment("Last day on which zombies and skeletons can wear pumpkins")
+                .defineDate("end", MonthDay.of(10, 31));
         builder.pop();
 
         //these get baked into the villagers brain schedule on setup
         builder.icon("minecraft:clock").push("trick_or_treating_time");
         START_TIME = builder.gameRestart()
-                .comment("Time of day at which baby villagers will start trick-or-treating")
-                .define("start_time", 12000, 0, 24000);
+                .comment("In game time of day at which baby villagers will start trick-or-treating")
+                .defineTime("start", LocalTime.of(18, 0));
         END_TIME = builder.gameRestart()
-                .comment("Time of day at which baby villagers will stop trick-or-treating. Note that this will only properly work if it's at night since baby villagers can only trick or treat during their sleep schedule which is from 12000 to 0")
-                .define("end_time", 0, 0, 24000);
+                .comment("In game time of day at which baby villagers will stop trick-or-treating. Note that this will only properly work if it's at night since baby villagers can only trick or treat during their sleep schedule, which runs from 18:00 to 06:00")
+                .defineTime("end", LocalTime.of(6, 0));
         builder.pop();
 
         //the category name isn't an item, so the gate row can't infer one
@@ -74,7 +68,7 @@ public class CommonConfigs {
         }
         builder.pop();
 
-        builder.push("general");
+        builder.icon("minecraft:name_tag").push("general");
         CREATIVE_TAB = builder.gameRestart().comment("Enable Creative Tab").define("creative_tab", false);
         builder.pop();
 
@@ -103,18 +97,14 @@ public class CommonConfigs {
         SPEC.forceLoad();        //load early
     }
 
-    public static final Supplier<Integer> START_DAY;
-    public static final Supplier<Integer> START_MONTH;
-    public static final Supplier<Integer> END_DAY;
-    public static final Supplier<Integer> END_MONTH;
+    public static final Supplier<MonthDay> SEASON_START;
+    public static final Supplier<MonthDay> SEASON_END;
 
-    public static final Supplier<Integer> START_TIME;
-    public static final Supplier<Integer> END_TIME;
+    public static final Supplier<LocalTime> START_TIME;
+    public static final Supplier<LocalTime> END_TIME;
 
-    public static final Supplier<Integer> P_END_DAY;
-    public static final Supplier<Integer> P_END_MONTH;
-    public static final Supplier<Integer> P_START_DAY;
-    public static final Supplier<Integer> P_START_MONTH;
+    public static final Supplier<MonthDay> WEAR_START;
+    public static final Supplier<MonthDay> WEAR_END;
     public static final Supplier<Double> WEAR_CHANCE;
 
     public static final Supplier<Boolean> CUSTOM_CARVINGS;

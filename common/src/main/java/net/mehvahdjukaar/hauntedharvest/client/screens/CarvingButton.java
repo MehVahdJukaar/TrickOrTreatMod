@@ -3,9 +3,9 @@ package net.mehvahdjukaar.hauntedharvest.client.screens;
 
 import net.mehvahdjukaar.hauntedharvest.reg.ClientRegistry;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
 
 
 public class CarvingButton extends BaseCarvingButton {
@@ -14,7 +14,7 @@ public class CarvingButton extends BaseCarvingButton {
 
     private final int u;
     private final int v;
-    private Material material;
+    private TextureAtlasSprite sprite;
 
     public CarvingButton(CarvingScreen screen, int centerX, int centerY, int u, int v, boolean carved) {
         super(screen, centerX - ((8 - u) * SIZE), centerY - ((-v) * SIZE), carved, SIZE,
@@ -29,8 +29,8 @@ public class CarvingButton extends BaseCarvingButton {
         this.parent.updateBlackboard(this.u, this.v, carved);
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
+    public void setSprite(TextureAtlasSprite sprite) {
+        this.sprite = sprite;
     }
 
     @Override
@@ -40,9 +40,9 @@ public class CarvingButton extends BaseCarvingButton {
 
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (this.isValidClickButton(button)) {
-            this.parent.onButtonDragged(mouseX, mouseY, this.carved);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (this.isValidClickButton(event.buttonInfo())) {
+            this.parent.onButtonDragged(event.x(), event.y(), this.carved);
             return true;
         } else {
             return false;
@@ -50,8 +50,8 @@ public class CarvingButton extends BaseCarvingButton {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (this.isValidClickButton(button)) {
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (this.isValidClickButton(event.buttonInfo())) {
             this.parent.saveHistoryStep();
             return true;
         } else {
@@ -60,8 +60,7 @@ public class CarvingButton extends BaseCarvingButton {
     }
 
     @Override
-    protected void renderButton(GuiGraphics graphics) {
-        TextureAtlasSprite sprite = material.sprite();
+    protected void extractButton(GuiGraphicsExtractor graphics) {
         RenderUtil.blitSpriteSection(graphics, this.x, this.y, SIZE, SIZE, u / 16f, v / 16f, 1, 1, sprite);
     }
 

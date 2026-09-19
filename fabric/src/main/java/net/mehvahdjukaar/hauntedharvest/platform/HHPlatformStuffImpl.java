@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.hauntedharvest.platform;
 
-import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +16,7 @@ public class HHPlatformStuffImpl {
     }
 
     public static boolean isTopCarver(ItemStack stack) {
-        return stack.getItem() instanceof ShearsItem || (!(stack.getItem() instanceof SwordItem) && stack.is(ModTags.CARVERS));
+        return stack.getItem() instanceof ShearsItem || (!stack.is(ItemTags.SWORDS) && stack.is(ModTags.CARVERS));
     }
 
     public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {

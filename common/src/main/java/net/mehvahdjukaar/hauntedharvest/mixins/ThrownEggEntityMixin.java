@@ -57,7 +57,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
     }//TODO: check if iron golems can be angered
 
     //from player
-    @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/world/level/Level;)Lnet/minecraft/world/entity/Entity;"))
+    @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/EntitySpawnReason;)Lnet/minecraft/world/entity/Entity;"))
     protected void onSpawnChicken(HitResult pResult, CallbackInfo ci,
                                   @Share("hasSpawnedChicken") LocalBooleanRef spawnedChicken) {
         spawnedChicken.set(true);

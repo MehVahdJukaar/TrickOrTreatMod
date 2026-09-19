@@ -1,13 +1,15 @@
 package net.mehvahdjukaar.hauntedharvest.client.screens;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.resources.Identifier;
@@ -39,34 +41,23 @@ public abstract class BaseCarvingButton implements GuiEventListener, Renderable,
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         this.shouldDrawOverlay = this.isMouseOver(mouseX, mouseY);
 
-        renderButton(graphics);
-
-        if (this.isShouldDrawOverlay()) {
-            renderHoverOverlay(graphics);
-        }
+        extractButton(graphics);
     }
 
-    protected abstract void renderButton(GuiGraphics graphics);
+    protected abstract void extractButton(GuiGraphicsExtractor graphics);
 
-    public void renderHoverOverlay(GuiGraphics graphics) {
-        var pose = graphics.pose();
-        pose.pushPose();
-
-        pose.translate(0, 0, 90);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        graphics.blitSprite(this.outlineTexture,
+    public void extractHoverOverlay(GuiGraphicsExtractor graphics) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.outlineTexture,
                 this.x - 1, this.y - 1, size + 2, size + 2);
-
-        pose.popPose();
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isValidClickButton(button)) {
-            boolean flag = this.isMouseOver(mouseX, mouseY);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (this.isValidClickButton(event.buttonInfo())) {
+            boolean flag = this.isMouseOver(event.x(), event.y());
             if (flag) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
                 this.onClick();
@@ -78,8 +69,8 @@ public abstract class BaseCarvingButton implements GuiEventListener, Renderable,
 
     protected abstract void onClick();
 
-    protected boolean isValidClickButton(int button) {
-        return button == 0;
+    protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
+        return buttonInfo.button() == 0;
     }
 
     public boolean isShouldDrawOverlay() {

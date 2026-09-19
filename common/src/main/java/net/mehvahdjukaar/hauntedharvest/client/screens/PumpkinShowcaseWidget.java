@@ -1,26 +1,21 @@
 package net.mehvahdjukaar.hauntedharvest.client.screens;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.SeasonManager;
 import net.mehvahdjukaar.hauntedharvest.blocks.ModCarvedPumpkinBlock;
-import net.mehvahdjukaar.hauntedharvest.client.CarvedPumpkinItemRenderer;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.client.gui.ConfigScreenExtensions;
 import net.mehvahdjukaar.moonlight.api.client.gui.particle.ScreenParticle;
 import net.mehvahdjukaar.moonlight.api.client.gui.particle.ScreenParticleEngine;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -29,6 +24,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.Level;
+
+import org.joml.Matrix3x2f;
 
 import java.util.List;
 
@@ -87,8 +84,6 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
     // pumpkin side texture
     private static final int[] CRUMB_TINTS = {0xE0912B, 0xC4761C, 0x9C5613};
     private static final int CRUMB_COUNT = 14;
-    // the pumpkin sits well forward in the gui, so the crumbs have to be pushed past it or they come out behind
-    private static final float CRUMB_DEPTH = 200;
 
     private final RandomSource random = RandomSource.create();
     private final ScreenParticleEngine crumbs = new ScreenParticleEngine();
@@ -107,41 +102,22 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
 
     public static void register() {
         ConfigScreenExtensions.registerShowcase(HauntedHarvest.MOD_ID, SHOWCASE);
+        ClientHelper.addPictureInPictureRendererRegistration(event ->
+                event.register(PumpkinShowcaseRenderer.State.class, PumpkinShowcaseRenderer::new));
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         this.animate(mouseX, mouseY);
 
         float size = Math.min(this.width, this.height) * BLOCK_FILL;
+        graphics.guiRenderState.addPicturesInPictureState(new PumpkinShowcaseRenderer.State(this.block, this.carving,
+                this.yaw, this.pitch, Mth.sin(this.time * BOB_SPEED) * BOB_HEIGHT,
+                Mth.sin(this.time * WOBBLE_SPEED) * WOBBLE_ANGLE,
+                this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, size,
+                new Matrix3x2f(graphics.pose()), graphics.scissorStack.peek()));
 
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(this.getX() + this.width / 2f, this.getY() + this.height / 2f, 150);
-        // same chain an item goes through in a slot: the negative y cancels out the gui projection's own flip, so
-        // the quads keep their winding and the culled block render types don't turn inside out
-        pose.scale(size, -size, size);
-        // hover, applied before the aiming so it stays a straight up and down bob and a screen space tilt no
-        // matter where the pumpkin is looking
-        pose.translate(0, Mth.sin(this.time * BOB_SPEED) * BOB_HEIGHT, 0);
-        pose.mulPose(Axis.ZP.rotationDegrees(Mth.sin(this.time * WOBBLE_SPEED) * WOBBLE_ANGLE));
-        pose.mulPose(Axis.XP.rotationDegrees(this.pitch));
-        // the carved face is on the block's north side, so 180 turns it to us
-        pose.mulPose(Axis.YP.rotationDegrees(180 + this.yaw));
-        pose.translate(-0.5f, -0.5f, -0.5f); // the block renderer starts from the block corner
-
-        Lighting.setupFor3DItems();
-        MultiBufferSource.BufferSource buffer = graphics.bufferSource();
-        CarvedPumpkinItemRenderer.renderPumpkin(this.block, this.carving, pose, buffer,
-                LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-
-        graphics.flush();
-        pose.popPose();
-
-        pose.pushPose();
-        pose.translate(0, 0, CRUMB_DEPTH);
         this.crumbs.renderAndTick(graphics);
-        pose.popPose();
     }
 
     private void animate(int mouseX, int mouseY) {
@@ -212,7 +188,7 @@ public class PumpkinShowcaseWidget extends AbstractWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(MouseButtonEvent event, boolean doubleClick) {
         this.carve();
         this.spawnCrumbs();
     }
