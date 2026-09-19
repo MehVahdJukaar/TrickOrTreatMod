@@ -1,0 +1,18 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "hauntedharvest:item/carved_pumpkin"
+      },
+      {
+        "type": "minecraft:special",
+        "base": "hauntedharvest:item/carved_pumpkin",
+        "model": {
+          "type": "hauntedharvest:pumpkin_carving"
+        }
+      }
+    ]
+  }
+}

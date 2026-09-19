@@ -1,0 +1,18 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "hauntedharvest:item/redstone_jack_o_lantern"
+      },
+      {
+        "type": "minecraft:special",
+        "base": "hauntedharvest:item/redstone_jack_o_lantern",
+        "model": {
+          "type": "hauntedharvest:pumpkin_carving"
+        }
+      }
+    ]
+  }
+}
