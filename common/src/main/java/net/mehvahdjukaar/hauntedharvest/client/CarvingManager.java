@@ -4,7 +4,7 @@ package net.mehvahdjukaar.hauntedharvest.client;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.model.QuadBatch;
@@ -46,7 +46,7 @@ public class CarvingManager implements PreparableReloadListener {
             .removalListener(i -> {
                 CarvingVisuals value = (CarvingVisuals) i.getValue();
                 if (value != null) {
-                    RenderSystem.recordRenderCall(value::close);
+                    Minecraft.getInstance().execute(value::close);
                 }
             })
             .build(new CacheLoader<>() {
@@ -68,6 +68,8 @@ public class CarvingManager implements PreparableReloadListener {
 
     public static class CarvingVisuals implements AutoCloseable {
         public static final int WIDTH = 16;
+
+        private static int nextTextureId = 0;
 
         //quads for each direction
         private final Map<Direction, QuadBatch> quadsCache = new EnumMap<>(Direction.class);
@@ -99,8 +101,8 @@ public class CarvingManager implements PreparableReloadListener {
         private void initializeTexture() {
             this.texture = new DynamicTexture("pumpkin carving", WIDTH, WIDTH, false);
             PumpkinTextureGenerator.drawCarving(texture, this);
-            //texture manager has its own internal id
-            this.textureLocation = Minecraft.getInstance().getTextureManager().register("carving/", this.texture);
+            this.textureLocation = HauntedHarvest.res("carving/" + nextTextureId++);
+            Minecraft.getInstance().getTextureManager().register(this.textureLocation, this.texture);
             this.renderType = RenderTypes.entitySolid(textureLocation);
         }
 
@@ -132,8 +134,8 @@ public class CarvingManager implements PreparableReloadListener {
         //should be called when cache expires
         @Override
         public void close() {
-            if (texture != null) this.texture.close();
             if (textureLocation != null) Minecraft.getInstance().getTextureManager().release(textureLocation);
+            else if (texture != null) this.texture.close();
         }
     }
 

@@ -4,7 +4,7 @@ import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.SeasonManager;
 import net.mehvahdjukaar.moonlight.api.client.gui.ConfigScreenExtensions;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
@@ -19,7 +19,7 @@ public class SeasonConfigOverlay implements ConfigScreenExtensions.Overlay {
     }
 
     @Override
-    public void render(GuiGraphics graphics, ConfigScreenExtensions.Panel panel, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, ConfigScreenExtensions.Panel panel, int mouseX, int mouseY, float partialTick) {
         SeasonManager seasons = HauntedHarvest.getSeasonManager();
         Level level = Minecraft.getInstance().level;
         String key;
@@ -38,6 +38,6 @@ public class SeasonConfigOverlay implements ConfigScreenExtensions.Overlay {
         var font = Minecraft.getInstance().font;
         int x = (panel.left() + panel.right()) / 2;
         int y = panel.bottom() - font.lineHeight - 4;
-        graphics.drawCenteredString(font, Component.translatable(key), x, y, color);
+        graphics.centeredText(font, Component.translatable(key), x, y, color);
     }
 }

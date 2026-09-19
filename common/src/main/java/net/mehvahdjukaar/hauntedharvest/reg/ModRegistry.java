@@ -16,6 +16,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -165,7 +167,8 @@ public class ModRegistry {
     public static final String PAPER_BAG_NAME = "paper_bag";
     public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME,
             p -> new PaperBagItem(PAPER_BAG.get(), p), new Item.Properties()
-                    .equippable(EquipmentSlot.HEAD));
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                            .setCameraOverlay(res("misc/paper_bag_overlay")).build()));
 
 
     public static final Supplier<Block> CANDY_BAG = regBlock("candy_bag", CandyBagBlock::new,

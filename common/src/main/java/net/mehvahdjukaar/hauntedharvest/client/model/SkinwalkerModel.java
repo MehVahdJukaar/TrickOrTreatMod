@@ -4,9 +4,9 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
-public class SkinwalkerModel<T extends LivingEntity> extends HumanoidModel<T> {
+public class SkinwalkerModel<T extends HumanoidRenderState> extends HumanoidModel<T> {
     public boolean carrying;
     public boolean creepy;
 
@@ -40,8 +40,8 @@ public class SkinwalkerModel<T extends LivingEntity> extends HumanoidModel<T> {
         return LayerDefinition.create(meshDefinition, 128, 64);
     }
 
-    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(T state) {
+        super.setupAnim(state);
         this.head.visible = true;
         this.body.xRot = 0.0F;
         this.body.y = -14.0F;

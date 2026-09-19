@@ -1,22 +1,32 @@
 package net.mehvahdjukaar.hauntedharvest.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.hauntedharvest.entity.ICustomPumpkinHolder;
 import net.mehvahdjukaar.hauntedharvest.network.SyncSnowGolemPumpkinPacket;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.golem.SnowGolem;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.BiConsumer;
 
 @Mixin(SnowGolem.class)
 public abstract class SnowGolemMixin extends Entity implements ICustomPumpkinHolder {
@@ -62,14 +72,21 @@ public abstract class SnowGolemMixin extends Entity implements ICustomPumpkinHol
         if (!pumpkinEquipped) this.hauntedharvest$setCustomPumpkin(ItemStack.EMPTY);
     }
 
-    @ModifyArg(method = "shear", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/animal/SnowGolem;spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;"))
-    protected ItemStack hauntedharvest$shearCustomPumpkin(ItemStack original) {
-        ItemStack s = this.hauntedharvest$getCustomPumpkin();
-        if (!s.isEmpty()) {
-            return s;
-        }
-        return original;
+    @Inject(method = "shear", at = @At("HEAD"))
+    protected void hauntedharvest$rememberShearedPumpkin(ServerLevel level, SoundSource soundSource, ItemStack tool, CallbackInfo ci,
+                                                         @Share("shearedPumpkin") LocalRef<ItemStack> shearedPumpkin) {
+        shearedPumpkin.set(this.hauntedharvest$getCustomPumpkin());
+    }
+
+    @WrapOperation(method = "shear", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/animal/golem/SnowGolem;dropFromShearingLootTable(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/item/ItemInstance;Ljava/util/function/BiConsumer;)V"))
+    protected void hauntedharvest$shearCustomPumpkin(SnowGolem golem, ServerLevel level, ResourceKey<LootTable> lootTable,
+                                                     ItemInstance tool, BiConsumer<ServerLevel, ItemStack> dropper,
+                                                     Operation<Void> original,
+                                                     @Share("shearedPumpkin") LocalRef<ItemStack> shearedPumpkin) {
+        ItemStack customPumpkin = shearedPumpkin.get();
+        if (customPumpkin.isEmpty()) original.call(golem, level, lootTable, tool, dropper);
+        else dropper.accept(level, customPumpkin);
     }
 
 

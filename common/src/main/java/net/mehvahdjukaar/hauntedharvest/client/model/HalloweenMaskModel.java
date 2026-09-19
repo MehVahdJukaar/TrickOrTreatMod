@@ -1,33 +1,25 @@
 package net.mehvahdjukaar.hauntedharvest.client.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.npc.VillagerModel;
 
-public class HalloweenMaskModel<T extends Villager> extends EntityModel<T> implements HeadedModel {
-    private final ModelPart mask;
+public class HalloweenMaskModel extends VillagerModel {
 
-    public HalloweenMaskModel(ModelPart modelPart) {
-        this.mask = modelPart.getChild("head").getChild("hat");
-        mask.getChild("hat_rim").visible = false;
+    public HalloweenMaskModel(ModelPart root) {
+        super(root);
     }
 
-
-    @Override
-    public void setupAnim(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+    public static LayerDefinition createMesh() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0, 16, 0));
+        head.addOrReplaceChild("mask", CubeListBuilder.create().texOffs(32, 0)
+                .addBox(-4, -9, -4, 8, 10, 8, new CubeDeformation(0.3f, -0.7f, -0.2f)), PartPose.ZERO);
+        root.addOrReplaceChild("arms", CubeListBuilder.create(), PartPose.ZERO);
+        root.addOrReplaceChild("right_leg", CubeListBuilder.create(), PartPose.ZERO);
+        root.addOrReplaceChild("left_leg", CubeListBuilder.create(), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
     }
-
-    @Override
-    public ModelPart getHead() {
-        return mask;
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, int color) {
-        mask.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, color);
-    }
-
 }

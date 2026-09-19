@@ -40,12 +40,12 @@ public class AutumnityCompatImpl {
     }
 
     public static final Supplier<ModCarvedPumpkinBlock> SOUL_JACK_O_LANTERN = regPumpkin("soul_jack_o_lantern",
-            () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
-                    .lightLevel(s -> 10), AutumnityCompatImpl.SOUL));
+            p -> new ModCarvedPumpkinBlock(p, AutumnityCompatImpl.SOUL),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN).lightLevel(s -> 10));
 
     public static final Supplier<ModCarvedPumpkinBlock> REDSTONE_JACK_O_LANTERN = regPumpkin("redstone_jack_o_lantern",
-            () -> new RedstoneCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN),
-                    AutumnityCompatImpl.REDSTONE));
+            p -> new RedstoneCarvedPumpkinBlock(p, AutumnityCompatImpl.REDSTONE),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN));
 
     // These compat jack o' lanterns have no plain (non block-entity) vanilla variant, so we light
     // plain carved pumpkins into the modded carvable block itself instead of a missing block (which crashed).
@@ -60,8 +60,8 @@ public class AutumnityCompatImpl {
                 Identifier.parse("endergetic:ender_torch")).orElse(null));
 
         public final Supplier<ModCarvedPumpkinBlock> enderJackOLantern = regPumpkin("ender_jack_o_lantern",
-                () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
-                        .lightLevel(s -> 10), this.ender));
+                p -> new ModCarvedPumpkinBlock(p, this.ender),
+                BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN).lightLevel(s -> 10));
 
         private final RegSupplier<PumpkinType> ender = PumpkinType.register(res("ender_jack_o_lantern"),
                 enderTorch, enderJackOLantern, enderJackOLantern);
@@ -72,8 +72,8 @@ public class AutumnityCompatImpl {
                 Identifier.parse("caverns_and_chasms:cupric_torch")).orElse(null));
 
         public final Supplier<ModCarvedPumpkinBlock> cupricJackOLantern = regPumpkin("cupric_jack_o_lantern",
-                () -> new ModCarvedPumpkinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN)
-                        .lightLevel(s -> 10), this.cupric));
+                p -> new ModCarvedPumpkinBlock(p, this.cupric),
+                BlockBehaviour.Properties.ofFullCopy(Blocks.CARVED_PUMPKIN).lightLevel(s -> 10));
 
         private final RegSupplier<PumpkinType> cupric = PumpkinType.register(res("cupric_jack_o_lantern"),
                 cupricTorch, cupricJackOLantern, cupricJackOLantern);

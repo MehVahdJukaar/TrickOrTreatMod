@@ -15,7 +15,10 @@
   ],
   "client": [
     "SnowGolemHeadLayerMixin",
-    "VillagerRendererMixin"
+    "SnowGolemRendererMixin",
+    "SnowGolemRenderStateMixin",
+    "VillagerRendererMixin",
+    "VillagerRenderStateMixin"
   ],
   "injectors": {
     "defaultRequire": 1

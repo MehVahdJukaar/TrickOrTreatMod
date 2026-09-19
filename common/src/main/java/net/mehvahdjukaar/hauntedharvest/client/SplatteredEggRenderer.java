@@ -6,17 +6,19 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.entity.SplatteredEggEntity;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
+public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity, SplatteredEggRenderer.State> {
 
     public static final Identifier TEXTURE = HauntedHarvest.res("textures/entity/egg/splattered_egg.png");
     public static final Identifier TEXTURE_2 = HauntedHarvest.res("textures/entity/egg/splattered_egg_2.png");
@@ -25,43 +27,51 @@ public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity> {
         super(context);
     }
 
-    @Override
-    public void render(SplatteredEggEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
-        pMatrixStack.pushPose();
-        pMatrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - pEntityYaw));
-
-        pMatrixStack.scale(0.0625F, 0.0625F, 0.0625F);
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(pEntity)));
-
-        this.renderPainting(pMatrixStack, vertexconsumer, pEntity);
-        pMatrixStack.popPose();
-        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+    public static class State extends EntityRenderState {
+        private Identifier texture = TEXTURE;
+        private Direction direction = Direction.NORTH;
+        private float yRot;
+        private int splatLight;
     }
 
-    /**
-     * Returns the location of an entity's texture.
-     */
     @Override
-    public Identifier getTextureLocation(SplatteredEggEntity pEntity) {
-        return pEntity.altTexture ? TEXTURE_2 : TEXTURE;
+    public State createRenderState() {
+        return new State();
     }
 
-    private void renderPainting(PoseStack poseStack, VertexConsumer consumer, SplatteredEggEntity entity) {
+    @Override
+    public void extractRenderState(SplatteredEggEntity entity, State state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        state.texture = entity.altTexture ? TEXTURE_2 : TEXTURE;
+        state.direction = entity.getDirection();
+        state.yRot = entity.getYRot();
 
-        PoseStack.Pose last = poseStack.last();
-
-        float p = 8;
-        float n = -8;
         int blockX = entity.getBlockX();
         int blockY = entity.getBlockY();
         int blockZ = entity.getBlockZ();
-        Direction dir = entity.getDirection();
-        switch (dir.getAxis()) {
+        switch (state.direction.getAxis()) {
             case X -> blockZ = Mth.floor(entity.getZ());
             case Z -> blockX = Mth.floor(entity.getX());
             case Y -> blockY = Mth.floor(entity.getY());
         }
-        int l1 = LevelRenderer.getLightColor(entity.level(), new BlockPos(blockX, blockY, blockZ));
+        state.splatLight = LevelRenderer.getLightCoords(entity.level(), new BlockPos(blockX, blockY, blockZ));
+    }
+
+    @Override
+    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - state.yRot));
+
+        poseStack.scale(0.0625F, 0.0625F, 0.0625F);
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.texture),
+                (pose, buffer) -> this.renderPainting(pose, buffer, state.direction, state.splatLight));
+        poseStack.popPose();
+        super.submit(state, poseStack, collector, camera);
+    }
+
+    private void renderPainting(PoseStack.Pose last, VertexConsumer consumer, Direction dir, int l1) {
+        float p = 8;
+        float n = -8;
         if (dir == Direction.DOWN) {
             this.vertex(last, consumer, p, -0.5f, 0, 1, n, 0, -1, 0, l1);
             this.vertex(last, consumer, n, -0.5f, 1, 1, n, 0, -1, 0, l1);
