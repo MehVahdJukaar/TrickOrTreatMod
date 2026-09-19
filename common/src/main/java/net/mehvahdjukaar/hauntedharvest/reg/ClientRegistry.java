@@ -17,9 +17,9 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.HeartParticle;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteId;
-import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 
 import java.util.Map;
@@ -37,7 +37,7 @@ public class ClientRegistry {
     private static final Map<PumpkinType, SpriteId[]> PUMPKIN_SPRITES = new Object2ObjectOpenHashMap<>();
 
     public static SpriteId blockSprite(Identifier texture) {
-        return new SpriteId(AtlasIds.BLOCKS, texture);
+        return new SpriteId(TextureAtlas.LOCATION_BLOCKS, texture);
     }
 
     public static TextureAtlasSprite sprite(SpriteId id) {

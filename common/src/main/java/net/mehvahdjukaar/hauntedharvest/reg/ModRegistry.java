@@ -39,6 +39,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
 import java.util.Optional;
@@ -127,6 +128,7 @@ public class ModRegistry {
 
     public static final Supplier<Block> CORN_BASE = regBlock("corn_base", CornBaseBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
+                    .mapColor(MapColor.PLANT)
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.NONE)
                     .instabreak()

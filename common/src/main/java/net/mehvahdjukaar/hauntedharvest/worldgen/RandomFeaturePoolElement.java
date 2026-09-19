@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.worldgen;//
 
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class RandomFeaturePoolElement extends StructurePoolElement {
     public static final MapCodec<RandomFeaturePoolElement> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
@@ -36,16 +38,17 @@ public class RandomFeaturePoolElement extends StructurePoolElement {
             .apply(i, RandomFeaturePoolElement::new)
     );
     private final WeightedList<Holder<PlacedFeature>> features;
+    private final Supplier<WeightedList<Holder<PlacedFeature>>> enabledFeatures;
     private final CompoundTag defaultJigsawNBT;
 
     protected RandomFeaturePoolElement(WeightedList<Holder<PlacedFeature>> features, Projection projection) {
         super(projection);
         this.defaultJigsawNBT = this.fillDefaultJigsawNBT();
-        features = this.removeDisabledHack(features);
         this.features = features;
+        this.enabledFeatures = Suppliers.memoize(() -> removeDisabledHack(features));
     }
 
-    private WeightedList<Holder<PlacedFeature>> removeDisabledHack(WeightedList<Holder<PlacedFeature>> original) {
+    private static WeightedList<Holder<PlacedFeature>> removeDisabledHack(WeightedList<Holder<PlacedFeature>> original) {
         var newList = WeightedList.<Holder<PlacedFeature>>builder();
         for (var v : original.unwrap()) {
             //hack. Use data conditions instead
@@ -94,7 +97,7 @@ public class RandomFeaturePoolElement extends StructurePoolElement {
     public boolean place(StructureTemplateManager structureTemplateManager, WorldGenLevel level, StructureManager structureManager,
                          ChunkGenerator generator, BlockPos blockPos, BlockPos centerPos, Rotation rotation,
                          BoundingBox boundingBox, RandomSource random, LiquidSettings liquidSettings, boolean bl) {
-        return this.features.getRandomOrThrow(RandomSource.create(centerPos.asLong())).value()
+        return this.enabledFeatures.get().getRandomOrThrow(RandomSource.create(centerPos.asLong())).value()
                 .place(level, generator, random, blockPos);
     }
 

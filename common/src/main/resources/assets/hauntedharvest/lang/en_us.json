@@ -83,5 +83,21 @@
   "hauntedharvest.configuration.features.popcorn": "Popcorn",
   "hauntedharvest.configuration.features.carved_pumpkin": "Carved Pumpkin",
   "hauntedharvest.configuration.features.splattered_egg": "Splattered Egg",
-  "hauntedharvest.configuration.features.candy_corn": "Candy Corn"
+  "hauntedharvest.configuration.features.candy_corn": "Candy Corn",
+  "hauntedharvest.configuration.start": "Start",
+  "hauntedharvest.configuration.start.month": "Month",
+  "hauntedharvest.configuration.start.day": "Day",
+  "hauntedharvest.configuration.halloween_season.start": "Start",
+  "hauntedharvest.configuration.end": "End",
+  "hauntedharvest.configuration.end.month": "Month",
+  "hauntedharvest.configuration.end.day": "Day",
+  "hauntedharvest.configuration.halloween_season.end": "End",
+  "hauntedharvest.configuration.mob_pumpkins_season.start": "Start",
+  "hauntedharvest.configuration.mob_pumpkins_season.end": "End",
+  "hauntedharvest.configuration.start.hour": "Hour",
+  "hauntedharvest.configuration.start.minute": "Minute",
+  "hauntedharvest.configuration.trick_or_treating_time.start": "Start",
+  "hauntedharvest.configuration.end.hour": "Hour",
+  "hauntedharvest.configuration.end.minute": "Minute",
+  "hauntedharvest.configuration.trick_or_treating_time.end": "End"
 }

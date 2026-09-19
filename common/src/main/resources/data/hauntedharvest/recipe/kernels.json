@@ -13,9 +13,7 @@
   ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "tag": "c:crops/corn"
-    }
+    "#c:crops/corn"
   ],
   "result": {
     "count": 4,

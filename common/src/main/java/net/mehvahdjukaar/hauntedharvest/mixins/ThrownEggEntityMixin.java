@@ -65,7 +65,7 @@ public abstract class ThrownEggEntityMixin extends ThrowableItemProjectile imple
 
     //from player2
     @Inject(method = "onHit", at = @At(value = "INVOKE", shift = At.Shift.BEFORE,
-            target = "Lnet/minecraft/world/entity/projectile/ThrownEgg;discard()V"))
+            target = "Lnet/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEgg;discard()V"))
     protected void onHitFromPlayer(HitResult pResult, CallbackInfo ci,
                                    @Share("hasSpawnedChicken") LocalBooleanRef spawnedChicken) {
         if (!spawnedChicken.get() && CommonConfigs.SPLATTERED_EGG_ENABLED.get()) {

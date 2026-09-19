@@ -13,21 +13,11 @@
   ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "hauntedharvest:rotten_apple"
-    },
-    {
-      "item": "minecraft:wither_rose"
-    },
-    {
-      "item": "minecraft:fermented_spider_eye"
-    },
-    {
-      "item": "minecraft:poisonous_potato"
-    },
-    {
-      "item": "minecraft:rotten_flesh"
-    }
+    "hauntedharvest:rotten_apple",
+    "minecraft:wither_rose",
+    "minecraft:fermented_spider_eye",
+    "minecraft:poisonous_potato",
+    "minecraft:rotten_flesh"
   ],
   "result": {
     "count": 1,

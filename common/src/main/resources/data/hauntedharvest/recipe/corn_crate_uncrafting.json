@@ -21,9 +21,7 @@
   ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "hauntedharvest:corn_crate"
-    }
+    "hauntedharvest:corn_crate"
   ],
   "result": {
     "count": 9,

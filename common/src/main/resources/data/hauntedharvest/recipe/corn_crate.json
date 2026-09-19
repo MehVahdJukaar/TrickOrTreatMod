@@ -26,9 +26,7 @@
     "111"
   ],
   "key": {
-    "1": {
-      "tag": "c:crops/corn"
-    }
+    "1": "#c:crops/corn"
   },
   "result": {
     "count": 1,
