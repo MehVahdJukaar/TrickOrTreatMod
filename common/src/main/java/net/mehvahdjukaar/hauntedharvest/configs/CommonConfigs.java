@@ -40,7 +40,7 @@ public class CommonConfigs {
                 .defineDate("end", MonthDay.of(11, 10));
         builder.pop();
 
-        builder.icon("minecraft:zombie_head").push("mob_pumpkins_season");
+        builder.icon("minecraft:bone").push("mob_pumpkins_season");
         WEAR_CHANCE = builder.comment("Chance for a mob to wear a pumpkin. All this does not affect vanilla halloween behavior")
                 .definePercentage("wear_chance", 0.25);
         WEAR_START = builder.comment("Day from which zombies and skeletons can wear pumpkins")
@@ -60,7 +60,7 @@ public class CommonConfigs {
         builder.pop();
 
         //the category name isn't an item, so the gate row can't infer one
-        builder.icon("minecraft:oak_leaves").push("season_mod_compat");
+        builder.icon("minecraft:cherry_sapling").push("season_mod_compat");
         builder.comment("Enables compatibility with Serene Seasons (Forge) or Fabric Seasons (Fabric). Only takes effect if the mod is installed. Will make halloween season only active during certain seasons. Note that this will override previous time window settings");
         SEASONS_MOD_COMPAT = builder.mainFeature(CompatHandler.SEASON_MOD_INSTALLED);
         if (CompatHandler.SEASON_MOD_INSTALLED) {

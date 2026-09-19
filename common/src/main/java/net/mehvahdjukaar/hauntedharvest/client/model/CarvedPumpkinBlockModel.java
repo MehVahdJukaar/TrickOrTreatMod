@@ -88,10 +88,10 @@ public class CarvedPumpkinBlockModel implements CustomBlockModel {
 
     private static void emitPixelQuad(QuadEmitter emitter, float x, float y, float width, float height,
                                       TextureAtlasSprite sprite) {
-        float u0 = (1 - x) / 16f;
-        float v0 = (1 - y) / 16f;
-        float u1 = (1 - (x + width)) / 16f;
-        float v1 = (1 - (y + height)) / 16f;
+        float u0 = 1 - x;
+        float v0 = 1 - y;
+        float u1 = 1 - (x + width);
+        float v1 = 1 - (y + height);
 
         emitter.sprite(sprite)
                 .cullFace(Direction.NORTH)

@@ -6,9 +6,11 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -133,8 +135,14 @@ public class ModCarvedPumpkinBlock extends CarvedPumpkinBlock implements EntityB
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!oldState.is(state.getBlock())) {
-            this.trySpawnGolemWithCustomPumpkin(level, pos);
+            //item components get copied onto the tile after onPlace
+            level.scheduleTick(pos, this, 1);
         }
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        this.trySpawnGolemWithCustomPumpkin(level, pos);
     }
 
     //TODO: copper golems can be built from a carved pumpkin too now. needs the weather state + chest swap from vanilla
