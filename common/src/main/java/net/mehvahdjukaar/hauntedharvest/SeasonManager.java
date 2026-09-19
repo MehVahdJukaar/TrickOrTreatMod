@@ -6,9 +6,8 @@ import net.mehvahdjukaar.hauntedharvest.integration.SeasonModCompat;
 import net.minecraft.world.level.Level;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalTime;
+import java.time.MonthDay;
 
 public class SeasonManager {
 
@@ -34,18 +33,14 @@ public class SeasonManager {
     public void refresh() {
         //refresh date after configs are loaded
 
-        isHalloweenRealTime = isDayInBetween(CommonConfigs.START_MONTH.get(), CommonConfigs.START_DAY.get(),
-                CommonConfigs.END_MONTH.get(), CommonConfigs.END_DAY.get());
+        MonthDay today = MonthDay.from(LocalDate.now());
 
-        isPumpkinWearTime = isDayInBetween(CommonConfigs.P_START_MONTH.get(), CommonConfigs.P_START_DAY.get(),
-                CommonConfigs.P_END_MONTH.get(), CommonConfigs.P_END_DAY.get());
+        isHalloweenRealTime = isDayInBetween(today, CommonConfigs.SEASON_START.get(), CommonConfigs.SEASON_END.get());
+        isPumpkinWearTime = isDayInBetween(today, CommonConfigs.WEAR_START.get(), CommonConfigs.WEAR_END.get());
+        isPreciselyHalloweenRealTime = today.equals(MonthDay.of(10, 31));
 
-        LocalDate localdate = LocalDate.now();
-        isPreciselyHalloweenRealTime = localdate.get(ChronoField.DAY_OF_MONTH) == 31 &&
-                localdate.get(ChronoField.MONTH_OF_YEAR) == 10;
-
-        trickOrTreatStart = CommonConfigs.START_TIME.get();
-        trickOrTreatEnd = CommonConfigs.END_TIME.get();
+        trickOrTreatStart = toDayTime(CommonConfigs.START_TIME.get());
+        trickOrTreatEnd = toDayTime(CommonConfigs.END_TIME.get());
 
         useSeasonMod = CompatHandler.SEASON_MOD_INSTALLED && CommonConfigs.SEASONS_MOD_COMPAT.get();
 
@@ -54,55 +49,15 @@ public class SeasonManager {
         }
     }
 
-    private boolean isDayInBetween(int startM, int startD, int endM, int endD) {
-        startM = startM - 1;
-        endM = endM - 1;
-
-        boolean inv = startM > endM;
-
-        Calendar calendar = Calendar.getInstance();
-
-        //pain
-        calendar.set(0, startM, startD);
-        Date start = calendar.getTime();
-        calendar.set((inv ? 1 : 0), endM, endD);
-        Date end = calendar.getTime();
-
-        Calendar todayCalendar = Calendar.getInstance();
-        int ii = (todayCalendar.getTime().before(start) && inv) ? 1 : 0;
-        todayCalendar.set(ii, todayCalendar.get(Calendar.MONTH), todayCalendar.get(Calendar.DATE));
-
-        Date today = todayCalendar.getTime();
-
-        //if seasonal use pumpkin placement time window
-        return after(today, start) && before(today, end);
+    //configs use a normal clock, the world counts ticks from 6 am
+    private static int toDayTime(LocalTime time) {
+        return Math.floorMod((time.getHour() - 6) * 1000 + time.getMinute() * 1000 / 60, 24000);
     }
 
-    public static boolean before(Date obj, Date that) {
-        int objYear = obj.getYear();
-        int thatYear = that.getYear();
-        int objMonth = obj.getMonth();
-        int thatMonth = that.getMonth();
-        int objDay = obj.getDate();
-        int thatDay = that.getDate();
-
-        if (objYear < thatYear) {
-            return true;
-        } else if (objYear > thatYear) {
-            return false;
-        } else {
-            if (objMonth < thatMonth) {
-                return true;
-            } else if (objMonth > thatMonth) {
-                return false;
-            } else {
-                return objDay < thatDay;
-            }
-        }
-    }
-
-    public static boolean after(Date obj, Date that) {
-        return !before(obj, that) && !obj.equals(that);
+    private static boolean isDayInBetween(MonthDay today, MonthDay start, MonthDay end) {
+        //window wraps over new year
+        if (start.isAfter(end)) return !today.isBefore(start) || !today.isAfter(end);
+        return !today.isBefore(start) && !today.isAfter(end);
     }
 
     public boolean isHalloween(Level level) {
