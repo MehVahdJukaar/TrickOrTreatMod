@@ -20,9 +20,7 @@
     }
   ],
   "type": "minecraft:smoking",
-  "ingredient": {
-    "tag": "c:crops/corn"
-  },
+  "ingredient": "#c:crops/corn",
   "result": {
     "count": 1,
     "id": "hauntedharvest:corn_on_the_cob"

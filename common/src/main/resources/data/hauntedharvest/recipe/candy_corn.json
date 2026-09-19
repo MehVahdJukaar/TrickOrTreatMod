@@ -13,12 +13,8 @@
   ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "tag": "c:seeds/corn"
-    },
-    {
-      "item": "minecraft:sugar"
-    }
+    "#c:seeds/corn",
+    "minecraft:sugar"
   ],
   "result": {
     "count": 3,

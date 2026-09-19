@@ -12,9 +12,7 @@
     }
   ],
   "type": "minecraft:campfire_cooking",
-  "ingredient": {
-    "tag": "c:seeds/corn"
-  },
+  "ingredient": "#c:seeds/corn",
   "result": {
     "count": 1,
     "id": "hauntedharvest:popcorn"

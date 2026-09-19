@@ -18,9 +18,7 @@
     " 1 "
   ],
   "key": {
-    "1": {
-      "item": "minecraft:paper"
-    }
+    "1": "minecraft:paper"
   },
   "result": {
     "count": 1,

@@ -27,15 +27,9 @@
   ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "tag": "c:crops/corn"
-    },
-    {
-      "item": "minecraft:bread"
-    },
-    {
-      "item": "minecraft:bread"
-    }
+    "#c:crops/corn",
+    "minecraft:bread",
+    "minecraft:bread"
   ],
   "result": {
     "count": 3,

@@ -73,15 +73,15 @@ public class SplatteredEggRenderer extends EntityRenderer<SplatteredEggEntity, S
         float p = 8;
         float n = -8;
         if (dir == Direction.DOWN) {
-            this.vertex(last, consumer, p, -0.5f, 0, 1, n, 0, -1, 0, l1);
-            this.vertex(last, consumer, n, -0.5f, 1, 1, n, 0, -1, 0, l1);
-            this.vertex(last, consumer, n, -0.5f, 1, 0, p, 0, -1, 0, l1);
             this.vertex(last, consumer, p, -0.5f, 0, 0, p, 0, -1, 0, l1);
+            this.vertex(last, consumer, n, -0.5f, 1, 0, p, 0, -1, 0, l1);
+            this.vertex(last, consumer, n, -0.5f, 1, 1, n, 0, -1, 0, l1);
+            this.vertex(last, consumer, p, -0.5f, 0, 1, n, 0, -1, 0, l1);
         } else if (dir == Direction.UP) {
-            this.vertex(last, consumer, n, 0.5f, 0, 1, p, 0, 1, 0, l1);
-            this.vertex(last, consumer, n, 0.5f, 1, 1, n, 0, 1, 0, l1);
-            this.vertex(last, consumer, p, 0.5f, 1, 0, n, 0, 1, 0, l1);
             this.vertex(last, consumer, p, 0.5f, 0, 0, p, 0, 1, 0, l1);
+            this.vertex(last, consumer, p, 0.5f, 1, 0, n, 0, 1, 0, l1);
+            this.vertex(last, consumer, n, 0.5f, 1, 1, n, 0, 1, 0, l1);
+            this.vertex(last, consumer, n, 0.5f, 0, 1, p, 0, 1, 0, l1);
         } else {
             this.vertex(last, consumer, p, n, 0, 1, -0.5F, 0, 0, 1, l1);
             this.vertex(last, consumer, n, n, 1, 1, -0.5F, 0, 0, 1, l1);
