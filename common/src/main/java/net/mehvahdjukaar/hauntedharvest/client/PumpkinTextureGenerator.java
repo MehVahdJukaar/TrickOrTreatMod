@@ -23,7 +23,7 @@ public class PumpkinTextureGenerator {
         for (int y = 0; y < pixels.length && y < WIDTH; y++) {
             for (int x = 0; x < pixels[y].length && x < WIDTH; x++) {
                 int c = ClientHelper.getPixelABGR(sprites[x][y], 0, x, y);
-                texture.getPixels().setPixel(x, y, c);
+                texture.getPixels().setPixelABGR(x, y, c);
             }
         }
         texture.upload();
