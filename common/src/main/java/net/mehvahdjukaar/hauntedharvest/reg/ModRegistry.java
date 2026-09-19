@@ -168,7 +168,7 @@ public class ModRegistry {
 
     public static final String PAPER_BAG_NAME = "paper_bag";
     public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME,
-            p -> new PaperBagItem(PAPER_BAG.get(), p), new Item.Properties()
+            p -> new PaperBagItem(PAPER_BAG.get(), p), new Item.Properties().useBlockDescriptionPrefix()
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                             .setCameraOverlay(res("misc/paper_bag_overlay")).build()));
 
@@ -201,7 +201,7 @@ public class ModRegistry {
         var block = regBlock(name, factory, properties);
         RegHelper.registerItem(res(name), p -> {
             var type = block.get().getType(block.get().defaultBlockState());
-            p.component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(type));
+            p.useBlockDescriptionPrefix().component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(type));
             //jack o' lanterns are too bright to wear
             if (!type.value().isJackOLantern()) p.equippable(EquipmentSlot.HEAD);
             return new ModCarvedPumpkinItem(block.get(), p);
@@ -231,7 +231,7 @@ public class ModRegistry {
     }
 
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
-        return RegHelper.registerItem(res(name), p -> new BlockItem(blockSup.get(), p), properties);
+        return RegHelper.registerBlockItem(res(name), blockSup, properties);
     }
 
 }
