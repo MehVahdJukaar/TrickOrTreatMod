@@ -99,5 +99,11 @@
   "hauntedharvest.configuration.trick_or_treating_time.start": "Start",
   "hauntedharvest.configuration.end.hour": "Hour",
   "hauntedharvest.configuration.end.minute": "Minute",
-  "hauntedharvest.configuration.trick_or_treating_time.end": "End"
+  "hauntedharvest.configuration.trick_or_treating_time.end": "End",
+  "hauntedharvest.configuration.halloween_season.start.description": "Day from which villagers will start placing pumpkins & trick or treating",
+  "hauntedharvest.configuration.halloween_season.end.description": "Day from which villagers will start removing placed pumpkins",
+  "hauntedharvest.configuration.mob_pumpkins_season.start.description": "Day from which zombies and skeletons can wear pumpkins",
+  "hauntedharvest.configuration.mob_pumpkins_season.end.description": "Last day on which zombies and skeletons can wear pumpkins",
+  "hauntedharvest.configuration.trick_or_treating_time.start.description": "In game time of day at which baby villagers will start trick-or-treating",
+  "hauntedharvest.configuration.trick_or_treating_time.end.description": "In game time of day at which baby villagers will stop trick-or-treating. Note that this will only properly work if it's at night since baby villagers can only trick or treat during their sleep schedule, which runs from 18:00 to 06:00"
 }

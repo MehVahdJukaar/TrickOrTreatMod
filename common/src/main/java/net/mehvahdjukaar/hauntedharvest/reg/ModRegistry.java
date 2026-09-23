@@ -202,8 +202,9 @@ public class ModRegistry {
         RegHelper.registerItem(res(name), p -> {
             var type = block.get().getType(block.get().defaultBlockState());
             p.useBlockDescriptionPrefix().component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(type));
-            //jack o' lanterns are too bright to wear
-            if (!type.value().isJackOLantern()) p.equippable(EquipmentSlot.HEAD);
+            if (type.is(PumpkinType.NORMAL.getKey())) {
+                p.equippable(EquipmentSlot.HEAD);
+            }
             return new ModCarvedPumpkinItem(block.get(), p);
         });
         return block;
