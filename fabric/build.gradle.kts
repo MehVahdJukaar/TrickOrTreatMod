@@ -19,7 +19,7 @@ dependencies {
 
     //no 26.1.2 builds of these yet. uncomment as they port
     //modImplementation("net.mehvahdjukaar:supplementaries-fabric:${supplementaries_version}")
-    //modCompileOnly("curse.maven:farmers-delight-refabricated-993166:8088691")
+    modImplementation("maven.modrinth:farmers-delight-refabricated:26.1-3.6.26")
     //modCompileOnly("curse.maven:jei-238222:7420583")
     //modCompileOnly("curse.maven:roughly-enough-items-310111:6199139")
     //modCompileOnly("curse.maven:roughly-enough-items-310111:6199140") // NeoForge build, provides me.shedaniel.rei.forge for common REICompat

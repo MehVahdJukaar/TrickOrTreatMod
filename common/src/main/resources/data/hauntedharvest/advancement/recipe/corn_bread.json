@@ -10,6 +10,10 @@
         "type": "neoforge:tag_empty",
         "tag": "c:crops/corn"
       }
+    },
+    {
+      "type": "neoforge:registered",
+      "value": "hauntedharvest:cornbread"
     }
   ],
   "fabric:load_conditions": [
@@ -23,6 +27,12 @@
         "condition": "fabric:tag_empty",
         "tag": "c:crops/corn"
       }
+    },
+    {
+      "condition": "fabric:registry_contains",
+      "values": [
+        "hauntedharvest:cornbread"
+      ]
     }
   ],
   "parent": "minecraft:recipes/root",

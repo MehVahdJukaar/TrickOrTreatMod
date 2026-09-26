@@ -21,9 +21,7 @@
   ],
   "type": "farmersdelight:cutting",
   "ingredients": [
-    {
-      "tag": "c:crops/corn"
-    }
+    "#c:crops/corn"
   ],
   "result": [
     {
@@ -33,7 +31,5 @@
       }
     }
   ],
-  "tool": {
-    "tag": "farmersdelight:tools/knives"
-  }
+  "tool": "#farmersdelight:tools/knives"
 }

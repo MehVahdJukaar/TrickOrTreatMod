@@ -18,6 +18,6 @@
   "type": "moonlight:add_item",
   "item": {
     "id": "hauntedharvest:rotten_apple",
-    "Count": 1
+    "count": 1
   }
 }

@@ -7,6 +7,12 @@
     {
       "condition": "hauntedharvest:flag",
       "flag": "corn"
+    },
+    {
+      "condition": "fabric:registry_contains",
+      "values": [
+        "hauntedharvest:corn_crate"
+      ]
     }
   ],
   "neoforge:conditions": [
@@ -17,6 +23,10 @@
     {
       "type": "hauntedharvest:flag",
       "flag": "corn"
+    },
+    {
+      "type": "neoforge:registered",
+      "value": "hauntedharvest:corn_crate"
     }
   ],
   "type": "minecraft:crafting_shaped",
