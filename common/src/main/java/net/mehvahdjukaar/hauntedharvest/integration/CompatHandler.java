@@ -11,7 +11,7 @@ public class CompatHandler {
     public static final boolean IMMEDIATELY_FAST = PlatHelper.isModLoaded("immediatelyfast");
 
     public static void init() {
-        //if (FD_INSTALLED) FDCompat.init(); //TODO: no 26.1.2 fd yet
+        if (FD_INSTALLED) FDCompat.init();
         if (QUARK_INSTALLED) QuarkCompat.init();
         if (AUTUMNITY_INSTALLED) AutumnityCompat.init();
     }

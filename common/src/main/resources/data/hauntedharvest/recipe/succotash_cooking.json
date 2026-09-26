@@ -7,6 +7,12 @@
     {
       "condition": "hauntedharvest:flag",
       "flag": "corn"
+    },
+    {
+      "condition": "fabric:registry_contains",
+      "values": [
+        "hauntedharvest:succotash"
+      ]
     }
   ],
   "neoforge:conditions": [
@@ -17,24 +23,20 @@
     {
       "type": "hauntedharvest:flag",
       "flag": "corn"
+    },
+    {
+      "type": "neoforge:registered",
+      "value": "hauntedharvest:succotash"
     }
   ],
   "type": "farmersdelight:cooking",
   "cookingtime": 200,
   "experience": 1.0,
   "ingredients": [
-    {
-      "tag": "c:crops/tomato"
-    },
-    {
-      "tag": "c:foods/cooked_pork"
-    },
-    {
-      "item": "minecraft:beetroot"
-    },
-    {
-      "tag": "c:crops/corn"
-    }
+    "#c:crops/tomato",
+    "#c:foods/cooked_pork",
+    "minecraft:beetroot",
+    "#c:crops/corn"
   ],
   "recipe_book_tab": "meals",
   "result": {

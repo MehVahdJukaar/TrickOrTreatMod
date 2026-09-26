@@ -6,6 +6,7 @@ import net.mehvahdjukaar.hauntedharvest.CustomCarvingsManager;
 import net.mehvahdjukaar.hauntedharvest.blocks.AbstractCornBlock;
 import net.mehvahdjukaar.hauntedharvest.configs.CommonConfigs;
 import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
+import net.mehvahdjukaar.hauntedharvest.integration.FDCompat;
 import net.mehvahdjukaar.hauntedharvest.integration.SuppCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,11 +73,10 @@ public class FarmFieldFeature extends Feature<FarmFieldFeature.Config> {
     }
 
     private boolean placeTomatoes(BlockPos.MutableBlockPos p, WorldGenLevel level, RandomSource random) {
-        //TODO: restore when farmers delight ports to 26.1.2
-        //if (level.getBlockState(p).isAir()) {
-        //    level.setBlock(p, FDCompat.getTomato(random), 2);
-        //    return true;
-        //}
+        if (level.getBlockState(p).isAir()) {
+            level.setBlock(p, FDCompat.getTomato(random), 2);
+            return true;
+        }
         return false;
     }
 

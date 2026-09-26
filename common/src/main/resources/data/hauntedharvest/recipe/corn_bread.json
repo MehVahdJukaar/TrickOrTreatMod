@@ -10,6 +10,12 @@
         "condition": "fabric:tag_empty",
         "tag": "c:crops/corn"
       }
+    },
+    {
+      "condition": "fabric:registry_contains",
+      "values": [
+        "hauntedharvest:cornbread"
+      ]
     }
   ],
   "neoforge:conditions": [
@@ -23,6 +29,10 @@
         "type": "neoforge:tag_empty",
         "tag": "c:crops/corn"
       }
+    },
+    {
+      "type": "neoforge:registered",
+      "value": "hauntedharvest:cornbread"
     }
   ],
   "type": "minecraft:crafting_shapeless",
