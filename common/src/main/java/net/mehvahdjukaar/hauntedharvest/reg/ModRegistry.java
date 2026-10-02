@@ -28,6 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -52,6 +53,7 @@ import static net.mehvahdjukaar.hauntedharvest.HauntedHarvest.res;
 public class ModRegistry {
 
     public static void init() {
+        RegHelper.addClientSyncedRecipes(e -> e.add(CARVED_PUMPKIN_RECIPE.get(), RecipeType.CRAFTING));
         RegHelper.addExtraBEBlockStatesRegistration(event -> {
             for (var t : PumpkinType.REGISTRY) {
                 event.addBlocks(MOD_CARVED_PUMPKIN_TILE.get(), t.getPumpkin());
