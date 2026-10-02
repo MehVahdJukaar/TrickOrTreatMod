@@ -20,7 +20,8 @@ dependencies {
     //modImplementation("net.mehvahdjukaar:supplementaries-neoforge:${supplementaries_version}")
     //no neoforge FD for 26.1.2 yet, the fabric jar has the same classes
     modCompileOnly("maven.modrinth:farmers-delight-refabricated:26.1-3.6.26")
-    //modCompileOnly("curse.maven:jei-238222:7420587")
+    modCompileOnly("mezz.jei:jei-26.1.2-neoforge-api:29.16.0.48")
+    modRuntimeOnly("mezz.jei:jei-26.1.2-neoforge:29.16.0.48")
     //modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
     //modCompileOnly("curse.maven:emi-580555:6420931")
     //modCompileOnly("curse.maven:quark-243121:8146177")
