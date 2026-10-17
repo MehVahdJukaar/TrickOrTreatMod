@@ -8,12 +8,14 @@ neoforge {
 }
 
 val moonlight_version: String by extra
+val polytone_version: String by extra
 val codecui_version: String by extra
 
 dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
-    // JiJ'd into Moonlight, so not on the dev runtime classpath. Add explicitly to avoid a missing schema codec class.
+    modCompileOnly("net.mehvahdjukaar:polytone-neoforge:${polytone_version}")
+
     modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
 
     //uncomment when these update

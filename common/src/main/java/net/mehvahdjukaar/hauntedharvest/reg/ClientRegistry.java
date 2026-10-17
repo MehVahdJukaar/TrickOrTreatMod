@@ -11,6 +11,8 @@ import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBlockModel;
 import net.mehvahdjukaar.hauntedharvest.client.model.HalloweenMaskModel;
 import net.mehvahdjukaar.hauntedharvest.client.screens.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.client.screens.PumpkinShowcaseWidget;
+import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
+import net.mehvahdjukaar.hauntedharvest.integration.PolytoneCompat;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -67,6 +69,7 @@ public class ClientRegistry {
         ClientHelper.addClientSetup(ClientRegistry::setup);
         SeasonConfigOverlay.register();
         PumpkinShowcaseWidget.register();
+        if (CompatHandler.POLYTONE_INSTALLED) PolytoneCompat.setupClient();
     }
 
 

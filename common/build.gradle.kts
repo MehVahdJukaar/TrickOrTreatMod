@@ -9,11 +9,12 @@ common {
 }
 
 val moonlight_version: String by extra
+val polytone_version: String by extra
 
 dependencies {
-    // Use the common variant in common (loader-agnostic) for compile-only access
     modCompileOnly("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
+    modCompileOnly("net.mehvahdjukaar:polytone-common:${polytone_version}")
 
     //uncomment when these update
     //modCompileOnly("net.mehvahdjukaar:supplementaries-common:${supplementaries_version}")

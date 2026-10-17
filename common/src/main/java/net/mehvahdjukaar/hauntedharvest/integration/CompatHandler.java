@@ -9,6 +9,7 @@ public class CompatHandler {
     public static final boolean QUARK_INSTALLED = PlatHelper.isModLoaded("quark") && false; //TODO: ad back
     public static final boolean AUTUMNITY_INSTALLED = PlatHelper.isModLoaded("autumnity");
     public static final boolean IMMEDIATELY_FAST = PlatHelper.isModLoaded("immediatelyfast");
+    public static final boolean POLYTONE_INSTALLED = PlatHelper.isModLoaded("polytone");
 
     public static void init() {
         if (FD_INSTALLED) FDCompat.init();

@@ -8,12 +8,14 @@ fabric {
 }
 
 val moonlight_version: String by extra
+val polytone_version: String by extra
 val codecui_version: String by extra
 val modmenu_version: String by extra
 
 dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
-    // JiJ'd into Moonlight, so not on the dev runtime classpath. Add explicitly to avoid a missing schema codec class.
+    modCompileOnly("net.mehvahdjukaar:polytone-fabric:${polytone_version}")
+
     modRuntimeOnly("net.mehvahdjukaar:codecui-fabric:${codecui_version}")
     modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
 
