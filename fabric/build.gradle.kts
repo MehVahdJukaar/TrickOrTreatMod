@@ -9,16 +9,17 @@ fabric {
 
 val moonlight_version: String by extra
 val supplementaries_version: String by extra
+val polytone_version: String by extra
 val codecui_version: String by extra
 val cloth_version: String by extra
 val emi_version: String by extra
 
 dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
-    // JiJ'd into Moonlight, so not on the dev runtime classpath. Add explicitly to avoid a missing schema codec class.
+    modCompileOnly("net.mehvahdjukaar:polytone-fabric:${polytone_version}")
+
     modRuntimeOnly("net.mehvahdjukaar:codecui-fabric:${codecui_version}")
 
-    // Mirrored from common (platform variant)
     modImplementation("net.mehvahdjukaar:supplementaries-fabric:${supplementaries_version}")
     modCompileOnly("curse.maven:farmers-delight-refabricated-993166:8088691")
     modCompileOnly("curse.maven:jei-238222:7420583")
@@ -28,7 +29,6 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:8146177")
     modCompileOnly("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
 
-    // Fabric-only deps
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_version}") {
         exclude(group = "net.fabricmc.fabric-api")
     }

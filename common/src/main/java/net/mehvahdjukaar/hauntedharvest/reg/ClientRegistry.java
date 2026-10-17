@@ -8,6 +8,8 @@ import net.mehvahdjukaar.hauntedharvest.client.*;
 import net.mehvahdjukaar.hauntedharvest.client.model.CarvedPumpkinBakedModel;
 import net.mehvahdjukaar.hauntedharvest.client.screens.CarvingTooltipComponent;
 import net.mehvahdjukaar.hauntedharvest.client.screens.PumpkinShowcaseWidget;
+import net.mehvahdjukaar.hauntedharvest.integration.CompatHandler;
+import net.mehvahdjukaar.hauntedharvest.integration.PolytoneCompat;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.ItemRenderExtension;
@@ -75,6 +77,7 @@ public class ClientRegistry {
         ClientHelper.addClientSetup(ClientRegistry::setup);
         SeasonConfigOverlay.register();
         PumpkinShowcaseWidget.register();
+        if (CompatHandler.POLYTONE_INSTALLED) PolytoneCompat.setupClient();
     }
 
 
