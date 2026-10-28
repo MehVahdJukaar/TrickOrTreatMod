@@ -78,8 +78,6 @@ public class CommonConfigs {
         PAPER_BAG = builder.gameRestart().mainFeature();
         PAPER_BAG_NAME_TAG = builder.comment("Wearing a paper bag will hide the player's name tag")
                 .define("hide_name_tag", true);
-        PAPER_BAG_ENDERMAN = builder.comment("Endermen will not attack players wearing a paper bag")
-                .define("hide_from_enderman", true);
         builder.pop();
 
         CORN_ENABLED = builder.gameRestart().feature(ModRegistry.CORN_NAME);
@@ -119,7 +117,6 @@ public class CommonConfigs {
     public static final Supplier<Boolean> GRIM_APPLE;
     public static final Supplier<Boolean> PAPER_BAG;
     public static final Supplier<Boolean> PAPER_BAG_NAME_TAG;
-    public static final Supplier<Boolean> PAPER_BAG_ENDERMAN;
     public static final Supplier<Boolean> POPCORN_ENABLED;
     public static final Supplier<Boolean> SPLATTERED_EGG_ENABLED;
     public static final Supplier<Boolean> CARVED_PUMPKINS_ENABLED;

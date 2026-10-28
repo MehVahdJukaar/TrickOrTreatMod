@@ -28,7 +28,7 @@ public class RedstoneCarvedPumpkinBlock extends ModCarvedPumpkinBlock {
         return state.getValue(LIT) ? super.getType(state) : PumpkinType.NORMAL;
     }
 
-    @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context)
                 .setValue(LIT, context.getLevel().hasNeighborSignal(context.getClickedPos()));
@@ -55,6 +55,7 @@ public class RedstoneCarvedPumpkinBlock extends ModCarvedPumpkinBlock {
                 tile.refreshType();
             }
         }
+        super.tick(state, worldIn, pos, rand);
     }
 
     @Override

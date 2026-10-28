@@ -6,6 +6,7 @@
   "package": "net.mehvahdjukaar.hauntedharvest.mixins",
   "mixins": [
     "AbstractSkeletonMixin",
+    "CarvedPumpkinBlockMixin",
     "NearestAttackableTargetGoalMixin",
     "SnowGolemMixin",
     "ThrownEggEntityMixin",
@@ -14,6 +15,7 @@
     "ZombieMixin"
   ],
   "client": [
+    "GuiMixin",
     "SnowGolemHeadLayerMixin",
     "SnowGolemRendererMixin",
     "SnowGolemRenderStateMixin",

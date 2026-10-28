@@ -1,3 +1,4 @@
 accessWidener   v2  official
 
 accessible method net/minecraft/world/level/block/CarvedPumpkinBlock getOrCreateIronGolemFull ()Lnet/minecraft/world/level/block/state/pattern/BlockPattern;
+accessible method net/minecraft/world/level/block/CarvedPumpkinBlock trySpawnGolem (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V
