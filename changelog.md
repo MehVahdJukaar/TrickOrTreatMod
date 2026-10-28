@@ -1,1 +1,3 @@
-fixed some recipes
+- fixed some recipes
+- added polytone colored lights compat
+- fixed some compat stuff
