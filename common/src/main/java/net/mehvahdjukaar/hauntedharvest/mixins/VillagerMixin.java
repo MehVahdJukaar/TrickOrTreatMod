@@ -2,10 +2,7 @@ package net.mehvahdjukaar.hauntedharvest.mixins;
 
 import net.mehvahdjukaar.hauntedharvest.ai.HalloweenVillagerAI;
 import net.mehvahdjukaar.hauntedharvest.ai.IHalloweenVillager;
-import net.mehvahdjukaar.hauntedharvest.reg.ModRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -111,25 +108,13 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     private int hauntedharvest$conversionTime = -1;
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+    public void hh$addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
         output.putInt("ConversionTime", this.hauntedharvest$conversionTime);
-
-        //can't get thingie brain memory saving to work
-        //TODO: figure out why it's not read after getting saved
-        if (this.getBrain().hasMemoryValue(ModRegistry.PUMPKIN_POS.get())) {
-            GlobalPos globalpos = this.getBrain().getMemory(ModRegistry.PUMPKIN_POS.get()).get();
-            if (globalpos.dimension() == this.level().dimension()) {
-                output.store("Pumpkin", BlockPos.CODEC, globalpos.pos());
-            }
-        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    public void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+    public void hh$readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
         this.hauntedharvest$conversionTime = input.getIntOr("ConversionTime", -1);
-
-        input.read("Pumpkin", BlockPos.CODEC).ifPresent(pos ->
-                this.getBrain().setMemory(ModRegistry.PUMPKIN_POS.get(), GlobalPos.of(this.level().dimension(), pos)));
     }
 
     @Override
@@ -138,7 +123,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     }
 
     @Unique
-    private void doWitchConversion() {
+    private void hh$doWitchConversion() {
 
         float yBodyRot = this.yBodyRot;
         float yHeadRot = this.yHeadRot;
@@ -176,7 +161,7 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
 
 
     @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"), cancellable = true)
-    public void handleEntityEvent(byte pId, CallbackInfo ci) {
+    public void hh$handleEntityEvent(byte pId, CallbackInfo ci) {
         if (pId == EntityEvent.ZOMBIE_CONVERTING) {
             this.hauntedharvest$conversionTime = 60 * 20;
             if (!this.isSilent()) {
@@ -194,20 +179,20 @@ public abstract class VillagerMixin extends AbstractVillager implements IHallowe
     }
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
-    public void tick(CallbackInfo ci) {
+    public void hh$tick(CallbackInfo ci) {
         if (!this.level().isClientSide() && this.isAlive() && !this.isNoAi()) {
             if (this.hauntedharvest$isConverting()) {
                 --this.hauntedharvest$conversionTime;
 
                 if (this.hauntedharvest$conversionTime == 0) {
-                    this.doWitchConversion();
+                    this.hh$doWitchConversion();
                 }
             }
         }
     }
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
-    public void interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
+    public void hh$interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (itemstack.is(Items.MILK_BUCKET) && this.hauntedharvest$isConverting()) {
             this.hauntedharvest$conversionTime = -1;
