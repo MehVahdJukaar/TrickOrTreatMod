@@ -19,6 +19,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.equipment.Equippable;
+import net.minecraft.world.waypoints.Waypoint;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -170,7 +172,7 @@ public class ModRegistry {
 
     public static final String PAPER_BAG_NAME = "paper_bag";
     public static final Supplier<Item> PAPER_BAG_ITEM = regItem(PAPER_BAG_NAME,
-            p -> new PaperBagItem(PAPER_BAG.get(), p), new Item.Properties().useBlockDescriptionPrefix()
+            p -> new PaperBagItem(PAPER_BAG.get(), p), Waypoint.addHideAttribute(new Item.Properties()).useBlockDescriptionPrefix()
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
                             .setCameraOverlay(res("misc/paper_bag_overlay")).build()));
 
@@ -205,7 +207,8 @@ public class ModRegistry {
             var type = block.get().getType(block.get().defaultBlockState());
             p.useBlockDescriptionPrefix().component(PUMPKIN_CARVING.get(), PumpkinCarvingData.empty(type));
             if (type.is(PumpkinType.NORMAL.getKey())) {
-                p.equippable(EquipmentSlot.HEAD);
+                Waypoint.addHideAttribute(p).component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                        .setSwappable(false).setCameraOverlay(Identifier.withDefaultNamespace("misc/pumpkinblur")).build());
             }
             return new ModCarvedPumpkinItem(block.get(), p);
         });
