@@ -25,7 +25,7 @@ public abstract class SnowGolemRendererMixin extends MobRenderer<SnowGolem, Snow
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/animal/golem/SnowGolem;Lnet/minecraft/client/renderer/entity/state/SnowGolemRenderState;F)V",
             at = @At("TAIL"))
-    public void extractCustomPumpkin(SnowGolem golem, SnowGolemRenderState state, float partialTicks, CallbackInfo ci) {
+    private void hauntedharvest$extractCustomPumpkin(SnowGolem golem, SnowGolemRenderState state, float partialTicks, CallbackInfo ci) {
         ItemStackRenderState customPumpkinState = ((ICustomPumpkinRenderState) state).hauntedharvest$getCustomPumpkin();
         customPumpkinState.clear();
         if (golem instanceof ICustomPumpkinHolder cp) {
