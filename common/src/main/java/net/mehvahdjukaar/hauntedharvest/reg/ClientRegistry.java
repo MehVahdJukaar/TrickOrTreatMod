@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.hauntedharvest.reg;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
@@ -19,12 +22,18 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.HeartParticle;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class ClientRegistry {
 
@@ -37,6 +46,21 @@ public class ClientRegistry {
     public static final Identifier OUTLINE_SPRITE = HauntedHarvest.res("outline");
 
     private static final Map<PumpkinType, SpriteId[]> PUMPKIN_SPRITES = new Object2ObjectOpenHashMap<>();
+
+    public static final RenderPipeline BLUR_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            .withLocation(HauntedHarvest.res("pipeline/blur"))
+            .withVertexShader("core/position_tex")
+            .withFragmentShader(HauntedHarvest.res("core/blur"))
+            .withSampler("Sampler0")
+            .withCull(false)
+            .withDepthStencilState(Optional.empty())
+            .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+            .build();
+
+    public static final Function<Identifier, RenderType> BLUR = Util.memoize(texture ->
+            RenderType.create("hauntedharvest_blur", RenderSetup.builder(BLUR_PIPELINE)
+                    .withTexture("Sampler0", texture)
+                    .createRenderSetup()));
 
     public static SpriteId blockSprite(Identifier texture) {
         return new SpriteId(TextureAtlas.LOCATION_BLOCKS, texture);
@@ -67,6 +91,7 @@ public class ClientRegistry {
         ClientHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
         ClientHelper.addClientSetup(ClientRegistry::setup);
+        ClientHelper.addRenderPipelineRegistration(e -> e.register(BLUR_PIPELINE));
         SeasonConfigOverlay.register();
         PumpkinShowcaseWidget.register();
         if (CompatHandler.POLYTONE_INSTALLED) PolytoneCompat.setupClient();

@@ -4,10 +4,14 @@ package net.mehvahdjukaar.hauntedharvest.client;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import net.mehvahdjukaar.hauntedharvest.HauntedHarvest;
 import net.mehvahdjukaar.hauntedharvest.blocks.PumpkinType;
 import net.mehvahdjukaar.hauntedharvest.items.components.PumpkinCarvingData;
 import net.mehvahdjukaar.moonlight.api.client.model.QuadBatch;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.DynamicTextureRenderer;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderableDynamicTexture;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -140,10 +144,28 @@ public class CarvingManager implements PreparableReloadListener {
     }
 
 
-    //TODO: blur overlay off until the shader is a RenderPipeline
+    private static final Identifier PUMPKIN_BLUR = HauntedHarvest.res("pumpkinblur");
+
+    //no need to register a bunch of these just having one since theres only one player
     @Nullable
     public static Identifier getCachedBlurTexture(CarvingVisuals carving) {
-        return null;
+        BlurTexture blur = DynamicTextureRenderer.requestTexture(PUMPKIN_BLUR, BlurTexture::new);
+        if (blur == null) return null;
+        if (blur.carving != carving) {
+            blur.carving = carving;
+            blur.redraw();
+        }
+        return PUMPKIN_BLUR;
+    }
+
+    private static class BlurTexture extends RenderableDynamicTexture {
+        @Nullable
+        private CarvingVisuals carving;
+
+        private BlurTexture() {
+            super(PUMPKIN_BLUR, 512, (BlurTexture t) -> PumpkinTextureGenerator.drawBlur(t, t.carving));
+            this.sampler = RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR);
+        }
     }
 
     public static void onTextureReload() {
