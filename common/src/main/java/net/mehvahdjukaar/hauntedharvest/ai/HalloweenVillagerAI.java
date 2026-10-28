@@ -52,7 +52,8 @@ public class HalloweenVillagerAI {
                 event.addTaskToActivity(Activity.PLAY, Pair.of(9, new EatCandy(100, 130)));
                 event.addTaskToActivity(Activity.PLAY, Pair.of(10, new CarvePumpkin(0.5f)));
 
-                //TODO: needs a timeline on BABY_VILLAGER_ACTIVITY, babies never start trick or treating on their own
+                event.scheduleActivity(ModRegistry.TRICK_OR_TREAT.get(), HauntedHarvest.getSeasonManager().getTrickOrTreatStart(),
+                        HauntedHarvest.getSeasonManager().getTrickOrTreatEnd());
 
             } else {
 
