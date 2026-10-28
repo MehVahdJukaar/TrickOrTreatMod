@@ -15,6 +15,7 @@
     "ZombieMixin"
   ],
   "client": [
+    "CrossedArmsItemLayerMixin",
     "GuiMixin",
     "SnowGolemHeadLayerMixin",
     "SnowGolemRendererMixin",
