@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.hauntedharvest.client.screens;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
@@ -44,24 +42,13 @@ public abstract class BaseCarvingButton implements GuiEventListener, Renderable,
         this.shouldDrawOverlay = this.isMouseOver(mouseX, mouseY);
 
         renderButton(graphics);
-
-        if (this.isShouldDrawOverlay()) {
-            renderHoverOverlay(graphics);
-        }
     }
 
     protected abstract void renderButton(GuiGraphics graphics);
 
     public void renderHoverOverlay(GuiGraphics graphics) {
-        var pose = graphics.pose();
-        pose.pushPose();
-
-        pose.translate(0, 0, 90);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
         graphics.blitSprite(this.outlineTexture,
                 this.x - 1, this.y - 1, size + 2, size + 2);
-
-        pose.popPose();
     }
 
     @Override

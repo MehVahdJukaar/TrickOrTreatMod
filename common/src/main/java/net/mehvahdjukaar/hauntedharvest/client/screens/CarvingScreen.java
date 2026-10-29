@@ -180,36 +180,19 @@ public class CarvingScreen extends Screen {
 
     }
 
-    /*
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
-
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
-
-        // RenderSystem.enableDepthTest();
         super.render(graphics, mouseX, mouseY, partialTicks);
-        // RenderSystem.disableDepthTest();
-        graphics.pose().pushPose();
-        label:
-        for (int xx = 0; xx < 16; xx++) {
-            for (int yy = 0; yy < 16; yy++) {
-                CarvingButton button = this.buttons[xx][yy];
+
+        for (CarvingButton[] column : this.buttons) {
+            for (CarvingButton button : column) {
                 if (button.isShouldDrawOverlay()) {
                     button.renderHoverOverlay(graphics);
-                    break label;
+                    break;
                 }
             }
         }
-        graphics.pose().popPose();
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
-    }
-
-*/
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
-        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }
 
